@@ -6,11 +6,6 @@ project(Ghost VERSION 0.0.1)
 # Specify parameters on the command line.
 set(Platform_Config "AutoSelect" CACHE STRING "Path of CMakeLists.txt used by the target platform." FORCE)
 
-# Add sub modules.
-add_subdirectory(App)
-add_subdirectory(Drivers)
-add_subdirectory(Platforms)
-
 # Select platform profile.
 if(${Platform_Config} STREQUAL "AutoSelect")
 	if(WIN32)
@@ -22,3 +17,12 @@ if(${Platform_Config} STREQUAL "AutoSelect")
 else()
 	include(${Platform_Config})
 endif()
+
+# Add third-party dependence.
+add_subdirectory(ThirdParty)
+
+# Add sub modules.
+add_subdirectory(App)
+add_subdirectory(Drivers)
+add_subdirectory(Platforms)
+
