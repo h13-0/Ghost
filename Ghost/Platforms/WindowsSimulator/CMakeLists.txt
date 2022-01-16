@@ -8,6 +8,10 @@
 # Driver configs.
 ## Select ScreenDriver.
 set(ScreenDriver "QT_GraphicsView")
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5Widgets REQUIRED)
+QT5_WRAP_UI()
+
 
 # Sensor configs.
 ## Select GyroscopeDriver.

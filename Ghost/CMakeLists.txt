@@ -18,9 +18,6 @@ else()
 	include(${Platform_Config})
 endif()
 
-# Add third-party dependence.
-add_subdirectory(ThirdParty)
-
 # Add sub modules.
 add_subdirectory(App)
 add_subdirectory(Drivers)
