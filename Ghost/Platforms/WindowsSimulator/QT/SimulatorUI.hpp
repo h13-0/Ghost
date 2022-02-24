@@ -1,22 +1,20 @@
 #ifndef SIMULATORUI_HPP
 #define SIMULATORUI_HPP
 
-#include <QWidget>
+#include <QMainWindow>
+#include "ui_Simulator.h"
 
-namespace SimulatorUI {
-class SimulatorUI;
-}
-
-class SimulatorUI : public QWidget
+class SimulatorUI : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit SimulatorUI(QWidget *parent = nullptr);
+    SimulatorUI(QWidget *parent = Q_NULLPTR);
+    SimulatorUI(const SimulatorUI&) = delete;
     ~SimulatorUI();
 
 private:
-    SimulatorUI::SimulatorUI *ui;
+    Ui::MainWindow ui;
 };
 
 #endif // SIMULATORUI_H

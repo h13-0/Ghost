@@ -4,27 +4,33 @@
 
 #pragma once
 
+#include "GhostPlatformErrorDefine.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	typedef enum
-	{
-		GhQT_OK = 0,
-	} GhQT_Error_t;
+#define GhostError_QT_SimulatorInitFaild        DeclareGhostError(GhostPlatformLayerError, PlatformModuleQT_Error, 1)
+#define GhostError_QT_SimulatorUnexpectedExit   DeclareGhostError(GhostPlatformLayerError, PlatformModuleQT_Error, 2)
 
-	typedef void* GhQT_Simulator_t;
+	typedef struct
+	{
+		void* QApplicationPtr;
+		void *SimulatorUI_Ptr;
+	} GhostQT_Simulator_t;
 
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
-	GhQT_Error_t GhQT_SimulatorInit(GhQT_Simulator_t* QT_Simulator);
+	GhostError_t GhostQT_SimulatorInit(GhostQT_Simulator_t* QT_Simulator, int argc, char** argv);
 
-	GhQT_Error_t GhQT_SimulatorGetResolution(GhQT_Simulator_t* QT_Simulator, int* X_Resolution, int* Y_Resolution);
+	GhostError_t GhostQT_SimulatorRun(GhostQT_Simulator_t* QT_Simulator);
 
-	GhQT_Error_t GhQT_SimulatorDraw(GhQT_Simulator_t* QT_Simulator);
+	GhostError_t GhostQT_SimulatorGetResolution(GhostQT_Simulator_t* QT_Simulator, int* X_Resolution, int* Y_Resolution);
+
+	GhostError_t GhostQT_SimulatorDraw(GhostQT_Simulator_t* QT_Simulator);
 
 	/// <summary>
 	/// 
@@ -32,10 +38,7 @@ extern "C" {
 	/// <param name="QT_Simulator"></param>
 	/// <param name="CallbackPtr"></param>
 	/// <returns></returns>
-	GhQT_Error_t GhQT_SimulatorSetTouchEventsCallback(GhQT_Simulator_t* QT_Simulator, void (*CallbackPtr)(int X, int Y));
-
-	GhQT_Error_t GhQT_SimulatorDestory(GhQT_Simulator_t* QT_Simulator);
-
+	GhostError_t GhostQT_SimulatorSetTouchEventsCallback(GhostQT_Simulator_t* QT_Simulator, void (*CallbackPtr)(int X, int Y));
 
 #ifdef __cplusplus
 }

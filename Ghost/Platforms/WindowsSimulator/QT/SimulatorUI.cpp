@@ -1,14 +1,13 @@
 #include "SimulatorUI.hpp"
-#include "ui_SimulatorUI.h"
+#include "ui_Simulator.h"
 
 SimulatorUI::SimulatorUI(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::SimulatorUI)
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
+    ui.setupUi(this);
 }
 
 SimulatorUI::~SimulatorUI()
 {
-    delete ui;
+
 }
