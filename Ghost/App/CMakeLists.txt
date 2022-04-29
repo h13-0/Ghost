@@ -1,33 +1,28 @@
 # The following are set after configuration is done:
 # GHOST_APP_INCLUDE_DIRS
-# GHOST_APP_SOURCE_FILES
-# GHOST_APP_LINK_LIBRARIES
+# GHOST_APP_LIBRARIES
 
-# Add third-party dependence.
-## lvgl
-set(LVGL_PATH "${PROJECT_SOURCE_DIR}/App/ThirdParty/lvgl")
-include(${PROJECT_SOURCE_DIR}/Tools/CMake/FindLVGL.cmake)
-
-### 
-
-## micropython
-
+project(GhostApps)
 
 # Set header paths.
 set(
 	GHOST_APP_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}/App"
 	"${PROJECT_SOURCE_DIR}/App/Log"
-	"${GHOST_LVGL_INCLUDE_DIRS}"
+	CACHE PATH "Ghost Apps header file path list."
 )
 
-message("${GHOST_LVGL_INCLUDE_DIRS}")
-
-# Set source files.
-set( 
-	GHOST_APP_SOURCE_FILES
-	"${PROJECT_SOURCE_DIR}/App/App.c"
-	"${GHOST_LVGL_SOURCE_FILES}"
+include_directories(
+	"${GHOST_APP_INCLUDE_DIRS}"
 )
+
+add_library(
+	${PROJECT_NAME}
+	STATIC
+	"${CMAKE_CURRENT_LIST_DIR}/App.c"
+)
+
 
 # Set link libraries.
+
+

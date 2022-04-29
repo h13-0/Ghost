@@ -3,7 +3,7 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "lv_port_disp_template.h"
+#include "QT_GraphicsView.h"
 #include "lvgl.h"
 
 /*********************
