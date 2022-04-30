@@ -1,0 +1,3 @@
+[submodule "Ghost/ThirdParty/lvgl"]
+	path = Ghost/ThirdParty/lvgl
+	url = https://github.com/lvgl/lvgl.git
