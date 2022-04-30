@@ -7,8 +7,8 @@ project(GhostApps)
 # Set header paths.
 set(
 	GHOST_APP_INCLUDE_DIRS
-	"${PROJECT_SOURCE_DIR}/App"
-	"${PROJECT_SOURCE_DIR}/App/Log"
+	"${PROJECT_SOURCE_DIR}"
+	"${PROJECT_SOURCE_DIR}/Log"
 	CACHE PATH "Ghost Apps header file path list."
 )
 

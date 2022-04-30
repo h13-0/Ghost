@@ -36,11 +36,6 @@ GhostError_t GhostQT_SimulatorRun(GhostQT_Simulator_t* QT_Simulator)
 	
 }
 
-GhostError_t GhostQT_SimulatorShow(void)
-{
-	return GhostOK;
-}
-
 GhostError_t GhostQT_SimulatorGetResolution(GhostQT_Simulator_t* QT_Simulator, int* X_Resolution, int* Y_Resolution)
 {
 	return GhostOK;
@@ -49,6 +44,27 @@ GhostError_t GhostQT_SimulatorGetResolution(GhostQT_Simulator_t* QT_Simulator, i
 GhostError_t GhostQT_SimulatorDraw(GhostQT_Simulator_t* QT_Simulator)
 {
 	return GhostError_t();
+}
+
+/// <summary>
+/// Draw image in the virtual screen of the simulator.
+/// </summary>
+/// <param name="QT_Simulator">Simulator pointor.</param>
+/// <param name="X">X coordinate from 0.</param>
+/// <param name="Y">Y coordinate from 0.</param>
+/// <param name="Width">Width.</param>
+/// <param name="Height">Height.</param>
+/// <param name="ARGB32_Pixels">ARGB32 Pixels in uint8_t.</param>
+/// <returns>GhostError_t</returns>
+GhostError_t GhostQT_SimulatorDrawScreen(GhostQT_Simulator_t* QT_Simulator, int X, int Y, int Width, int Height, unsigned char* ARGB32_Pixels)
+{
+	if (!QT_Simulator->QApplicationPtr || !QT_Simulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QT_SimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QT_Simulator->SimulatorUI_Ptr))->DrawScreen(X, Y, Width, Height, ARGB32_Pixels);
+	return GhostOK;
 }
 
 GhostError_t GhostQT_SimulatorSetTouchEventsCallback(GhostQT_Simulator_t* QT_Simulator, void(*CallbackPtr)(int X, int Y))

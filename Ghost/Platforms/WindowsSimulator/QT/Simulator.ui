@@ -14,11 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QGraphicsView" name="ScreenView">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>150</y>
+      <x>190</x>
+      <y>130</y>
       <width>240</width>
       <height>240</height>
      </rect>
@@ -27,6 +27,12 @@
      <string notr="true">border-radius:8px;
 background-color: rgb(255, 255, 255);
 border:2px solid rgb(200,200,200);</string>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
     </property>
    </widget>
   </widget>

@@ -1,4 +1,5 @@
 #pragma once
 
-
-#define UseQT_GraphicsView (1)
+// Virtual Screen configs.
+#define MacroDisplayHorizontalResolution      (240)
+#define MacroDisplayVerticalResolution        (240)

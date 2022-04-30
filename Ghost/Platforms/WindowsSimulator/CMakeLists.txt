@@ -7,22 +7,22 @@ include_directories(${PThreads4W_INCLUDE_DIR})
 
 # Build executable file.
 ## Include submodules.
-### Platforms layer.
-#### QT.
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/QT")
-include_directories(${GHOST_WINDOWS_QT_INCLUDE_DIRS})
-
-### Driver layer.
-#### Screen.
-add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Screen")
-#### Touch Screen.
-add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/TouchScreen")
-
 ### ThirdParty layer.
 #### lvgl.
 include("${CMAKE_CURRENT_LIST_DIR}/lvgl/CMakeLists.txt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
+
+### Platforms layer.
+#### QT.
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/QT")
+include_directories(${GHOST_WINDOWS_QSIM_INCLUDE_DIRS})
+
+### Driver layer.
+#### Screen.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Screen/QT_SimulatorScreen")
+#### Touch Screen.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/TouchScreen")
 
 ### Application layer.
 add_subdirectory("${PROJECT_SOURCE_DIR}/App")
@@ -40,4 +40,11 @@ set(
 
 # Compile executable file.
 add_executable(WindowsSimulator ${SOURCE_FILES})
-target_link_libraries(WindowsSimulator GhostApps GhostWindowsQT ${PThreads4W_LIBRARY} lvgl)
+target_link_libraries(
+	WindowsSimulator 
+	GhostApps 
+	QT_SimulatorScreen 
+	GhostWindowsQT_Simulator 
+	${PThreads4W_LIBRARY} 
+	lvgl
+)

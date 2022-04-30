@@ -6,9 +6,6 @@
 
 GhostError_t GhostAppInit(void)
 {
-	// Init Drivers.
-
-	// Init software.
 
 	return GhostOK;
 }
@@ -30,7 +27,14 @@ GhostError_t GhostAppRun(void)
 	lv_label_set_text(label, "Button");                             /*Set the labels text*/
 	lv_obj_center(label);                                           /*Align the label to the center*/
 
-
 	while (1);
+	return GhostOK;
+}
+
+GhostError_t GhostTimerHandler(float TimeIntervalInMillisecond)
+{
+	// Refresh UI.
+	lv_tick_inc(TimeIntervalInMillisecond);
+	lv_timer_handler();
 	return GhostOK;
 }
