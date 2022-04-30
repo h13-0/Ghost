@@ -1,3 +1,4 @@
+#include "GhostPlatformConfigs.h"
 #if(UseQT_GraphicsView)
 
 /*********************
