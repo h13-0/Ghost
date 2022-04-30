@@ -1,0 +1,22 @@
+# The following are set after configuration is done:
+# GHOST_STANDARD_CLOCK_INCLUDE_DIRS
+
+project(GhostStandardClock)
+
+# Link libraries.
+add_library(
+	${PROJECT_NAME} 
+	STATIC 
+	"${PROJECT_SOURCE_DIR}/StandardClock.cpp"
+)
+
+# Set header paths.
+set(
+	GHOST_STANDARD_CLOCK_INCLUDE_DIRS
+	"${CMAKE_CURRENT_LIST_DIR}/.."
+	CACHE PATH "Ghost Standard Clock interface header file paths list."
+)
+
+include_directories(
+	"${GHOST_STANDARD_CLOCK_INCLUDE_DIRS}"
+)

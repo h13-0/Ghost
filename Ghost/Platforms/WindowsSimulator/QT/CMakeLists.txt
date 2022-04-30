@@ -28,7 +28,7 @@ target_link_libraries(
 # Set header paths.
 set(
 	GHOST_WINDOWS_QSIM_INCLUDE_DIRS
-	"${CMAKE_CURRENT_LIST_DIR}"
+	"${PROJECT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_BINARY_DIR}"
 	CACHE PATH "Ghost Windows QT interface header file paths list."
 )
