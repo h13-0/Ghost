@@ -1,5 +1,6 @@
 # Ghost
 ![](Images/Logo.jpg)
+
 An amazing watch.
 
 # Functions and tasks
