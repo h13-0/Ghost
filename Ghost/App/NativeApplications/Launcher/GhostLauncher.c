@@ -14,7 +14,7 @@ GhostError_t GhostLauncherRun(char* LauncherProfilePath)
 
 	lv_obj_t* timeLabel = lv_label_create(lv_scr_act());
 	lv_obj_set_width(timeLabel, 150);
-	lv_label_set_text(timeLabel, "00:00");
+	lv_label_set_text_static(timeLabel, timeText);
 	lv_obj_set_style_text_font(timeLabel, &lv_font_montserrat_48, 0);
 	lv_obj_align(timeLabel, LV_ALIGN_CENTER, 0, 40);
 
@@ -31,8 +31,9 @@ GhostError_t GhostLauncherRun(char* LauncherProfilePath)
 			sprintf(timeText, "%02d %02d", hour, minute);
 		}
 
-		lv_label_set_text(timeLabel, timeText);
-		GhostSleepMillisecond(10);
+		lv_label_set_text_static(timeLabel, NULL);
+		
+		GhostSleepMillisecond(50);
 	}
 
 	return GhostOK;

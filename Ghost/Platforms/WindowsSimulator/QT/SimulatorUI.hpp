@@ -34,6 +34,8 @@ private:
     // Screen image buffer.
     unsigned char screenRawBuffer[MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution * 4] = { 0 };
 
+    QGraphicsScene* screenScene;
+
 private slots:
     /// <summary>
     /// Draw Screen slot function.
