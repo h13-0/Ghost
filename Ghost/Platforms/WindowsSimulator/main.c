@@ -1,8 +1,11 @@
+#include "GhostPlatformConfigs.h"
+
 #include "QT_Simulator.h"
 
 #include "App.h"
 
 #include "GhostClock.h"
+#include "GhostFileSystem.h"
 
 #include <time.h>
 
@@ -41,17 +44,6 @@ static void* ghostTimer(void* args)
 		GhostTimerHandler(10);
 		GhostSleepMillisecond(10);
 	}
-
-	while (1)
-	{
-		to.tv_sec = time(NULL);
-		to.tv_nsec = 100000;
-		if (pthread_cond_timedwait(&cond, &mutex, &to) == ETIMEDOUT)
-		{
-			GhostTimerHandler((clock() - lastExecuteTime) * 1000.0 / CLOCKS_PER_SEC);
-			lastExecuteTime = clock();
-		}
-	}
 }
 
 int main(int argc, char* argv[])
@@ -61,7 +53,11 @@ int main(int argc, char* argv[])
 	GhostQT_SimulatorInit(&simulator, argc, argv);
 
 	// Init Drivers.
+	/// Clock.
 	GhostClockInit();
+	/// FileSystem.
+	GhostFS_Init(MacroFileSystemMountPoint);
+
 	// Init software.
 	// Init lvgl.
 	lv_init();

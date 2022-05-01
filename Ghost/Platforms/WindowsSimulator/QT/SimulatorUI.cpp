@@ -8,6 +8,10 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
 {
     ui.setupUi(this);
 
+    // Init screenScene.
+    screenScene = new QGraphicsScene();
+    ui.ScreenView->setScene(screenScene);
+
     // Create screen image buffer.
 
 
@@ -17,7 +21,7 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
 
 SimulatorUI::~SimulatorUI()
 {
-
+    delete screenScene;
 }
 
 /// <summary>
@@ -44,9 +48,7 @@ void SimulatorUI::drawScreenMethod(int X, int Y, int Width, int Height, unsigned
         }
 
         QImage image = QImage(screenRawBuffer, MacroDisplayHorizontalResolution, MacroDisplayVerticalResolution, QImage::Format_ARGB32);
-        QGraphicsScene* scene = new QGraphicsScene;
-        scene->addPixmap(QPixmap::fromImage(image));
-        ui.ScreenView->setScene(scene);
-        ui.ScreenView->show();
+        screenScene->clear();
+        screenScene->addPixmap(QPixmap::fromImage(image));
     }
 }

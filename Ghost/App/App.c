@@ -9,6 +9,8 @@
 // Applications.
 #include "GhostLauncher.h"
 
+#include "GhostClock.h"
+
 // Thirdparty.
 #include "lvgl.h"
 
@@ -38,9 +40,11 @@ void btn_event_cb(lv_event_t* e)
 
 GhostError_t GhostAppRun(void)
 {
+	while (1)
+	{
+		GhostSleepMillisecond(100000);
+	}
 
-
-	while (1);
 	return GhostOK;
 }
 
