@@ -1,5 +1,8 @@
-# Include Platform configs headers.
-include_directories("${CMAKE_CURRENT_LIST_DIR}")
+# Include Platform configs and Tools headers.
+include_directories(
+	"${CMAKE_CURRENT_LIST_DIR}"
+	"${PROJECT_SOURCE_DIR}/Tools/Macro"
+)
 
 # find dependent packages.
 find_package(pthreads CONFIG REQUIRED)
@@ -23,6 +26,12 @@ include_directories(${GHOST_WINDOWS_QSIM_INCLUDE_DIRS})
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Screen/QT_SimulatorScreen")
 #### Touch Screen.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/TouchScreen")
+#### Clock.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Clock/StandardClock")
+include_directories(${GHOST_STANDARD_CLOCK_INCLUDE_DIRS})
+
+
+
 
 ### Application layer.
 add_subdirectory("${PROJECT_SOURCE_DIR}/App")
@@ -44,7 +53,8 @@ target_link_libraries(
 	WindowsSimulator 
 	GhostApps 
 	QT_SimulatorScreen 
-	GhostWindowsQT_Simulator 
+	GhostWindowsQT_Simulator
+	GhostStandardClock
 	${PThreads4W_LIBRARY} 
 	lvgl
 )

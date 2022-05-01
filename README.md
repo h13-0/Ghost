@@ -6,9 +6,12 @@ An amazing watch.
 # Functions and tasks
 - [ ] Basic software framework.
   - [X] Support lvgl.
-  - [ ] Support clock.
+  - [X] Package manager.
+  - [X] Support clock.
+  - [ ] lua interpreter.
   - [ ] Support file system.
   - [ ] Power manager framework.
+  
 - [ ] Basic function realization.
   - [ ] Basic clock function.
 - [ ] PCB and BOM.
@@ -20,10 +23,11 @@ An amazing watch.
 git clone https://github.com/h13-0/Ghost.git
 git submodule update --init
 ```
-Open in visual studio and build.
+Open in visual studio and build.  
 **Note that QT needs to be deployed before running.**
 ```
 windeployqt WindowsSimulator.exe
 ```
 
 ## esp32s3
+Will launch soon(perhaps).

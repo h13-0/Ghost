@@ -12,12 +12,14 @@ find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 QT5_WRAP_UI(GHOST_QT_SOURCE_FILES "${PROJECT_SOURCE_DIR}/Simulator.ui")
 aux_source_directory(${PROJECT_SOURCE_DIR} GHOST_QT_SOURCE_FILES)
 
-# Link libraries.
+# Generate libraries.
 add_library(
 	${PROJECT_NAME} 
 	STATIC 
 	${GHOST_QT_SOURCE_FILES}
 )
+
+# Link libraries.
 target_link_libraries(
 	${PROJECT_NAME}
 	"Qt5::Widgets"
@@ -28,7 +30,7 @@ target_link_libraries(
 # Set header paths.
 set(
 	GHOST_WINDOWS_QSIM_INCLUDE_DIRS
-	"${CMAKE_CURRENT_LIST_DIR}"
+	"${PROJECT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_BINARY_DIR}"
 	CACHE PATH "Ghost Windows QT interface header file paths list."
 )

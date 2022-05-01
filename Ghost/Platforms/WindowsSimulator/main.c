@@ -2,15 +2,15 @@
 
 #include "App.h"
 
+#include "GhostClock.h"
+
 #include <time.h>
 
 #include "pthread.h"
 
-#include <windows.h>
-
 static void* ghostRun(void* args)
 {
-	Sleep(3000);
+	GhostSleepMillisecond(3000);
 	GhostError_t ret = GhostAppRun();
 	if (ret.LayerErrorCode == GhostNoError)
 	{
@@ -39,7 +39,7 @@ static void* ghostTimer(void* args)
 	while (1)
 	{
 		GhostTimerHandler(10);
-		Sleep(10);
+		GhostSleepMillisecond(10);
 	}
 
 	while (1)
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	GhostQT_SimulatorInit(&simulator, argc, argv);
 
 	// Init Drivers.
-
+	GhostClockInit();
 	// Init software.
 	// Init lvgl.
 	lv_init();
