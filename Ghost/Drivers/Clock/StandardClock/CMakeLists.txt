@@ -7,7 +7,7 @@ project(GhostStandardClock)
 add_library(
 	${PROJECT_NAME} 
 	STATIC 
-	"${PROJECT_SOURCE_DIR}/StandardClock.cpp"
+	"${PROJECT_SOURCE_DIR}/GhostStandardClock.cpp"
 )
 
 # Set header paths.

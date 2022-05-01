@@ -39,7 +39,7 @@ static void* ghostTimer(void* args)
 	while (1)
 	{
 		GhostTimerHandler(10);
-		Sleep(10);
+		GhostSleepMillisecond(10);
 	}
 
 	while (1)

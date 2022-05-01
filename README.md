@@ -6,10 +6,12 @@ An amazing watch.
 # Functions and tasks
 - [ ] Basic software framework.
   - [X] Support lvgl.
-  - [ ] Support clock.
+  - [X] Package manager.
+  - [X] Support clock.
+  - [ ] lua interpreter.
   - [ ] Support file system.
   - [ ] Power manager framework.
-  - [ ] lua interpreter.
+  
 - [ ] Basic function realization.
   - [ ] Basic clock function.
 - [ ] PCB and BOM.

@@ -1,5 +1,8 @@
-# Include Platform configs headers.
-include_directories("${CMAKE_CURRENT_LIST_DIR}")
+# Include Platform configs and Tools headers.
+include_directories(
+	"${CMAKE_CURRENT_LIST_DIR}"
+	"${PROJECT_SOURCE_DIR}/Tools/Macro"
+)
 
 # find dependent packages.
 find_package(pthreads CONFIG REQUIRED)
