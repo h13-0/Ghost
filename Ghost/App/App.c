@@ -1,17 +1,24 @@
 #include "App.h"
 
+#include <stddef.h>
+
 // Configs.
 #include "GhostPlatformConfigs.h"
 
-// Components.
+// Drivers layer.
+/// FileSystem.
+#include "GhostFileSystem.h"
+
+// App layer.
+/// Components.
 #include "GhostApplicationManager.h"
 
-// Applications.
+/// Applications.
 #include "GhostLauncher.h"
 
 #include "GhostClock.h"
 
-// Thirdparty.
+// Thirdparty layer.
 #include "lvgl.h"
 
 #include <stdio.h>
@@ -40,6 +47,15 @@ void btn_event_cb(lv_event_t* e)
 
 GhostError_t GhostAppRun(void)
 {
+	GhostFile_t file;
+
+	char data[] = "Hello, world!";
+
+	GhostError_t ret = GhostOK;
+	ret = GhostFS_Open("./test.txt", &file, "w+");
+	GhostFS_Write(data, sizeof(char), strlen(data), &file);
+	GhostFS_Close(&file);
+
 	while (1)
 	{
 		GhostSleepMillisecond(100000);

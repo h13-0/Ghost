@@ -36,6 +36,6 @@ set(
 )
 
 include_directories(
-	"${GHOST_WINDOWS_QT_INCLUDE_DIRS}"
+	"${GHOST_WINDOWS_QSIM_INCLUDE_DIRS}"
 	"${Qt5Widgets_INCLUDE_DIRS}"
 )

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,8 +14,8 @@ extern "C" {
 	typedef struct
 	{
 		LayerErrorCode_t LayerErrorCode : 8;
-		uint8_t ModuleErrorCode;
-		int16_t SubErrorCode;
+		int ModuleErrorCode : 8;
+		int SubErrorCode : 16;
 	} GhostError_t;
 
 #ifdef __cplusplus
