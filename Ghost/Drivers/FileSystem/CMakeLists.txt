@@ -1,7 +1,7 @@
 # The following are set after configuration is done:
 # GHOST_FILESYSTEM_INCLUDE_DIRS
 
-project(GhostFileSystem)
+project(GhostFileSystem VERSION 0.0.1)
 
 # Link libraries.
 add_library(

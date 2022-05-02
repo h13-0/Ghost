@@ -13,6 +13,10 @@ include_directories("${PROJECT_SOURCE_DIR}")
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/ApplicationManager")
 include_directories("${GHOST_COMPONENT_APP_MGR_INCLUDE_DIRS}")
 
+### SafeLVGL
+add_subdirectory("${PROJECT_SOURCE_DIR}/Components/SafeLVGL")
+include_directories("${GHOST_SAFELVGL_INCLUDE_DIRS}")
+
 ## Applications.
 add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
 include_directories("${GHOST_APP_LAUNCHER_INCLUDE_DIRS}")
@@ -40,6 +44,7 @@ target_link_libraries(
 	${PROJECT_NAME}
 	
 	GhostComponentAppMgr
+	SafeLVGL
 
 	GhostAppLauncher
 )
