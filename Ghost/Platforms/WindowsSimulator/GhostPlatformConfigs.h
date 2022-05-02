@@ -6,7 +6,7 @@
 #define MacroDisplayHorizontalResolution           (240)
 #define MacroDisplayVerticalResolution             (240)
 /// File system configs.
-#define MacroFileSystemMountPoint                  ("./Ghost")
+#define MacroFileSystemMountPoint                  ("./Ghost")   //**Paths should be separated by '/'**
 #define MacroMaximumPathLength                     (256)
 
 /*******************************************************/

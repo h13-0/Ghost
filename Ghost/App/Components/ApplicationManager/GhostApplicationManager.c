@@ -181,7 +181,7 @@ GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args)
 	if (ret.LayerErrorCode == GhostNoError)
 	{
 		ret = GhostThreadCreate(
-			nodePtr->ThreadHandle,
+			&nodePtr->ThreadHandle,
 			nodePtr->CurrentApplicationInfo.ApplicationEntryFunction,
 			nodePtr->CurrentApplicationInfo.PackageName,
 			0,

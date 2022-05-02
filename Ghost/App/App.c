@@ -8,6 +8,7 @@
 // Drivers layer.
 /// FileSystem.
 #include "GhostFileSystem.h"
+#include "GhostThread.h"
 
 // App layer.
 /// Components.
@@ -45,20 +46,47 @@ void btn_event_cb(lv_event_t* e)
 	printf("Clicked\n");
 }
 
+static GhostFile_t file = { NULL };
+
+void testThread(void)
+{
+	char data[] = "Ghooooost!\r\n";
+	GhostError_t ret = GhostOK;
+	unsigned long long times = 0;
+	while (1)
+	{
+		if (GhostFS_Write(data, sizeof(char), strlen(data), &file) == 0)
+			while (1);
+		times++;
+		printf("GTimes: %d\r\n", times);
+		if (times > 1000000)
+			while (1);
+	}
+}
+
 GhostError_t GhostAppRun(void)
 {
-	GhostFile_t file;
+	char data[] = "Hello, world!\r\n";
 
-	char data[] = "Hello, world!";
+	unsigned long long times = 0;
 
 	GhostError_t ret = GhostOK;
-	ret = GhostFS_Open("./test.txt", &file, "w+");
-	GhostFS_Write(data, sizeof(char), strlen(data), &file);
-	GhostFS_Close(&file);
+	ret = GhostFS_Open("./test.txt", &file, "a+");
+	if (ret.LayerErrorCode != GhostNoError)
+		while (1);
+
+	GhostThread_t t;
+	GhostThreadCreate(&t, testThread, NULL, 0, NULL, 1);
 
 	while (1)
 	{
-		GhostSleepMillisecond(100000);
+		
+		if(GhostFS_Write(data, sizeof(char), strlen(data), &file) == 0)
+			while (1);
+		times++;
+		printf("HTimes: %d\r\n", times);
+		if (times > 1000000)
+			while (1);
 	}
 
 	return GhostOK;

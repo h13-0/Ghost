@@ -3,9 +3,6 @@
 #include "GhostSoftwareErrorDefine.h"
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define GhostErrorAppMgrUninitialized        DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 1)
 #define GhostErrorAppInfoIllegal             DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 2)
@@ -13,6 +10,11 @@ extern "C" {
 #define GhostErrorAppDuplicatePackageName    DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 4)
 #define GhostErrorAppCreateThreadError       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 5)
 #define GhostErrorAppCreateOutOfMemory       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 6)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 	/// <summary>
 	/// Typedef of Ghost application type.
 	/// </summary>

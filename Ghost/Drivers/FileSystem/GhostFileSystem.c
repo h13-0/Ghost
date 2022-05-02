@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
+// rootDirectoryPath will end with '/'.
 static char* rootDirectoryPath = NULL;
 static int rootDirectoryPathLen = 0;
 
@@ -16,12 +17,69 @@ static int rootDirectoryPathLen = 0;
 /// <returns></returns>
 GhostError_t GhostFS_Init(char* RootDirectoryPath)
 {
-	rootDirectoryPathLen = strlen(RootDirectoryPath);
-	rootDirectoryPath = malloc(rootDirectoryPathLen * sizeof(char));
-	if (rootDirectoryPath == NULL)
-		return GhostErrorFS_InitFailed;
+	char realPath[MacroMaximumPathLength] = { 0 };
 
-	memcpy(rootDirectoryPath, RootDirectoryPath, rootDirectoryPathLen * sizeof(char));
+#ifdef _WIN32
+	if (_fullpath(realPath, RootDirectoryPath, MacroMaximumPathLength) == NULL)
+		return GhostErrorFS_PathTooLong;
+#else
+#error ""
+#endif
+	rootDirectoryPathLen = strlen(realPath);
+	
+	// Check the characters at the end of the path.
+	if (realPath[rootDirectoryPathLen - 1] == '/')
+	{
+		// Allocate memory.
+		rootDirectoryPath = calloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
+		if (rootDirectoryPath == NULL)
+			return GhostErrorFS_InitFailed;
+
+		// Copy string.
+		memcpy(rootDirectoryPath, realPath, rootDirectoryPathLen * sizeof(char));
+	} 
+#ifdef _WIN32
+	else if (realPath[rootDirectoryPathLen - 1] == '\\')
+	{
+		// Allocate memory.
+		rootDirectoryPath = calloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
+		if (rootDirectoryPath == NULL)
+			return GhostErrorFS_InitFailed;
+
+		// Copy string.
+		memcpy(rootDirectoryPath, realPath, rootDirectoryPathLen * sizeof(char));
+	}
+#endif
+	else {
+		// Add '/' to end.
+		rootDirectoryPathLen++;
+
+		// Allocate memory.
+		rootDirectoryPath = calloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
+		if (rootDirectoryPath == NULL)
+			return GhostErrorFS_InitFailed;
+
+		// Copy string.
+		memcpy(rootDirectoryPath, realPath, rootDirectoryPathLen * sizeof(char));
+
+#ifdef _WIN32
+		* (rootDirectoryPath + rootDirectoryPathLen - 1) = '\\';
+#else
+		* (rootDirectoryPath + rootDirectoryPathLen - 1) = '/';
+#endif
+		
+	}
+
+#ifdef _WIN32
+	// Replace '/' to '\\'.
+	for (int index = 0; index < rootDirectoryPathLen; index++)
+	{
+		//The delimiter of windows is FUCKING PIECE OF SHIT!
+		if (*(rootDirectoryPath + index) == '/')
+			*(rootDirectoryPath + index) = '\\';
+	}
+#endif
+
 	return GhostOK;
 }
 
@@ -64,24 +122,59 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mo
 {
 	// Get real path.
 	/// Allocate memory.
-	char* realPath = malloc(sizeof(char) * MacroMaximumPathLength + rootDirectoryPathLen);
+	char* realPath = calloc(1, sizeof(char) * MacroMaximumPathLength + rootDirectoryPathLen);
 	if (realPath == NULL)
 		return GhostErrorFS_OutOfMemory;
 
-	GhostError_t ret = getRealFilePath(FilePath, realPath, MacroMaximumPathLength + rootDirectoryPathLen);
+	/// Strcat string.
+	if (*(FilePath) == '/')
+	{
+		// Absolute path.
+		// Omit duplicate characters '/'.
+		memcpy(realPath, rootDirectoryPath, rootDirectoryPathLen);
+		memcpy(realPath + rootDirectoryPathLen, FilePath + 1, strlen(FilePath - 1));
+	}
+	else if (*(FilePath) == '.')
+	{
+		// Relative path.
+		// Copy rootDirectoryPath to the begining.
+		memcpy(realPath, rootDirectoryPath, rootDirectoryPathLen);
+		memcpy(realPath + rootDirectoryPathLen, FilePath, strlen(FilePath));
+	}
+	else {
+		// Illegal path.
+		return GhostErrorFS_PathIllegal;
+	}
+
+	GhostError_t ret = getRealFilePath(realPath, realPath, MacroMaximumPathLength + rootDirectoryPathLen);
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
 
+	// Check whether the path is legal.
+	int minimumPath = 0;
+	if (rootDirectoryPathLen < strlen(realPath))
+		minimumPath = rootDirectoryPathLen;
+	else
+		minimumPath = strlen(realPath);
+
+	if (memcmp(rootDirectoryPath, realPath, minimumPath))
+	{
+		// Above the root path, access denied.
+		printf("%s", rootDirectoryPath);
+		return GhostErrorFS_PathIllegal;
+	}
+
 	// Create mutex for file.
-	ret = GhostMutexCreate(GhostFile->Mutex);
+	ret = GhostMutexInit(&GhostFile->Mutex);
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
 
 	// Lock mutex.
-	ret = GhostMutexLock(GhostFile->Mutex);
+	ret = GhostMutexLock(&GhostFile->Mutex);
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
 
+	// Open file.
 	GhostFile->FileStream = fopen(realPath, Mode);
 
 	/// Free memory.
@@ -92,7 +185,39 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mo
 		return GhostErrorFS_FileOpenFailed;
 
 	// Unlock mutex.
-	ret = GhostMutexUnlock(GhostFile->Mutex);
+	ret = GhostMutexUnlock(&GhostFile->Mutex);
+	if (ret.LayerErrorCode != GhostNoError)
+		return ret;
+
+	return GhostOK;
+}
+
+/// <summary>
+/// Flush buffer to file.
+/// </summary>
+/// <param name="GhostFile"></param>
+/// <returns></returns>
+GhostError_t GhostFS_Flush(GhostFile_t* GhostFile)
+{
+	// Check file handle.
+	if (GhostFile == NULL)
+		return GhostErrorFS_FileUninitialized;
+
+	// Lock mutex.
+	GhostError_t ret = GhostMutexLock(&GhostFile->Mutex);
+	if (ret.LayerErrorCode != GhostNoError)
+		return ret;
+
+	// Flush.
+	if (fflush(GhostFile->FileStream))
+		return GhostErrorFS_FileFlushFailed;
+
+	// Check whether the file was successfully opened.
+	if (GhostFile->FileStream == NULL)
+		return GhostErrorFS_FileOpenFailed;
+
+	// Unlock mutex.
+	ret = GhostMutexUnlock(&GhostFile->Mutex);
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
 
@@ -106,25 +231,26 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mo
 /// <returns>Function execution result.</returns>
 GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 {
+	// Check file handle.
 	if (GhostFile == NULL)
-		return GhostErrorFS_HandleInvalid;
+		return GhostErrorFS_FileUninitialized;
 
 	// Lock mutex.
-	GhostError_t gret = GhostMutexLock(GhostFile->Mutex);
+	GhostError_t gret = GhostMutexLock(&GhostFile->Mutex);
 	if (gret.LayerErrorCode != GhostNoError)
 		return gret;
 
 	int ret = fclose(GhostFile->FileStream);
 
 	// Unlock mutex.
-	gret = GhostMutexUnlock(GhostFile->Mutex);
+	gret = GhostMutexUnlock(&GhostFile->Mutex);
 	if (gret.LayerErrorCode != GhostNoError)
 		return gret;
 
 	if (!ret)
 	{
 		// Delete Mutex.
-		GhostMutexDelete(GhostFile->Mutex);
+		GhostMutexDestroy(&GhostFile->Mutex);
 		GhostFile = NULL;
 		return GhostOK;
 	}
@@ -145,15 +271,20 @@ GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 /// <returns>Same as fwrite, equal to the data size actually written.</returns>
 int GhostFS_Write(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile)
 {
+	// Check file handle.
+	if (GhostFile == NULL)
+		return 0;
+
 	// Lock mutex.
-	GhostError_t gret = GhostMutexLock(GhostFile->Mutex);
+	GhostError_t gret = GhostMutexLock(&GhostFile->Mutex);
 	if (gret.LayerErrorCode != GhostNoError)
 		return 0;
 
+	// Write.
 	int ret = fwrite(BufferPtr, Size, Count, GhostFile->FileStream);
 
 	// Unlock mutex.
-	gret = GhostMutexUnlock(GhostFile->Mutex);
+	gret = GhostMutexUnlock(&GhostFile->Mutex);
 	if (gret.LayerErrorCode != GhostNoError)
 		return 0;
 
