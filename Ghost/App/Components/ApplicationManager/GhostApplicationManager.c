@@ -1,8 +1,12 @@
 #include "GhostApplicationManager.h"
 #include "GhostPlatformConfigs.h"
+
+// Standard libraries.
 #include <string.h>
 #include <stdlib.h>
-#include "pthread.h"
+
+// Ghost drivers.
+#include "GhostThread.h"
 
 /// <summary>
 /// The linked list typedef of GhostApplicationList.
@@ -17,7 +21,7 @@ typedef struct GhostAppHandleList
 	bool IsForeground;
 
 	// Handles.
-	pthread_t ThreadHandle;
+	GhostThread_t ThreadHandle;
 
 	// Next node.
 	struct GhostAppHandleList* NextApplicatonNode;
@@ -176,14 +180,16 @@ GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args)
 	GhostError_t ret = ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr);
 	if (ret.LayerErrorCode == GhostNoError)
 	{
-		int pret = pthread_create(&nodePtr->ThreadHandle, NULL, nodePtr->CurrentApplicationInfo.ApplicationEntryFunction, NULL);
-		if (pret == 0)
-		{
-			return GhostOK;
-		}
-		else {
-			return GhostErrorAppCreateThreadError;
-		}
+		ret = GhostThreadCreate(
+			nodePtr->ThreadHandle,
+			nodePtr->CurrentApplicationInfo.ApplicationEntryFunction,
+			nodePtr->CurrentApplicationInfo.PackageName,
+			0,
+			NULL,
+			1
+		);
+
+		return ret;
 	}
 	else {
 		return ret;

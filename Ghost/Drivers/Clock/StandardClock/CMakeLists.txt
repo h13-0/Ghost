@@ -1,7 +1,9 @@
 # The following are set after configuration is done:
 # GHOST_STANDARD_CLOCK_INCLUDE_DIRS
 
-project(GhostStandardClock)
+project(GhostStandardClock VERSION 0.0.1)
+
+set(CMAKE_CXX_STANDARD 11)
 
 # Link libraries.
 add_library(

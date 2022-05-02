@@ -6,10 +6,12 @@ An amazing watch.
 # Functions and tasks
 - [ ] Basic software framework.
   - [X] Support lvgl.
-  - [X] Package manager.
-  - [X] Support clock.
+  - [X] Ghost Package manager.
+  - [X] Ghost Clock.
+  - [X] Ghost Thread.
+  - [X] Ghost File system.
+  - [ ] Ghost safe lvgl.
   - [ ] lua interpreter.
-  - [ ] Support file system.
   - [ ] Power manager framework.
   
 - [ ] Basic function realization.
