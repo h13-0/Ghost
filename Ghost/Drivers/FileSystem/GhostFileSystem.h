@@ -6,18 +6,24 @@
 
 #include "GhostThread.h"
 
+#define GhostErrorFS_InitFailed         DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 1)
+#define GhostErrorFS_FileNotFound       DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 2)
+#define GhostErrorFS_PathTooLong        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 3)
+#define GhostErrorFS_PathIllegal        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 4)
+#define GhostErrorFS_FileOpenFailed     DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 5)
+#define GhostErrorFS_OutOfMemory        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 6)
+#define GhostErrorFS_CloseFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 7)
+#define GhostErrorFS_HandleInvalid      DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 8)
+#define GhostErrorFS_FileUninitialized  DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 9)
+#define GhostErrorFS_FileFlushFailed    DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 10)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define GhostErrorFS_InitFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 1)
-#define GhostErrorFS_FileNotFound      DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 2)
-#define GhostErrorFS_PathTooLong       DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 3)
-#define GhostErrorFS_FileOpenFailed    DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 4)
-#define GhostErrorFS_OutOfMemory       DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 5)
-#define GhostErrorFS_CloseFailed       DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 6)
-#define GhostErrorFS_HandleInvalid     DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 7)
-
+	/// <summary>
+	/// Typedef Ghost file.
+	/// </summary>
 	typedef struct
 	{
 		FILE* FileStream;
@@ -47,6 +53,11 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mode);
 
+	/// <summary>
+	/// Flush buffer to file.
+	/// </summary>
+	/// <param name="GhostFile"></param>
+	/// <returns></returns>
 	GhostError_t GhostFS_Flush(GhostFile_t* GhostFile);
 
 	/// <summary>

@@ -16,13 +16,8 @@
 /// <param name="Args">Args.</param>
 /// <param name="Priority">Priority, invalid in pthread.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostThreadCreate(GhostThread_t Thread, void* (*Function)(void*), const char* TaskName, size_t StackSize, void* Args, int Priority)
+GhostError_t GhostThreadCreate(GhostThread_t* Thread, void* (*Function)(void*), const char* TaskName, size_t StackSize, void* Args, int Priority)
 {
-	// Create thread handle.
-	Thread = malloc(sizeof(pthread_t));
-	if (Thread == NULL)
-		GhostErrorThreadOutOfMemory;
-
 	// Create thread.
 	if (!pthread_create(Thread, NULL, Function, Args))
 		return GhostErrorThreadCreateFailed;
@@ -35,29 +30,41 @@ GhostError_t GhostThreadCreate(GhostThread_t Thread, void* (*Function)(void*), c
 /// </summary>
 /// <param name="Thread">Thread handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostThreadDelete(GhostThread_t Thread)
+GhostError_t GhostThreadDelete(GhostThread_t* Thread)
 {
 	//pthread_cance
 	return GhostOK;
 }
 
 /// <summary>
-/// Create mutex.
+/// Init mutex.
 /// </summary>
 /// <param name="Mutex">Mutex handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostMutexCreate(GhostMutex_t Mutex)
+GhostError_t GhostMutexInit(GhostMutex_t* Mutex)
 {
+	if (pthread_mutex_init(Mutex, NULL))
+		return GhostErrorMutexCreateFaild;
+
 	return GhostOK;
 }
 
 /// <summary>
-/// Delete mutex.
+/// Destroy mutex.
 /// </summary>
 /// <param name="Mutex">Mutex handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostMutexDelete(GhostMutex_t Mutex)
+GhostError_t GhostMutexDestroy(GhostMutex_t* Mutex)
 {
+#ifdef DEBUG
+	// Check handle.
+	if (Mutex == NULL)
+		return GhostErrorMutexUninitialized;
+#endif
+
+	if (pthread_mutex_destroy(Mutex))
+		return GhostErrorMutexDeleteFailed;
+
 	return GhostOK;
 }
 
@@ -66,8 +73,17 @@ GhostError_t GhostMutexDelete(GhostMutex_t Mutex)
 /// </summary>
 /// <param name="Mutex">Mutex handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostMutexLock(GhostMutex_t Mutex)
+GhostError_t GhostMutexLock(GhostMutex_t* Mutex)
 {
+#ifdef DEBUG
+	// Check handle.
+	if (Mutex == NULL)
+		return GhostErrorMutexUninitialized;
+#endif
+
+	// Lock mutex.
+	if (pthread_mutex_lock(Mutex))
+		return GhostErrorMutexLockFailed;
 	return GhostOK;
 }
 
@@ -76,7 +92,16 @@ GhostError_t GhostMutexLock(GhostMutex_t Mutex)
 /// </summary>
 /// <param name="Mutex">Mutex handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostMutexUnlock(GhostMutex_t Mutex)
+GhostError_t GhostMutexUnlock(GhostMutex_t* Mutex)
 {
+#ifdef DEBUG
+	// Check handle.
+	if (Mutex == NULL)
+		return GhostErrorMutexUninitialized;
+#endif
+
+	// Unlock mutex.
+	if (pthread_mutex_unlock(Mutex))
+		return GhostErrorMutexLockFailed;
 	return GhostOK;
 }

@@ -13,7 +13,6 @@
 
 static void* ghostRun(void* args)
 {
-	GhostSleepMillisecond(3000);
 	GhostError_t ret = GhostAppRun();
 	if (ret.LayerErrorCode == GhostNoError)
 	{

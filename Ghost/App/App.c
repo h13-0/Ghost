@@ -8,10 +8,12 @@
 // Drivers layer.
 /// FileSystem.
 #include "GhostFileSystem.h"
+#include "GhostThread.h"
 
 // App layer.
 /// Components.
 #include "GhostApplicationManager.h"
+#include "GhostSafeLVGL.h"
 
 /// Applications.
 #include "GhostLauncher.h"
@@ -27,7 +29,10 @@ GhostError_t GhostAppInit(void)
 {
 	GhostError_t ret = GhostOK;
 	
-	// Init ghost application manager.
+	// Init Ghost safe lvgl.
+	GhostSafeLV_Init();
+
+	// Init Ghost application manager.
 	ret = GhostAppMgrInit();
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
@@ -45,20 +50,12 @@ void btn_event_cb(lv_event_t* e)
 	printf("Clicked\n");
 }
 
+
 GhostError_t GhostAppRun(void)
 {
-	GhostFile_t file;
-
-	char data[] = "Hello, world!";
-
-	GhostError_t ret = GhostOK;
-	ret = GhostFS_Open("./test.txt", &file, "w+");
-	GhostFS_Write(data, sizeof(char), strlen(data), &file);
-	GhostFS_Close(&file);
-
 	while (1)
 	{
-		GhostSleepMillisecond(100000);
+		GhostSleepMillisecond(1000);
 	}
 
 	return GhostOK;
@@ -67,7 +64,5 @@ GhostError_t GhostAppRun(void)
 GhostError_t GhostTimerHandler(float TimeIntervalInMillisecond)
 {
 	// Refresh UI.
-	lv_tick_inc(TimeIntervalInMillisecond);
-	lv_timer_handler();
-	return GhostOK;
+	return GhostSafeLV_HeartBeat(TimeIntervalInMillisecond);
 }

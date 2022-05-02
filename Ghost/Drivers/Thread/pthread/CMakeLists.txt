@@ -3,13 +3,13 @@
 
 project(GhostThread VERSION 0.0.1)
 
-# Link libraries.
+# Generate libraries.
 add_library(
 	${PROJECT_NAME} 
 	STATIC 
 	"${PROJECT_SOURCE_DIR}/GhostThread.c"
 )
-
+# Link libraries.
 target_link_libraries(
 	${PROJECT_NAME}
 	${PThreads4W_LIBRARY}
