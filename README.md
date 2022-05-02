@@ -10,13 +10,17 @@ An amazing watch.
   - [X] Ghost Clock.
   - [X] Ghost Thread.
   - [X] Ghost File system.
-  - [ ] Ghost safe lvgl.
+  - [X] Ghost safe lvgl.
   - [ ] lua interpreter.
   - [ ] Power manager framework.
-  
 - [ ] Basic function realization.
   - [ ] Basic clock function.
+  - [ ] Launcher and theme.
+  - [ ] Calculator.
+- [ ] Ghost installable application support.
+  - [ ] Authority manager.
 - [ ] PCB and BOM.
+  - [ ] Migrate to esp-idf.
 - [ ] Mechanical structure.
 
 # Build
