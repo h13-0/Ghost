@@ -1,37 +1,66 @@
 #pragma once
 #include "GhostSoftwareErrorDefine.h"
 
-#include "GhostThread.h"
 #include "lvgl.h"
+
+/// Declare Ghost_LV error.
+
 
 /// You need to call all APIs of this header file **after lvgl initialization**.
 
-/// <summary>
-/// Init Ghost safe lvgl.
-///		You need to call this API **after lvgl initialization**.
-/// </summary>
-/// <param name=""></param>
-/// <returns></returns>
-GhostError_t GhostSafeLV_Init(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/// <summary>
-/// Safe lvgl heartbeat function interface.
-/// 	You need to call this API **after lvgl initialization**.
-/// </summary>
-/// <param name="HeartbeatPeriod">Heartbeat period in millisecond.</param>
-/// <returns></returns>
-GhostError_t GhostSafeLV_HeartBeat(int HeartbeatPeriod);
+	/// <summary>
+	/// Init Ghost safe lvgl.
+	///		You need to call this API **after lvgl initialization**.
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	GhostError_t GhostSafeLV_Init(void);
 
-/// <summary>
-/// 
-/// </summary>
-extern GhostMutex_t __ghost_lvgl_Mutex__;
+	/// <summary>
+	/// Safe lvgl heartbeat function interface.
+	/// 	You need to call this API **after lvgl initialization**.
+	/// </summary>
+	/// <param name="HeartbeatPeriod">Heartbeat period in millisecond.</param>
+	/// <returns></returns>
+	GhostError_t GhostSafeLV_HeartBeat(int HeartbeatPeriod);
 
-/// <summary>
-/// Do functions with lvgl mutex.
-/// </summary>
-/// <param name="">Functions.</param>
-#define LV_Safe(functions) \
-	GhostMutexLock(&__ghost_lvgl_Mutex__); \
-	functions; \
-	GhostMutexUnlock(&__ghost_lvgl_Mutex__); \
+	/// <summary>
+	/// Lock lvgl mutex.
+	///		You need to call this API **after lvgl initialization**.
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	GhostError_t GhostLV_Lock(void);
+
+	/// <summary>
+	/// Unlock lvgl mutex.
+	///		You need to call this API **after lvgl initialization**.
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	GhostError_t GhostLV_Unlock(void);
+
+	/// <summary>
+	/// Try lock lvgl mutex.
+	///		You need to call this API **after lvgl initialization**.
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	GhostError_t GhostLV_TryLock(void);
+
+	/// <summary>
+	/// Do functions with lvgl mutex.
+	/// </summary>
+	/// <param name="">Functions.</param>
+	#define LV_Safe(functions) \
+		GhostLV_Lock(); \
+		functions; \
+		GhostLV_Unlock(); \
+
+#ifdef __cplusplus
+}
+#endif
