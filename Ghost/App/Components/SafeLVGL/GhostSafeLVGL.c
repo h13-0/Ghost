@@ -1,8 +1,7 @@
 #include "GhostSafeLVGL.h"
 
 // lvgl mutex.
-GhostMutex_t __ghost_lvgl_Mutex__;
-
+GhostMutex_t lvglMutex;
 
 /// <summary>
 /// Init Ghost safe lvgl.
@@ -12,7 +11,7 @@ GhostMutex_t __ghost_lvgl_Mutex__;
 /// <returns></returns>
 GhostError_t GhostSafeLV_Init(void)
 {
-	return GhostMutexInit(&__ghost_lvgl_Mutex__);
+	return GhostMutexInit(&lvglMutex);
 }
 
 /// <summary>
@@ -28,4 +27,26 @@ GhostError_t GhostSafeLV_HeartBeat(int HeartbeatPeriod)
 		lv_timer_handler();
 	)
 	return GhostOK;
+}
+
+/// <summary>
+/// Lock lvgl mutex.
+///		You need to call this API **after lvgl initialization**.
+/// </summary>
+/// <param name=""></param>
+/// <returns></returns>
+GhostError_t GhostLV_Lock(void)
+{
+	return GhostMutexLock(&lvglMutex);
+}
+
+/// <summary>
+/// Unlock lvgl mutex.
+///		You need to call this API **after lvgl initialization**.
+/// </summary>
+/// <param name=""></param>
+/// <returns></returns>
+GhostError_t GhostLV_Unlock(void)
+{
+	return GhostMutexUnlock(&lvglMutex);
 }

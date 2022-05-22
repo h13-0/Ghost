@@ -1,0 +1,1 @@
+Currently supported lvgl version is 8.2.0.
