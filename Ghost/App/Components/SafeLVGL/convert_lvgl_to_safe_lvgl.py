@@ -7,7 +7,7 @@ safe_lvgl_path = "./"
 
 regex = r"^(?P<return_type>\w{1}.+)[ ]{1}(?P<function_name>(lv_){1}.+)(\((?P<var_list>.+)\);)"
 pattern = re.compile(regex, re.X)
-#r"(?!.*[\|#|/|\\|@|{|}])(?!.*return)^[\S]+[ ]*[\S]*(lv_){1}.+(\(){1}.*(\);){1}"
+whitelist_path = ["src"]
 
 def find_lv_function_declare(code : str):
     """
@@ -54,7 +54,10 @@ def main(lvgl_path : str, safe_lvgl_path : str):
 
     function_count = 0
     # Traversal header file.
-    for parent, dirnames, filenames in os.walk(lvgl_path):  
+    for parent, dirnames, filenames in os.walk(lvgl_path):
+        for path in whitelist_path:
+            if(os.path.normcase(os.path.join(lvgl_path, path)) == os.path.normcase(parent))
+
         for filename in filenames:
             ext = os.path.splitext(filename)[1][1:]
             if ext =="h":

@@ -1,4 +1,5 @@
 #include "GhostSafeLVGL.h"
+#include "GhostThread.h"
 
 // lvgl mutex.
 GhostMutex_t lvglMutex;

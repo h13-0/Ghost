@@ -3,11 +3,14 @@
 
 project(SafeLVGL VERSION 0.0.1)
 
+# Find 
+file(GLOB_RECURSE SAFE_LVGL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/*.c")
+
 # Generate libraries.
 add_library(
 	${PROJECT_NAME}
 	STATIC
-	"${PROJECT_SOURCE_DIR}/GhostSafeLVGL.c"
+	"${SAFE_LVGL_SOURCE_FILES}"
 )
 
 # Set header paths.
