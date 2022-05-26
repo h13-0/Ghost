@@ -3,29 +3,11 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_img_decoder.h"
 
-//The original function is: lv_res_t (*lv_img_decoder_open_f_t).
-typedef safe_lv_res_t (*lv_img_decoder_open_f_t)(struct _lv_img_decoder_t * decoder, struct _lv_img_decoder_dsc_t * dsc)
-{
-    GhostLV_Lock();
-    typedef ret = lv_res_t (*lv_img_decoder_open_f_t)(decoder, dsc);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_img_decoder_get_info.
 lv_res_t safe_lv_img_decoder_get_info(const void * src, lv_img_header_t * header)
 {
     GhostLV_Lock();
     lv_res_t ret = lv_img_decoder_get_info(src, header);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_img_decoder_open.
-lv_res_t safe_lv_img_decoder_open(lv_img_decoder_dsc_t * dsc, const void * src, lv_color_t color, int32_t frame_id)
-{
-    GhostLV_Lock();
-    lv_res_t ret = lv_img_decoder_open(dsc, src, color, frame_id);
     GhostLV_Unlock();
     return ret;
 }

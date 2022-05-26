@@ -36,14 +36,6 @@ void safe_lv_canvas_set_px_opa(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv
     GhostLV_Unlock();
 }
 
-//The original function is: lv_canvas_set_palette.
-void safe_lv_canvas_set_palette(lv_obj_t * canvas, uint8_t id, lv_color_t c)
-{
-    GhostLV_Lock();
-    lv_canvas_set_palette(canvas, id, c);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_canvas_get_px.
 lv_color_t safe_lv_canvas_get_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y)
 {
@@ -60,22 +52,6 @@ lv_img_dsc_t * safe_lv_canvas_get_img(lv_obj_t * canvas)
     lv_img_dsc_t * ret = lv_canvas_get_img(canvas);
     GhostLV_Unlock();
     return ret;
-}
-
-//The original function is: lv_canvas_blur_hor.
-void safe_lv_canvas_blur_hor(lv_obj_t * canvas, const lv_area_t * area, uint16_t r)
-{
-    GhostLV_Lock();
-    lv_canvas_blur_hor(canvas, area, r);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_canvas_blur_ver.
-void safe_lv_canvas_blur_ver(lv_obj_t * canvas, const lv_area_t * area, uint16_t r)
-{
-    GhostLV_Lock();
-    lv_canvas_blur_ver(canvas, area, r);
-    GhostLV_Unlock();
 }
 
 //The original function is: lv_canvas_fill_bg.

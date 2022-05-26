@@ -21,27 +21,3 @@ lv_meter_scale_t * safe_lv_meter_add_scale(lv_obj_t * obj)
     return ret;
 }
 
-//The original function is: lv_meter_set_indicator_value.
-void safe_lv_meter_set_indicator_value(lv_obj_t * obj, lv_meter_indicator_t * indic, int32_t value)
-{
-    GhostLV_Lock();
-    lv_meter_set_indicator_value(obj, indic, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_meter_set_indicator_start_value.
-void safe_lv_meter_set_indicator_start_value(lv_obj_t * obj, lv_meter_indicator_t * indic, int32_t value)
-{
-    GhostLV_Lock();
-    lv_meter_set_indicator_start_value(obj, indic, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_meter_set_indicator_end_value.
-void safe_lv_meter_set_indicator_end_value(lv_obj_t * obj, lv_meter_indicator_t * indic, int32_t value)
-{
-    GhostLV_Lock();
-    lv_meter_set_indicator_end_value(obj, indic, value);
-    GhostLV_Unlock();
-}
-

@@ -12,30 +12,6 @@ lv_obj_t * safe_lv_calendar_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_calendar_set_today_date.
-void safe_lv_calendar_set_today_date(lv_obj_t * obj, uint32_t year, uint32_t month, uint32_t day)
-{
-    GhostLV_Lock();
-    lv_calendar_set_today_date(obj, year, month, day);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_calendar_set_showed_date.
-void safe_lv_calendar_set_showed_date(lv_obj_t * obj, uint32_t year, uint32_t month)
-{
-    GhostLV_Lock();
-    lv_calendar_set_showed_date(obj, year, month);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_calendar_set_highlighted_dates.
-void safe_lv_calendar_set_highlighted_dates(lv_obj_t * obj, lv_calendar_date_t highlighted[], uint16_t date_num)
-{
-    GhostLV_Lock();
-    lv_calendar_set_highlighted_dates(obj, highlighted[], date_num);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_calendar_set_day_names.
 void safe_lv_calendar_set_day_names(lv_obj_t * obj, const char ** day_names)
 {

@@ -62,15 +62,6 @@ void safe_lv_mem_monitor(lv_mem_monitor_t * mon_p)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_mem_buf_get.
-void * safe_lv_mem_buf_get(uint32_t size)
-{
-    GhostLV_Lock();
-    void * ret = lv_mem_buf_get(size);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_mem_buf_release.
 void safe_lv_mem_buf_release(void * p)
 {
@@ -96,30 +87,19 @@ LV_ATTRIBUTE_FAST_MEM void * safe_lv_memcpy(void * dst, const void * src, size_t
     return ret;
 }
 
-//The original function is: lv_memset.
-LV_ATTRIBUTE_FAST_MEM void safe_lv_memset(void * dst, uint8_t v, size_t len)
-{
-    GhostLV_Lock();
-    LV_ATTRIBUTE_FAST_MEM void ret = lv_memset(dst, v, len);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_memset_00.
-LV_ATTRIBUTE_FAST_MEM void safe_lv_memset_00(void * dst, size_t len)
+void safe_lv_memset_00(void * dst, size_t len)
 {
     GhostLV_Lock();
-    LV_ATTRIBUTE_FAST_MEM void ret = lv_memset_00(dst, len);
+    lv_memset_00(dst, len);
     GhostLV_Unlock();
-    return ret;
 }
 
 //The original function is: lv_memset_ff.
-LV_ATTRIBUTE_FAST_MEM void safe_lv_memset_ff(void * dst, size_t len)
+void safe_lv_memset_ff(void * dst, size_t len)
 {
     GhostLV_Lock();
-    LV_ATTRIBUTE_FAST_MEM void ret = lv_memset_ff(dst, len);
+    lv_memset_ff(dst, len);
     GhostLV_Unlock();
-    return ret;
 }
 

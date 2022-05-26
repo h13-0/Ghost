@@ -3,70 +3,12 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_obj_draw.h"
 
-//The original function is: lv_obj_init_draw_rect_dsc.
-void safe_lv_obj_init_draw_rect_dsc(struct _lv_obj_t * obj, uint32_t part, lv_draw_rect_dsc_t * draw_dsc)
-{
-    GhostLV_Lock();
-    lv_obj_init_draw_rect_dsc(obj, part, draw_dsc);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_init_draw_label_dsc.
-void safe_lv_obj_init_draw_label_dsc(struct _lv_obj_t * obj, uint32_t part, lv_draw_label_dsc_t * draw_dsc)
-{
-    GhostLV_Lock();
-    lv_obj_init_draw_label_dsc(obj, part, draw_dsc);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_init_draw_img_dsc.
-void safe_lv_obj_init_draw_img_dsc(struct _lv_obj_t * obj, uint32_t part, lv_draw_img_dsc_t * draw_dsc)
-{
-    GhostLV_Lock();
-    lv_obj_init_draw_img_dsc(obj, part, draw_dsc);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_init_draw_line_dsc.
-void safe_lv_obj_init_draw_line_dsc(struct _lv_obj_t * obj, uint32_t part, lv_draw_line_dsc_t * draw_dsc)
-{
-    GhostLV_Lock();
-    lv_obj_init_draw_line_dsc(obj, part, draw_dsc);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_init_draw_arc_dsc.
-void safe_lv_obj_init_draw_arc_dsc(struct _lv_obj_t * obj, uint32_t part, lv_draw_arc_dsc_t * draw_dsc)
-{
-    GhostLV_Lock();
-    lv_obj_init_draw_arc_dsc(obj, part, draw_dsc);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_calculate_ext_draw_size.
-lv_coord_t safe_lv_obj_calculate_ext_draw_size(struct _lv_obj_t * obj, uint32_t part)
-{
-    GhostLV_Lock();
-    lv_coord_t ret = lv_obj_calculate_ext_draw_size(obj, part);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_obj_draw_dsc_init.
 void safe_lv_obj_draw_dsc_init(lv_obj_draw_part_dsc_t * dsc, lv_draw_ctx_t * draw_ctx)
 {
     GhostLV_Lock();
     lv_obj_draw_dsc_init(dsc, draw_ctx);
     GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_draw_part_check_type.
-bool safe_lv_obj_draw_part_check_type(lv_obj_draw_part_dsc_t * dsc, const struct _lv_obj_class_t * class_p, uint32_t type)
-{
-    GhostLV_Lock();
-    bool ret = lv_obj_draw_part_check_type(dsc, class_p, type);
-    GhostLV_Unlock();
-    return ret;
 }
 
 //The original function is: lv_obj_refresh_ext_draw_size.

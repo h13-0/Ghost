@@ -11,14 +11,6 @@ void safe_lv_disp_drv_init(lv_disp_drv_t * driver)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_disp_draw_buf_init.
-void safe_lv_disp_draw_buf_init(lv_disp_draw_buf_t * draw_buf, void * buf1, void * buf2, uint32_t size_in_px_cnt)
-{
-    GhostLV_Lock();
-    lv_disp_draw_buf_init(draw_buf, buf1, buf2, size_in_px_cnt);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_disp_drv_register.
 lv_disp_t * safe_lv_disp_drv_register(lv_disp_drv_t * driver)
 {
@@ -151,12 +143,11 @@ lv_disp_rot_t safe_lv_disp_get_rotation(lv_disp_t * disp)
 }
 
 //The original function is: lv_disp_flush_ready.
-LV_ATTRIBUTE_FLUSH_READY void safe_lv_disp_flush_ready(lv_disp_drv_t * disp_drv)
+void safe_lv_disp_flush_ready(lv_disp_drv_t * disp_drv)
 {
     GhostLV_Lock();
-    LV_ATTRIBUTE_FLUSH_READY void ret = lv_disp_flush_ready(disp_drv);
+    lv_disp_flush_ready(disp_drv);
     GhostLV_Unlock();
-    return ret;
 }
 
 //The original function is: lv_disp_flush_is_last.

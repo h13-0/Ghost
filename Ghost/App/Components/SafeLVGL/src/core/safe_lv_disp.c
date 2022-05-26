@@ -88,14 +88,6 @@ void safe_lv_disp_set_bg_opa(lv_disp_t * disp, lv_opa_t opa)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_scr_load_anim.
-void safe_lv_scr_load_anim(lv_obj_t * scr, lv_scr_load_anim_t anim_type, uint32_t time, uint32_t delay, bool auto_del)
-{
-    GhostLV_Lock();
-    lv_scr_load_anim(scr, anim_type, time, delay, auto_del);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_disp_get_inactive_time.
 uint32_t safe_lv_disp_get_inactive_time(const lv_disp_t * disp)
 {
@@ -119,32 +111,5 @@ void safe_lv_disp_clean_dcache(lv_disp_t * disp)
     GhostLV_Lock();
     lv_disp_clean_dcache(disp);
     GhostLV_Unlock();
-}
-
-//The original function is: lv_disp_get_scr_act(lv_disp_get_default.
-return safe_lv_disp_get_scr_act(lv_disp_get_default())
-{
-    GhostLV_Lock();
-    return ret = lv_disp_get_scr_act(lv_disp_get_default());
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_disp_get_layer_top(lv_disp_get_default.
-return safe_lv_disp_get_layer_top(lv_disp_get_default())
-{
-    GhostLV_Lock();
-    return ret = lv_disp_get_layer_top(lv_disp_get_default());
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_disp_get_layer_sys(lv_disp_get_default.
-return safe_lv_disp_get_layer_sys(lv_disp_get_default())
-{
-    GhostLV_Lock();
-    return ret = lv_disp_get_layer_sys(lv_disp_get_default());
-    GhostLV_Unlock();
-    return ret;
 }
 

@@ -19,14 +19,6 @@ void safe_lv_obj_set_flex_flow(lv_obj_t * obj, lv_flex_flow_t flow)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_flex_grow.
-void safe_lv_obj_set_flex_grow(lv_obj_t * obj, uint8_t grow)
-{
-    GhostLV_Lock();
-    lv_obj_set_flex_grow(obj, grow);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_flex_flow.
 void safe_lv_style_set_flex_flow(lv_style_t * style, lv_flex_flow_t value)
 {
@@ -56,14 +48,6 @@ void safe_lv_style_set_flex_track_place(lv_style_t * style, lv_flex_align_t valu
 {
     GhostLV_Lock();
     lv_style_set_flex_track_place(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_flex_grow.
-void safe_lv_style_set_flex_grow(lv_style_t * style, uint8_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_flex_grow(style, value);
     GhostLV_Unlock();
 }
 
@@ -97,58 +81,5 @@ void safe_lv_obj_set_style_flex_track_place(lv_obj_t * obj, lv_flex_align_t valu
     GhostLV_Lock();
     lv_obj_set_style_flex_track_place(obj, value, selector);
     GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_flex_grow.
-void safe_lv_obj_set_style_flex_grow(lv_obj_t * obj, uint8_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_flex_grow(obj, value, selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_FLOW)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_FLOW);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_MAIN_PLACE)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_MAIN_PLACE);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_CROSS_PLACE)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_CROSS_PLACE);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_TRACK_PLACE)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_TRACK_PLACE);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_GROW)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_FLEX_GROW);
-    GhostLV_Unlock();
-    return ret;
 }
 

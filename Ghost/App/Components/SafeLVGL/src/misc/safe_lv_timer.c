@@ -21,15 +21,6 @@ lv_timer_t * safe_lv_timer_create_basic(void)
     return ret;
 }
 
-//The original function is: lv_timer_create.
-lv_timer_t * safe_lv_timer_create(lv_timer_cb_t timer_xcb, uint32_t period, void * user_data)
-{
-    GhostLV_Lock();
-    lv_timer_t * ret = lv_timer_create(timer_xcb, period, user_data);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_timer_del.
 void safe_lv_timer_del(lv_timer_t * timer)
 {
@@ -62,27 +53,11 @@ void safe_lv_timer_set_cb(lv_timer_t * timer, lv_timer_cb_t timer_cb)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_timer_set_period.
-void safe_lv_timer_set_period(lv_timer_t * timer, uint32_t period)
-{
-    GhostLV_Lock();
-    lv_timer_set_period(timer, period);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_timer_ready.
 void safe_lv_timer_ready(lv_timer_t * timer)
 {
     GhostLV_Lock();
     lv_timer_ready(timer);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_timer_set_repeat_count.
-void safe_lv_timer_set_repeat_count(lv_timer_t * timer, int32_t repeat_count)
-{
-    GhostLV_Lock();
-    lv_timer_set_repeat_count(timer, repeat_count);
     GhostLV_Unlock();
 }
 

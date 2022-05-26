@@ -12,56 +12,11 @@ lv_obj_t * safe_lv_slider_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_bar_get_value.
-return safe_lv_bar_get_value(obj)
-{
-    GhostLV_Lock();
-    return ret = lv_bar_get_value(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_bar_get_start_value.
-return safe_lv_bar_get_start_value(obj)
-{
-    GhostLV_Lock();
-    return ret = lv_bar_get_start_value(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_bar_get_min_value.
-return safe_lv_bar_get_min_value(obj)
-{
-    GhostLV_Lock();
-    return ret = lv_bar_get_min_value(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_bar_get_max_value.
-return safe_lv_bar_get_max_value(obj)
-{
-    GhostLV_Lock();
-    return ret = lv_bar_get_max_value(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_slider_is_dragged.
 bool safe_lv_slider_is_dragged(const lv_obj_t * obj)
 {
     GhostLV_Lock();
     bool ret = lv_slider_is_dragged(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_bar_get_mode.
-lv_bar_mode_t mode = safe_lv_bar_get_mode(slider)
-{
-    GhostLV_Lock();
-    lv_bar_mode_t mode = ret = lv_bar_get_mode(slider);
     GhostLV_Unlock();
     return ret;
 }

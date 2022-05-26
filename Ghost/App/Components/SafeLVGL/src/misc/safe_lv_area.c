@@ -3,14 +3,6 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_area.h"
 
-//The original function is: lv_area_set.
-void safe_lv_area_set(lv_area_t * area_p, lv_coord_t x1, lv_coord_t y1, lv_coord_t x2, lv_coord_t y2)
-{
-    GhostLV_Lock();
-    lv_area_set(area_p, x1, y1, x2, y2);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_area_set_width.
 void safe_lv_area_set_width(lv_area_t * area_p, lv_coord_t w)
 {

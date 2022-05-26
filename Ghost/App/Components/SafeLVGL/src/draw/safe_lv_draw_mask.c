@@ -12,15 +12,6 @@ int16_t safe_lv_draw_mask_add(void * param, void * custom_id)
     return ret;
 }
 
-//The original function is: lv_draw_mask_remove_id.
-void * safe_lv_draw_mask_remove_id(int16_t id)
-{
-    GhostLV_Lock();
-    void * ret = lv_draw_mask_remove_id(id);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_draw_mask_remove_custom.
 void * safe_lv_draw_mask_remove_custom(void * custom_id)
 {
@@ -69,14 +60,6 @@ void safe_lv_draw_mask_map_init(lv_draw_mask_map_param_t * param, const lv_area_
 {
     GhostLV_Lock();
     lv_draw_mask_map_init(param, coords, map);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_draw_mask_polygon_init.
-void safe_lv_draw_mask_polygon_init(lv_draw_mask_polygon_param_t * param, const lv_point_t * points, uint16_t point_cnt)
-{
-    GhostLV_Lock();
-    lv_draw_mask_polygon_init(param, points, point_cnt);
     GhostLV_Unlock();
 }
 

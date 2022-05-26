@@ -11,35 +11,11 @@ void safe_lv_grid_init(void)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_grid_dsc_array.
-void safe_lv_obj_set_grid_dsc_array(lv_obj_t * obj, const lv_coord_t col_dsc[], const lv_coord_t row_dsc[])
-{
-    GhostLV_Lock();
-    lv_obj_set_grid_dsc_array(obj, col_dsc[], row_dsc[]);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_grid_align.
 void safe_lv_obj_set_grid_align(lv_obj_t * obj, lv_grid_align_t column_align, lv_grid_align_t row_align)
 {
     GhostLV_Lock();
     lv_obj_set_grid_align(obj, column_align, row_align);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_grid_row_dsc_array.
-void safe_lv_style_set_grid_row_dsc_array(lv_style_t * style, const lv_coord_t value[])
-{
-    GhostLV_Lock();
-    lv_style_set_grid_row_dsc_array(style, value[]);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_grid_column_dsc_array.
-void safe_lv_style_set_grid_column_dsc_array(lv_style_t * style, const lv_coord_t value[])
-{
-    GhostLV_Lock();
-    lv_style_set_grid_column_dsc_array(style, value[]);
     GhostLV_Unlock();
 }
 
@@ -107,22 +83,6 @@ void safe_lv_style_set_grid_cell_y_align(lv_style_t * style, lv_coord_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_style_grid_row_dsc_array.
-void safe_lv_obj_set_style_grid_row_dsc_array(lv_obj_t * obj, const lv_coord_t value[], lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_grid_row_dsc_array(obj, value[], selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_grid_column_dsc_array.
-void safe_lv_obj_set_style_grid_column_dsc_array(lv_obj_t * obj, const lv_coord_t value[], lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_grid_column_dsc_array(obj, value[], selector);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_style_grid_row_align.
 void safe_lv_obj_set_style_grid_row_align(lv_obj_t * obj, lv_grid_align_t value, lv_style_selector_t selector)
 {
@@ -185,95 +145,5 @@ void safe_lv_obj_set_style_grid_cell_y_align(lv_obj_t * obj, lv_coord_t value, l
     GhostLV_Lock();
     lv_obj_set_style_grid_cell_y_align(obj, value, selector);
     GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_ROW_DSC_ARRAY)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_ROW_DSC_ARRAY);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_COLUMN_DSC_ARRAY)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_COLUMN_DSC_ARRAY);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_ROW_ALIGN)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_ROW_ALIGN);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_COLUMN_ALIGN)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_COLUMN_ALIGN);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_COLUMN_POS)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_COLUMN_POS);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_COLUMN_SPAN)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_COLUMN_SPAN);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_ROW_POS)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_ROW_POS);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_ROW_SPAN)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_ROW_SPAN);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_X_ALIGN)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_X_ALIGN);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_style_prop.
-lv_style_value_t v = safe_lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_Y_ALIGN)
-{
-    GhostLV_Lock();
-    lv_style_value_t v = ret = lv_obj_get_style_prop(obj, part, LV_STYLE_GRID_CELL_Y_ALIGN);
-    GhostLV_Unlock();
-    return ret;
 }
 

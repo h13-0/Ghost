@@ -12,91 +12,11 @@ lv_obj_t * safe_lv_arc_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_arc_set_start_angle.
-void safe_lv_arc_set_start_angle(lv_obj_t * arc, uint16_t start)
-{
-    GhostLV_Lock();
-    lv_arc_set_start_angle(arc, start);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_end_angle.
-void safe_lv_arc_set_end_angle(lv_obj_t * arc, uint16_t end)
-{
-    GhostLV_Lock();
-    lv_arc_set_end_angle(arc, end);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_angles.
-void safe_lv_arc_set_angles(lv_obj_t * arc, uint16_t start, uint16_t end)
-{
-    GhostLV_Lock();
-    lv_arc_set_angles(arc, start, end);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_bg_start_angle.
-void safe_lv_arc_set_bg_start_angle(lv_obj_t * arc, uint16_t start)
-{
-    GhostLV_Lock();
-    lv_arc_set_bg_start_angle(arc, start);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_bg_end_angle.
-void safe_lv_arc_set_bg_end_angle(lv_obj_t * arc, uint16_t end)
-{
-    GhostLV_Lock();
-    lv_arc_set_bg_end_angle(arc, end);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_bg_angles.
-void safe_lv_arc_set_bg_angles(lv_obj_t * arc, uint16_t start, uint16_t end)
-{
-    GhostLV_Lock();
-    lv_arc_set_bg_angles(arc, start, end);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_rotation.
-void safe_lv_arc_set_rotation(lv_obj_t * arc, uint16_t rotation)
-{
-    GhostLV_Lock();
-    lv_arc_set_rotation(arc, rotation);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_arc_set_mode.
 void safe_lv_arc_set_mode(lv_obj_t * arc, lv_arc_mode_t type)
 {
     GhostLV_Lock();
     lv_arc_set_mode(arc, type);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_value.
-void safe_lv_arc_set_value(lv_obj_t * arc, int16_t value)
-{
-    GhostLV_Lock();
-    lv_arc_set_value(arc, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_range.
-void safe_lv_arc_set_range(lv_obj_t * arc, int16_t min, int16_t max)
-{
-    GhostLV_Lock();
-    lv_arc_set_range(arc, min, max);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_arc_set_change_rate.
-void safe_lv_arc_set_change_rate(lv_obj_t * arc, uint16_t rate)
-{
-    GhostLV_Lock();
-    lv_arc_set_change_rate(arc, rate);
     GhostLV_Unlock();
 }
 

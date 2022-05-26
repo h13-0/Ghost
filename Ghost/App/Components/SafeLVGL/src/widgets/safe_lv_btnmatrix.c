@@ -12,46 +12,6 @@ lv_obj_t * safe_lv_btnmatrix_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_btnmatrix_set_map.
-void safe_lv_btnmatrix_set_map(lv_obj_t * obj, const char * map[])
-{
-    GhostLV_Lock();
-    lv_btnmatrix_set_map(obj, map[]);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_btnmatrix_set_ctrl_map.
-void safe_lv_btnmatrix_set_ctrl_map(lv_obj_t * obj, const lv_btnmatrix_ctrl_t ctrl_map[])
-{
-    GhostLV_Lock();
-    lv_btnmatrix_set_ctrl_map(obj, ctrl_map[]);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_btnmatrix_set_selected_btn.
-void safe_lv_btnmatrix_set_selected_btn(lv_obj_t * obj, uint16_t btn_id)
-{
-    GhostLV_Lock();
-    lv_btnmatrix_set_selected_btn(obj, btn_id);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_btnmatrix_set_btn_ctrl.
-void safe_lv_btnmatrix_set_btn_ctrl(lv_obj_t * obj, uint16_t btn_id, lv_btnmatrix_ctrl_t ctrl)
-{
-    GhostLV_Lock();
-    lv_btnmatrix_set_btn_ctrl(obj, btn_id, ctrl);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_btnmatrix_clear_btn_ctrl.
-void safe_lv_btnmatrix_clear_btn_ctrl(lv_obj_t * obj, uint16_t btn_id, lv_btnmatrix_ctrl_t ctrl)
-{
-    GhostLV_Lock();
-    lv_btnmatrix_clear_btn_ctrl(obj, btn_id, ctrl);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_btnmatrix_set_btn_ctrl_all.
 void safe_lv_btnmatrix_set_btn_ctrl_all(lv_obj_t * obj, lv_btnmatrix_ctrl_t ctrl)
 {
@@ -65,14 +25,6 @@ void safe_lv_btnmatrix_clear_btn_ctrl_all(lv_obj_t * obj, lv_btnmatrix_ctrl_t ct
 {
     GhostLV_Lock();
     lv_btnmatrix_clear_btn_ctrl_all(obj, ctrl);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_btnmatrix_set_btn_width.
-void safe_lv_btnmatrix_set_btn_width(lv_obj_t * obj, uint16_t btn_id, uint8_t width)
-{
-    GhostLV_Lock();
-    lv_btnmatrix_set_btn_width(obj, btn_id, width);
     GhostLV_Unlock();
 }
 
@@ -98,24 +50,6 @@ uint16_t safe_lv_btnmatrix_get_selected_btn(const lv_obj_t * obj)
 {
     GhostLV_Lock();
     uint16_t ret = lv_btnmatrix_get_selected_btn(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_btnmatrix_get_btn_text.
-const char * safe_lv_btnmatrix_get_btn_text(const lv_obj_t * obj, uint16_t btn_id)
-{
-    GhostLV_Lock();
-    const char * ret = lv_btnmatrix_get_btn_text(obj, btn_id);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_btnmatrix_has_btn_ctrl.
-bool safe_lv_btnmatrix_has_btn_ctrl(lv_obj_t * obj, uint16_t btn_id, lv_btnmatrix_ctrl_t ctrl)
-{
-    GhostLV_Lock();
-    bool ret = lv_btnmatrix_has_btn_ctrl(obj, btn_id, ctrl);
     GhostLV_Unlock();
     return ret;
 }

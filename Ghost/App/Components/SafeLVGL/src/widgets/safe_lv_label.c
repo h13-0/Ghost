@@ -20,22 +20,6 @@ void safe_lv_label_set_text(lv_obj_t * obj, const char * text)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_label_set_text_fmt(lv_obj_t * obj, const char * fmt, ...) LV_FORMAT_ATTRIBUTE.
-void safe_lv_label_set_text_fmt(lv_obj_t * obj, const char * fmt, ...) LV_FORMAT_ATTRIBUTE(2, 3)
-{
-    GhostLV_Lock();
-    lv_label_set_text_fmt(lv_obj_t * obj, const char * fmt, ...) LV_FORMAT_ATTRIBUTE(2, 3);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_label_set_text_static.
-void safe_lv_label_set_text_static(lv_obj_t * obj, const char * text)
-{
-    GhostLV_Lock();
-    lv_label_set_text_static(obj, text);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_label_set_long_mode.
 void safe_lv_label_set_long_mode(lv_obj_t * obj, lv_label_long_mode_t long_mode)
 {
@@ -49,22 +33,6 @@ void safe_lv_label_set_recolor(lv_obj_t * obj, bool en)
 {
     GhostLV_Lock();
     lv_label_set_recolor(obj, en);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_label_set_text_sel_start.
-void safe_lv_label_set_text_sel_start(lv_obj_t * obj, uint32_t index)
-{
-    GhostLV_Lock();
-    lv_label_set_text_sel_start(obj, index);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_label_set_text_sel_end.
-void safe_lv_label_set_text_sel_end(lv_obj_t * obj, uint32_t index)
-{
-    GhostLV_Lock();
-    lv_label_set_text_sel_end(obj, index);
     GhostLV_Unlock();
 }
 
@@ -93,14 +61,6 @@ bool safe_lv_label_get_recolor(const lv_obj_t * obj)
     bool ret = lv_label_get_recolor(obj);
     GhostLV_Unlock();
     return ret;
-}
-
-//The original function is: lv_label_get_letter_pos.
-void safe_lv_label_get_letter_pos(const lv_obj_t * obj, uint32_t char_id, lv_point_t * pos)
-{
-    GhostLV_Lock();
-    lv_label_get_letter_pos(obj, char_id, pos);
-    GhostLV_Unlock();
 }
 
 //The original function is: lv_label_get_letter_on.
@@ -137,21 +97,5 @@ uint32_t safe_lv_label_get_text_selection_end(const lv_obj_t * obj)
     uint32_t ret = lv_label_get_text_selection_end(obj);
     GhostLV_Unlock();
     return ret;
-}
-
-//The original function is: lv_label_ins_text.
-void safe_lv_label_ins_text(lv_obj_t * obj, uint32_t pos, const char * txt)
-{
-    GhostLV_Lock();
-    lv_label_ins_text(obj, pos, txt);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_label_cut_text.
-void safe_lv_label_cut_text(lv_obj_t * obj, uint32_t pos, uint32_t cnt)
-{
-    GhostLV_Lock();
-    lv_label_cut_text(obj, pos, cnt);
-    GhostLV_Unlock();
 }
 

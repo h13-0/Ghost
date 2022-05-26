@@ -20,14 +20,6 @@ void safe_lv_chart_set_type(lv_obj_t * obj, lv_chart_type_t type)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_chart_set_point_count.
-void safe_lv_chart_set_point_count(lv_obj_t * obj, uint16_t cnt)
-{
-    GhostLV_Lock();
-    lv_chart_set_point_count(obj, cnt);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_chart_set_range.
 void safe_lv_chart_set_range(lv_obj_t * obj, lv_chart_axis_t axis, lv_coord_t min, lv_coord_t max)
 {
@@ -41,30 +33,6 @@ void safe_lv_chart_set_update_mode(lv_obj_t * obj, lv_chart_update_mode_t update
 {
     GhostLV_Lock();
     lv_chart_set_update_mode(obj, update_mode);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_div_line_count.
-void safe_lv_chart_set_div_line_count(lv_obj_t * obj, uint8_t hdiv, uint8_t vdiv)
-{
-    GhostLV_Lock();
-    lv_chart_set_div_line_count(obj, hdiv, vdiv);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_zoom_x.
-void safe_lv_chart_set_zoom_x(lv_obj_t * obj, uint16_t zoom_x)
-{
-    GhostLV_Lock();
-    lv_chart_set_zoom_x(obj, zoom_x);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_zoom_y.
-void safe_lv_chart_set_zoom_y(lv_obj_t * obj, uint16_t zoom_y)
-{
-    GhostLV_Lock();
-    lv_chart_set_zoom_y(obj, zoom_y);
     GhostLV_Unlock();
 }
 
@@ -113,14 +81,6 @@ uint16_t safe_lv_chart_get_x_start_point(const lv_obj_t * obj, lv_chart_series_t
     return ret;
 }
 
-//The original function is: lv_chart_get_point_pos_by_id.
-void safe_lv_chart_get_point_pos_by_id(lv_obj_t * obj, lv_chart_series_t * ser, uint16_t id, lv_point_t * p_out)
-{
-    GhostLV_Lock();
-    lv_chart_get_point_pos_by_id(obj, ser, id, p_out);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_chart_refresh.
 void safe_lv_chart_refresh(lv_obj_t * obj)
 {
@@ -159,14 +119,6 @@ void safe_lv_chart_set_series_color(lv_obj_t * chart, lv_chart_series_t * series
 {
     GhostLV_Lock();
     lv_chart_set_series_color(chart, series, color);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_x_start_point.
-void safe_lv_chart_set_x_start_point(lv_obj_t * obj, lv_chart_series_t * ser, uint16_t id)
-{
-    GhostLV_Lock();
-    lv_chart_set_x_start_point(obj, ser, id);
     GhostLV_Unlock();
 }
 
@@ -226,30 +178,6 @@ void safe_lv_chart_set_next_value2(lv_obj_t * obj, lv_chart_series_t * ser, lv_c
 {
     GhostLV_Lock();
     lv_chart_set_next_value2(obj, ser, x_value, y_value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_value_by_id.
-void safe_lv_chart_set_value_by_id(lv_obj_t * obj, lv_chart_series_t * ser, uint16_t id, lv_coord_t value)
-{
-    GhostLV_Lock();
-    lv_chart_set_value_by_id(obj, ser, id, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_ext_y_array.
-void safe_lv_chart_set_ext_y_array(lv_obj_t * obj, lv_chart_series_t * ser, lv_coord_t array[])
-{
-    GhostLV_Lock();
-    lv_chart_set_ext_y_array(obj, ser, array[]);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_chart_set_ext_x_array.
-void safe_lv_chart_set_ext_x_array(lv_obj_t * obj, lv_chart_series_t * ser, lv_coord_t array[])
-{
-    GhostLV_Lock();
-    lv_chart_set_ext_x_array(obj, ser, array[]);
     GhostLV_Unlock();
 }
 

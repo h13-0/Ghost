@@ -20,14 +20,6 @@ void safe_lv_led_set_color(lv_obj_t * led, lv_color_t color)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_led_set_brightness.
-void safe_lv_led_set_brightness(lv_obj_t * led, uint8_t bright)
-{
-    GhostLV_Lock();
-    lv_led_set_brightness(led, bright);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_led_on.
 void safe_lv_led_on(lv_obj_t * led)
 {

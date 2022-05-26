@@ -4,11 +4,10 @@
 #include "safe_lv_draw_label.h"
 
 //The original function is: lv_draw_label_dsc_init.
-LV_ATTRIBUTE_FAST_MEM void safe_lv_draw_label_dsc_init(lv_draw_label_dsc_t * dsc)
+void safe_lv_draw_label_dsc_init(lv_draw_label_dsc_t * dsc)
 {
     GhostLV_Lock();
-    LV_ATTRIBUTE_FAST_MEM void ret = lv_draw_label_dsc_init(dsc);
+    lv_draw_label_dsc_init(dsc);
     GhostLV_Unlock();
-    return ret;
 }
 

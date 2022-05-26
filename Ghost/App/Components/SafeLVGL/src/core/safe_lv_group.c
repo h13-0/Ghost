@@ -45,14 +45,6 @@ void safe_lv_group_add_obj(lv_group_t * group, struct _lv_obj_t * obj)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_group_swap_obj.
-void safe_lv_group_swap_obj(struct _lv_obj_t * obj1, struct _lv_obj_t * obj2)
-{
-    GhostLV_Lock();
-    lv_group_swap_obj(obj1, obj2);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_group_remove_obj.
 void safe_lv_group_remove_obj(struct _lv_obj_t * obj)
 {
@@ -99,15 +91,6 @@ void safe_lv_group_focus_freeze(lv_group_t * group, bool en)
     GhostLV_Lock();
     lv_group_focus_freeze(group, en);
     GhostLV_Unlock();
-}
-
-//The original function is: lv_group_send_data.
-lv_res_t safe_lv_group_send_data(lv_group_t * group, uint32_t c)
-{
-    GhostLV_Lock();
-    lv_res_t ret = lv_group_send_data(group, c);
-    GhostLV_Unlock();
-    return ret;
 }
 
 //The original function is: lv_group_set_focus_cb.

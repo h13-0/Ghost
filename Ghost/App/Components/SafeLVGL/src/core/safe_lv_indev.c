@@ -69,14 +69,6 @@ void safe_lv_indev_set_group(lv_indev_t * indev, lv_group_t * group)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_indev_set_button_points.
-void safe_lv_indev_set_button_points(lv_indev_t * indev, const lv_point_t points[])
-{
-    GhostLV_Lock();
-    lv_indev_set_button_points(indev, points[]);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_indev_get_point.
 void safe_lv_indev_get_point(const lv_indev_t * indev, lv_point_t * point)
 {

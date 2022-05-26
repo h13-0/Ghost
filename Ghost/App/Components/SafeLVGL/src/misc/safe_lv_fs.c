@@ -55,42 +55,6 @@ lv_fs_res_t safe_lv_fs_close(lv_fs_file_t * file_p)
     return ret;
 }
 
-//The original function is: lv_fs_read.
-lv_fs_res_t safe_lv_fs_read(lv_fs_file_t * file_p, void * buf, uint32_t btr, uint32_t * br)
-{
-    GhostLV_Lock();
-    lv_fs_res_t ret = lv_fs_read(file_p, buf, btr, br);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_fs_write.
-lv_fs_res_t safe_lv_fs_write(lv_fs_file_t * file_p, const void * buf, uint32_t btw, uint32_t * bw)
-{
-    GhostLV_Lock();
-    lv_fs_res_t ret = lv_fs_write(file_p, buf, btw, bw);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_fs_seek.
-lv_fs_res_t safe_lv_fs_seek(lv_fs_file_t * file_p, uint32_t pos, lv_fs_whence_t whence)
-{
-    GhostLV_Lock();
-    lv_fs_res_t ret = lv_fs_seek(file_p, pos, whence);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_fs_tell.
-lv_fs_res_t safe_lv_fs_tell(lv_fs_file_t * file_p, uint32_t * pos)
-{
-    GhostLV_Lock();
-    lv_fs_res_t ret = lv_fs_tell(file_p, pos);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_fs_dir_open.
 lv_fs_res_t safe_lv_fs_dir_open(lv_fs_dir_t * rddir_p, const char * path)
 {

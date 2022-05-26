@@ -3,14 +3,6 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_img_cache.h"
 
-//The original function is: lv_img_cache_set_size.
-void safe_lv_img_cache_set_size(uint16_t new_slot_num)
-{
-    GhostLV_Lock();
-    lv_img_cache_set_size(new_slot_num);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_img_cache_invalidate_src.
 void safe_lv_img_cache_invalidate_src(const void * src)
 {
