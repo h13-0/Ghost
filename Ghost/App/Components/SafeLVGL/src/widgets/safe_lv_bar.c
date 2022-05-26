@@ -12,30 +12,6 @@ lv_obj_t * safe_lv_bar_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_bar_set_value.
-void safe_lv_bar_set_value(lv_obj_t * obj, int32_t value, lv_anim_enable_t anim)
-{
-    GhostLV_Lock();
-    lv_bar_set_value(obj, value, anim);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_bar_set_start_value.
-void safe_lv_bar_set_start_value(lv_obj_t * obj, int32_t start_value, lv_anim_enable_t anim)
-{
-    GhostLV_Lock();
-    lv_bar_set_start_value(obj, start_value, anim);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_bar_set_range.
-void safe_lv_bar_set_range(lv_obj_t * obj, int32_t min, int32_t max)
-{
-    GhostLV_Lock();
-    lv_bar_set_range(obj, min, max);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_bar_set_mode.
 void safe_lv_bar_set_mode(lv_obj_t * obj, lv_bar_mode_t mode)
 {

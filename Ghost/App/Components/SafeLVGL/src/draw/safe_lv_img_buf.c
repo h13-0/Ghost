@@ -46,14 +46,6 @@ void safe_lv_img_buf_set_px_alpha(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y
     GhostLV_Unlock();
 }
 
-//The original function is: lv_img_buf_set_palette.
-void safe_lv_img_buf_set_palette(lv_img_dsc_t * dsc, uint8_t id, lv_color_t c)
-{
-    GhostLV_Lock();
-    lv_img_buf_set_palette(dsc, id, c);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_img_buf_free.
 void safe_lv_img_buf_free(lv_img_dsc_t * dsc)
 {

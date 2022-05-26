@@ -20,22 +20,6 @@ void safe_lv_roller_set_options(lv_obj_t * obj, const char * options, lv_roller_
     GhostLV_Unlock();
 }
 
-//The original function is: lv_roller_set_selected.
-void safe_lv_roller_set_selected(lv_obj_t * obj, uint16_t sel_opt, lv_anim_enable_t anim)
-{
-    GhostLV_Lock();
-    lv_roller_set_selected(obj, sel_opt, anim);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_roller_set_visible_row_count.
-void safe_lv_roller_set_visible_row_count(lv_obj_t * obj, uint8_t row_cnt)
-{
-    GhostLV_Lock();
-    lv_roller_set_visible_row_count(obj, row_cnt);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_roller_get_selected.
 uint16_t safe_lv_roller_get_selected(const lv_obj_t * obj)
 {
@@ -43,14 +27,6 @@ uint16_t safe_lv_roller_get_selected(const lv_obj_t * obj)
     uint16_t ret = lv_roller_get_selected(obj);
     GhostLV_Unlock();
     return ret;
-}
-
-//The original function is: lv_roller_get_selected_str.
-void safe_lv_roller_get_selected_str(const lv_obj_t * obj, char * buf, uint32_t buf_size)
-{
-    GhostLV_Lock();
-    lv_roller_get_selected_str(obj, buf, buf_size);
-    GhostLV_Unlock();
 }
 
 //The original function is: lv_roller_get_options.

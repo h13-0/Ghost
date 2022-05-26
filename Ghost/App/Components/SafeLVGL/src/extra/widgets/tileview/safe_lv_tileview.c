@@ -12,28 +12,11 @@ lv_obj_t * safe_lv_tileview_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_tileview_add_tile.
-lv_obj_t * safe_lv_tileview_add_tile(lv_obj_t * tv, uint8_t col_id, uint8_t row_id, lv_dir_t dir)
-{
-    GhostLV_Lock();
-    lv_obj_t * ret = lv_tileview_add_tile(tv, col_id, row_id, dir);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_obj_set_tile.
 void safe_lv_obj_set_tile(lv_obj_t * tv, lv_obj_t * tile_obj, lv_anim_enable_t anim_en)
 {
     GhostLV_Lock();
     lv_obj_set_tile(tv, tile_obj, anim_en);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_tile_id.
-void safe_lv_obj_set_tile_id(lv_obj_t * tv, uint32_t col_id, uint32_t row_id, lv_anim_enable_t anim_en)
-{
-    GhostLV_Lock();
-    lv_obj_set_tile_id(tv, col_id, row_id, anim_en);
     GhostLV_Unlock();
 }
 

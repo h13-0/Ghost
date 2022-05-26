@@ -28,35 +28,11 @@ void safe_lv_dropdown_set_options(lv_obj_t * obj, const char * options)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_dropdown_set_options_static.
-void safe_lv_dropdown_set_options_static(lv_obj_t * obj, const char * options)
-{
-    GhostLV_Lock();
-    lv_dropdown_set_options_static(obj, options);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_dropdown_add_option.
-void safe_lv_dropdown_add_option(lv_obj_t * obj, const char * option, uint32_t pos)
-{
-    GhostLV_Lock();
-    lv_dropdown_add_option(obj, option, pos);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_dropdown_clear_options.
 void safe_lv_dropdown_clear_options(lv_obj_t * obj)
 {
     GhostLV_Lock();
     lv_dropdown_clear_options(obj);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_dropdown_set_selected.
-void safe_lv_dropdown_set_selected(lv_obj_t * obj, uint16_t sel_opt)
-{
-    GhostLV_Lock();
-    lv_dropdown_set_selected(obj, sel_opt);
     GhostLV_Unlock();
 }
 
@@ -127,14 +103,6 @@ uint16_t safe_lv_dropdown_get_option_cnt(const lv_obj_t * obj)
     uint16_t ret = lv_dropdown_get_option_cnt(obj);
     GhostLV_Unlock();
     return ret;
-}
-
-//The original function is: lv_dropdown_get_selected_str.
-void safe_lv_dropdown_get_selected_str(const lv_obj_t * obj, char * buf, uint32_t buf_size)
-{
-    GhostLV_Lock();
-    lv_dropdown_get_selected_str(obj, buf, buf_size);
-    GhostLV_Unlock();
 }
 
 //The original function is: lv_dropdown_get_symbol.

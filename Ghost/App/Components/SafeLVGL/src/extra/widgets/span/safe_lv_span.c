@@ -37,14 +37,6 @@ void safe_lv_span_set_text(lv_span_t * span, const char * text)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_span_set_text_static.
-void safe_lv_span_set_text_static(lv_span_t * span, const char * text)
-{
-    GhostLV_Lock();
-    lv_span_set_text_static(span, text);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_spangroup_set_align.
 void safe_lv_spangroup_set_align(lv_obj_t * obj, lv_text_align_t align)
 {
@@ -75,15 +67,6 @@ void safe_lv_spangroup_set_mode(lv_obj_t * obj, lv_span_mode_t mode)
     GhostLV_Lock();
     lv_spangroup_set_mode(obj, mode);
     GhostLV_Unlock();
-}
-
-//The original function is: lv_spangroup_get_child.
-lv_span_t * safe_lv_spangroup_get_child(const lv_obj_t * obj, int32_t id)
-{
-    GhostLV_Lock();
-    lv_span_t * ret = lv_spangroup_get_child(obj, id);
-    GhostLV_Unlock();
-    return ret;
 }
 
 //The original function is: lv_spangroup_get_child_cnt.
@@ -136,15 +119,6 @@ lv_coord_t safe_lv_spangroup_get_max_line_h(lv_obj_t * obj)
 {
     GhostLV_Lock();
     lv_coord_t ret = lv_spangroup_get_max_line_h(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_spangroup_get_expand_width.
-uint32_t safe_lv_spangroup_get_expand_width(lv_obj_t * obj, uint32_t max_width)
-{
-    GhostLV_Lock();
-    uint32_t ret = lv_spangroup_get_expand_width(obj, max_width);
     GhostLV_Unlock();
     return ret;
 }

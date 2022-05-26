@@ -63,33 +63,6 @@ bool safe_lv_btnmatrix_get_popovers(const lv_obj_t * obj)
     return ret;
 }
 
-//The original function is: lv_btnmatrix_get_map.
-return safe_lv_btnmatrix_get_map(kb)
-{
-    GhostLV_Lock();
-    return ret = lv_btnmatrix_get_map(kb);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_btnmatrix_get_selected_btn.
-return safe_lv_btnmatrix_get_selected_btn(obj)
-{
-    GhostLV_Lock();
-    return ret = lv_btnmatrix_get_selected_btn(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_btnmatrix_get_btn_text.
-return safe_lv_btnmatrix_get_btn_text(obj, btn_id)
-{
-    GhostLV_Lock();
-    return ret = lv_btnmatrix_get_btn_text(obj, btn_id);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_keyboard_def_event_cb.
 void safe_lv_keyboard_def_event_cb(lv_event_t * e)
 {

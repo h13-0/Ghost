@@ -12,51 +12,11 @@ lv_obj_t * safe_lv_spinbox_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_spinbox_set_value.
-void safe_lv_spinbox_set_value(lv_obj_t * obj, int32_t i)
-{
-    GhostLV_Lock();
-    lv_spinbox_set_value(obj, i);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_spinbox_set_rollover.
 void safe_lv_spinbox_set_rollover(lv_obj_t * obj, bool b)
 {
     GhostLV_Lock();
     lv_spinbox_set_rollover(obj, b);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_spinbox_set_digit_format.
-void safe_lv_spinbox_set_digit_format(lv_obj_t * obj, uint8_t digit_count, uint8_t separator_position)
-{
-    GhostLV_Lock();
-    lv_spinbox_set_digit_format(obj, digit_count, separator_position);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_spinbox_set_step.
-void safe_lv_spinbox_set_step(lv_obj_t * obj, uint32_t step)
-{
-    GhostLV_Lock();
-    lv_spinbox_set_step(obj, step);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_spinbox_set_range.
-void safe_lv_spinbox_set_range(lv_obj_t * obj, int32_t range_min, int32_t range_max)
-{
-    GhostLV_Lock();
-    lv_spinbox_set_range(obj, range_min, range_max);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_spinbox_set_pos.
-void safe_lv_spinbox_set_pos(lv_obj_t * obj, uint8_t pos)
-{
-    GhostLV_Lock();
-    lv_spinbox_set_pos(obj, pos);
     GhostLV_Unlock();
 }
 

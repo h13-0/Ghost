@@ -39,14 +39,6 @@ lv_obj_t * safe_lv_tabview_get_tab_btns(lv_obj_t * tv)
     return ret;
 }
 
-//The original function is: lv_tabview_set_act.
-void safe_lv_tabview_set_act(lv_obj_t * obj, uint32_t id, lv_anim_enable_t anim_en)
-{
-    GhostLV_Lock();
-    lv_tabview_set_act(obj, id, anim_en);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_tabview_get_tab_act.
 uint16_t safe_lv_tabview_get_tab_act(lv_obj_t * tv)
 {

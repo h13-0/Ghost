@@ -3,51 +3,6 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_color.h"
 
-//The original function is: lv_color_t (*lv_color_filter_cb_t).
-typedef safe_lv_color_t (*lv_color_filter_cb_t)(const struct _lv_color_filter_dsc_t *, lv_color_t, lv_opa_t)
-{
-    GhostLV_Lock();
-    typedef ret = lv_color_t (*lv_color_filter_cb_t)(*, lv_color_t, lv_opa_t);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_mix.
-res_color_saved = safe_lv_color_mix(fg_color, bg_color, ratio)
-{
-    GhostLV_Lock();
-    res_color_saved = ret = lv_color_mix(fg_color, bg_color, ratio);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_to32.
-c32.full        = safe_lv_color_to32(color)
-{
-    GhostLV_Lock();
-    c32.full        = ret = lv_color_to32(color);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_make((uint8_t)((c >> 16) & 0xFF), (uint8_t)((c >> 8) & 0xFF), (uint8_t).
-return safe_lv_color_make((uint8_t)((c >> 16) & 0xFF), (uint8_t)((c >> 8) & 0xFF), (uint8_t)(c & 0xFF))
-{
-    GhostLV_Lock();
-    return ret = lv_color_make((uint8_t)((c >> 16) & 0xFF), (uint8_t)((c >> 8) & 0xFF), (uint8_t)(0xFF));
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_fill.
-LV_ATTRIBUTE_FAST_MEM void safe_lv_color_fill(lv_color_t * buf, lv_color_t color, uint32_t px_num)
-{
-    GhostLV_Lock();
-    LV_ATTRIBUTE_FAST_MEM void ret = lv_color_fill(buf, color, px_num);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_color_lighten.
 lv_color_t safe_lv_color_lighten(lv_color_t c, lv_opa_t lvl)
 {
@@ -75,24 +30,6 @@ lv_color_t safe_lv_color_change_lightness(lv_color_t c, lv_opa_t lvl)
     return ret;
 }
 
-//The original function is: lv_color_hsv_to_rgb.
-lv_color_t safe_lv_color_hsv_to_rgb(uint16_t h, uint8_t s, uint8_t v)
-{
-    GhostLV_Lock();
-    lv_color_t ret = lv_color_hsv_to_rgb(h, s, v);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_rgb_to_hsv.
-lv_color_hsv_t safe_lv_color_rgb_to_hsv(uint8_t r8, uint8_t g8, uint8_t b8)
-{
-    GhostLV_Lock();
-    lv_color_hsv_t ret = lv_color_rgb_to_hsv(r8, g8, b8);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_color_to_hsv.
 lv_color_hsv_t safe_lv_color_to_hsv(lv_color_t color)
 {
@@ -107,42 +44,6 @@ lv_color_t safe_lv_palette_main(lv_palette_t p)
 {
     GhostLV_Lock();
     lv_color_t ret = lv_palette_main(p);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_make.
-return safe_lv_color_make(0xff, 0xff, 0xff)
-{
-    GhostLV_Lock();
-    return ret = lv_color_make(0xff, 0xff, 0xff);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_color_make.
-return safe_lv_color_make(0x00, 0x0, 0x00)
-{
-    GhostLV_Lock();
-    return ret = lv_color_make(0x00, 0x0, 0x00);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_palette_lighten.
-lv_color_t safe_lv_palette_lighten(lv_palette_t p, uint8_t lvl)
-{
-    GhostLV_Lock();
-    lv_color_t ret = lv_palette_lighten(p, lvl);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_palette_darken.
-lv_color_t safe_lv_palette_darken(lv_palette_t p, uint8_t lvl)
-{
-    GhostLV_Lock();
-    lv_color_t ret = lv_palette_darken(p, lvl);
     GhostLV_Unlock();
     return ret;
 }

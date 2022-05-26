@@ -12,14 +12,6 @@ lv_obj_t * safe_lv_line_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_line_set_points.
-void safe_lv_line_set_points(lv_obj_t * obj, const lv_point_t points[], uint16_t point_num)
-{
-    GhostLV_Lock();
-    lv_line_set_points(obj, points[], point_num);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_line_set_y_invert.
 void safe_lv_line_set_y_invert(lv_obj_t * obj, bool en)
 {

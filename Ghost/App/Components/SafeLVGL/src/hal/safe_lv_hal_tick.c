@@ -3,29 +3,11 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_hal_tick.h"
 
-//The original function is: lv_tick_inc.
-LV_ATTRIBUTE_TICK_INC void safe_lv_tick_inc(uint32_t tick_period)
-{
-    GhostLV_Lock();
-    LV_ATTRIBUTE_TICK_INC void ret = lv_tick_inc(tick_period);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_tick_get.
 uint32_t safe_lv_tick_get(void)
 {
     GhostLV_Lock();
     uint32_t ret = lv_tick_get();
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_tick_elaps.
-uint32_t safe_lv_tick_elaps(uint32_t prev_tick)
-{
-    GhostLV_Lock();
-    uint32_t ret = lv_tick_elaps(prev_tick);
     GhostLV_Unlock();
     return ret;
 }

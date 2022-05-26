@@ -76,14 +76,6 @@ void safe_lv_obj_set_content_height(struct _lv_obj_t * obj, lv_coord_t h)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_layout.
-void safe_lv_obj_set_layout(struct _lv_obj_t * obj, uint32_t layout)
-{
-    GhostLV_Lock();
-    lv_obj_set_layout(obj, layout);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_is_layout_positioned.
 bool safe_lv_obj_is_layout_positioned(const struct _lv_obj_t * obj)
 {

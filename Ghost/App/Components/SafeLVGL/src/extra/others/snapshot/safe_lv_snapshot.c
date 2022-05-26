@@ -29,12 +29,3 @@ uint32_t safe_lv_snapshot_buf_size_needed(lv_obj_t * obj, lv_img_cf_t cf)
     return ret;
 }
 
-//The original function is: lv_snapshot_take_to_buf.
-lv_res_t safe_lv_snapshot_take_to_buf(lv_obj_t * obj, lv_img_cf_t cf, lv_img_dsc_t * dsc, void * buf, uint32_t buff_size)
-{
-    GhostLV_Lock();
-    lv_res_t ret = lv_snapshot_take_to_buf(obj, cf, dsc, buf, buff_size);
-    GhostLV_Unlock();
-    return ret;
-}
-

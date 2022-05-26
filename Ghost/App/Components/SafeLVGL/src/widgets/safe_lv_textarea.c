@@ -12,14 +12,6 @@ lv_obj_t * safe_lv_textarea_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_textarea_add_char.
-void safe_lv_textarea_add_char(lv_obj_t * obj, uint32_t c)
-{
-    GhostLV_Lock();
-    lv_textarea_add_char(obj, c);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_textarea_add_text.
 void safe_lv_textarea_add_text(lv_obj_t * obj, const char * txt)
 {
@@ -60,14 +52,6 @@ void safe_lv_textarea_set_placeholder_text(lv_obj_t * obj, const char * txt)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_textarea_set_cursor_pos.
-void safe_lv_textarea_set_cursor_pos(lv_obj_t * obj, int32_t pos)
-{
-    GhostLV_Lock();
-    lv_textarea_set_cursor_pos(obj, pos);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_textarea_set_cursor_click_pos.
 void safe_lv_textarea_set_cursor_click_pos(lv_obj_t * obj, bool en)
 {
@@ -100,14 +84,6 @@ void safe_lv_textarea_set_accepted_chars(lv_obj_t * obj, const char * list)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_textarea_set_max_length.
-void safe_lv_textarea_set_max_length(lv_obj_t * obj, uint32_t num)
-{
-    GhostLV_Lock();
-    lv_textarea_set_max_length(obj, num);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_textarea_set_insert_replace.
 void safe_lv_textarea_set_insert_replace(lv_obj_t * obj, const char * txt)
 {
@@ -121,14 +97,6 @@ void safe_lv_textarea_set_text_selection(lv_obj_t * obj, bool en)
 {
     GhostLV_Lock();
     lv_textarea_set_text_selection(obj, en);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_textarea_set_password_show_time.
-void safe_lv_textarea_set_password_show_time(lv_obj_t * obj, uint16_t time)
-{
-    GhostLV_Lock();
-    lv_textarea_set_password_show_time(obj, time);
     GhostLV_Unlock();
 }
 

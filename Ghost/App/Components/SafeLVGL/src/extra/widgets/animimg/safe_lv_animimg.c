@@ -12,35 +12,11 @@ lv_obj_t * safe_lv_animimg_create(lv_obj_t * parent)
     return ret;
 }
 
-//The original function is: lv_animimg_set_src.
-void safe_lv_animimg_set_src(lv_obj_t * img,  lv_img_dsc_t * dsc[], uint8_t num)
-{
-    GhostLV_Lock();
-    lv_animimg_set_src(img, dsc[], num);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_animimg_start.
 void safe_lv_animimg_start(lv_obj_t * obj)
 {
     GhostLV_Lock();
     lv_animimg_start(obj);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_animimg_set_duration.
-void safe_lv_animimg_set_duration(lv_obj_t * img, uint32_t duration)
-{
-    GhostLV_Lock();
-    lv_animimg_set_duration(img, duration);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_animimg_set_repeat_count.
-void safe_lv_animimg_set_repeat_count(lv_obj_t * img, uint16_t count)
-{
-    GhostLV_Lock();
-    lv_animimg_set_repeat_count(img, count);
     GhostLV_Unlock();
 }
 

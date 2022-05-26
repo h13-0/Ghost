@@ -20,14 +20,6 @@ void safe_lv_anim_timeline_del(lv_anim_timeline_t * at)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_anim_timeline_add.
-void safe_lv_anim_timeline_add(lv_anim_timeline_t * at, uint32_t start_time, lv_anim_t * a)
-{
-    GhostLV_Lock();
-    lv_anim_timeline_add(at, start_time, a);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_anim_timeline_start.
 uint32_t safe_lv_anim_timeline_start(lv_anim_timeline_t * at)
 {
@@ -50,14 +42,6 @@ void safe_lv_anim_timeline_set_reverse(lv_anim_timeline_t * at, bool reverse)
 {
     GhostLV_Lock();
     lv_anim_timeline_set_reverse(at, reverse);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_anim_timeline_set_progress.
-void safe_lv_anim_timeline_set_progress(lv_anim_timeline_t * at, uint16_t progress)
-{
-    GhostLV_Lock();
-    lv_anim_timeline_set_progress(at, progress);
     GhostLV_Unlock();
 }
 

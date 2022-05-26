@@ -61,22 +61,6 @@ bool safe_lv_obj_remove_local_style_prop(struct _lv_obj_t * obj, lv_style_prop_t
     return ret;
 }
 
-//The original function is: lv_obj_fade_in.
-void safe_lv_obj_fade_in(struct _lv_obj_t * obj, uint32_t time, uint32_t delay)
-{
-    GhostLV_Lock();
-    lv_obj_fade_in(obj, time, delay);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_fade_out.
-void safe_lv_obj_fade_out(struct _lv_obj_t * obj, uint32_t time, uint32_t delay)
-{
-    GhostLV_Lock();
-    lv_obj_fade_out(obj, time, delay);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_style_get_selector_state.
 lv_state_t safe_lv_obj_style_get_selector_state(lv_style_selector_t selector)
 {

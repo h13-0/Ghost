@@ -3,12 +3,3 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_font_fmt_txt.h"
 
-//The original function is: lv_font_get_bitmap_fmt_txt.
-const uint8_t * safe_lv_font_get_bitmap_fmt_txt(const lv_font_t * font, uint32_t letter)
-{
-    GhostLV_Lock();
-    const uint8_t * ret = lv_font_get_bitmap_fmt_txt(font, letter);
-    GhostLV_Unlock();
-    return ret;
-}
-

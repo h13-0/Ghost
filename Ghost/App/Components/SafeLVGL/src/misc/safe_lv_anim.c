@@ -55,38 +55,11 @@ lv_anim_t * safe_lv_anim_get(void * var, lv_anim_exec_xcb_t exec_cb)
     return ret;
 }
 
-//The original function is: lv_anim_del(a ? a->var : NULL, .
-return safe_lv_anim_del(a ? a->var : NULL, (lv_anim_exec_xcb_t)exec_cb)
-{
-    GhostLV_Lock();
-    return ret = lv_anim_del(a ? a->var : NULL, (lv_anim_exec_xcb_t)exec_cb);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_anim_get(a ? a->var : NULL, .
-return safe_lv_anim_get(a ? a->var : NULL, (lv_anim_exec_xcb_t)exec_cb)
-{
-    GhostLV_Lock();
-    return ret = lv_anim_get(a ? a->var : NULL, (lv_anim_exec_xcb_t)exec_cb);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_anim_count_running.
 uint16_t safe_lv_anim_count_running(void)
 {
     GhostLV_Lock();
     uint16_t ret = lv_anim_count_running();
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_anim_speed_to_time.
-uint32_t safe_lv_anim_speed_to_time(uint32_t speed, int32_t start, int32_t end)
-{
-    GhostLV_Lock();
-    uint32_t ret = lv_anim_speed_to_time(speed, start, end);
     GhostLV_Unlock();
     return ret;
 }

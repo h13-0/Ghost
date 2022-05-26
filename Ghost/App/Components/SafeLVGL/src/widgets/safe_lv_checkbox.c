@@ -20,14 +20,6 @@ void safe_lv_checkbox_set_text(lv_obj_t * obj, const char * txt)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_checkbox_set_text_static.
-void safe_lv_checkbox_set_text_static(lv_obj_t * obj, const char * txt)
-{
-    GhostLV_Lock();
-    lv_checkbox_set_text_static(obj, txt);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_checkbox_get_text.
 const char * safe_lv_checkbox_get_text(const lv_obj_t * obj)
 {

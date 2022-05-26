@@ -3,15 +3,6 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_obj_tree.h"
 
-//The original function is: lv_obj_tree_walk_res_t (*lv_obj_tree_walk_cb_t).
-typedef safe_lv_obj_tree_walk_res_t (*lv_obj_tree_walk_cb_t)(struct _lv_obj_t *, void *)
-{
-    GhostLV_Lock();
-    typedef ret = lv_obj_tree_walk_res_t (*lv_obj_tree_walk_cb_t)(*, *);
-    GhostLV_Unlock();
-    return ret;
-}
-
 //The original function is: lv_obj_del.
 void safe_lv_obj_del(struct _lv_obj_t * obj)
 {
@@ -25,14 +16,6 @@ void safe_lv_obj_clean(struct _lv_obj_t * obj)
 {
     GhostLV_Lock();
     lv_obj_clean(obj);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_del_delayed.
-void safe_lv_obj_del_delayed(struct _lv_obj_t * obj, uint32_t delay_ms)
-{
-    GhostLV_Lock();
-    lv_obj_del_delayed(obj, delay_ms);
     GhostLV_Unlock();
 }
 
@@ -60,22 +43,6 @@ void safe_lv_obj_set_parent(struct _lv_obj_t * obj, struct _lv_obj_t * parent)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_swap.
-void safe_lv_obj_swap(struct _lv_obj_t * obj1, struct _lv_obj_t * obj2)
-{
-    GhostLV_Lock();
-    lv_obj_swap(obj1, obj2);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_move_to_index.
-void safe_lv_obj_move_to_index(struct _lv_obj_t * obj, int32_t index)
-{
-    GhostLV_Lock();
-    lv_obj_move_to_index(obj, index);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_get_screen.
 struct _lv_obj_t * safe_lv_obj_get_screen(const struct _lv_obj_t * obj)
 {
@@ -99,15 +66,6 @@ struct _lv_obj_t * safe_lv_obj_get_parent(const struct _lv_obj_t * obj)
 {
     GhostLV_Lock();
     struct _lv_obj_t * ret = lv_obj_get_parent(obj);
-    GhostLV_Unlock();
-    return ret;
-}
-
-//The original function is: lv_obj_get_child.
-struct _lv_obj_t * safe_lv_obj_get_child(const struct _lv_obj_t * obj, int32_t id)
-{
-    GhostLV_Lock();
-    struct _lv_obj_t * ret = lv_obj_get_child(obj, id);
     GhostLV_Unlock();
     return ret;
 }

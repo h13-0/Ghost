@@ -3,11 +3,3 @@
 #include "GhostSafeLVGL.h"
 #include "safe_lv_draw_triangle.h"
 
-//The original function is: lv_draw_triangle.
-void safe_lv_draw_triangle(struct _lv_draw_ctx_t * draw_ctx, const lv_draw_rect_dsc_t * draw_dsc, const lv_point_t points[])
-{
-    GhostLV_Lock();
-    lv_draw_triangle(draw_ctx, draw_dsc, points[]);
-    GhostLV_Unlock();
-}
-

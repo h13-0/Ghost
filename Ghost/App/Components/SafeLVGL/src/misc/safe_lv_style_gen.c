@@ -683,22 +683,6 @@ void safe_lv_style_set_color_filter_opa(lv_style_t * style, lv_opa_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_style_set_anim_time.
-void safe_lv_style_set_anim_time(lv_style_t * style, uint32_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_anim_time(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_anim_speed.
-void safe_lv_style_set_anim_speed(lv_style_t * style, uint32_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_anim_speed(style, value);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_transition.
 void safe_lv_style_set_transition(lv_style_t * style, const lv_style_transition_dsc_t * value)
 {
@@ -712,14 +696,6 @@ void safe_lv_style_set_blend_mode(lv_style_t * style, lv_blend_mode_t value)
 {
     GhostLV_Lock();
     lv_style_set_blend_mode(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_layout.
-void safe_lv_style_set_layout(lv_style_t * style, uint16_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_layout(style, value);
     GhostLV_Unlock();
 }
 

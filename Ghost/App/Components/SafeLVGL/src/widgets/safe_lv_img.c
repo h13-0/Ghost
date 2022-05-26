@@ -36,27 +36,11 @@ void safe_lv_img_set_offset_y(lv_obj_t * obj, lv_coord_t y)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_img_set_angle.
-void safe_lv_img_set_angle(lv_obj_t * obj, int16_t angle)
-{
-    GhostLV_Lock();
-    lv_img_set_angle(obj, angle);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_img_set_pivot.
 void safe_lv_img_set_pivot(lv_obj_t * obj, lv_coord_t x, lv_coord_t y)
 {
     GhostLV_Lock();
     lv_img_set_pivot(obj, x, y);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_img_set_zoom.
-void safe_lv_img_set_zoom(lv_obj_t * obj, uint16_t zoom)
-{
-    GhostLV_Lock();
-    lv_img_set_zoom(obj, zoom);
     GhostLV_Unlock();
 }
 
