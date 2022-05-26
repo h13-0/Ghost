@@ -1,5 +1,7 @@
 #include "GhostLauncher.h"
 
+#include "GhostPlatformConfigs.h"
+
 #include <stdio.h>
 
 #include "GhostSafeLVGL.h"
@@ -9,6 +11,12 @@
 
 GhostError_t GhostLauncherRun(char* LauncherProfilePath)
 {
+	// TODO: Check whether the theme is used.
+
+	// TODO: Built in themes.
+	// Default theme.
+
+	
 	char timeText[16] = { 0 };
 
 	LV_Safe(

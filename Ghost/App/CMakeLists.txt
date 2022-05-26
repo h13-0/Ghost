@@ -17,7 +17,12 @@ include_directories("${GHOST_COMPONENT_APP_MGR_INCLUDE_DIRS}")
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/SafeLVGL")
 include_directories("${GHOST_SAFELVGL_INCLUDE_DIRS}")
 
+### Theme manager.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Components/ThemeManager")
+include_directories("${GHOST_COMPONENT_THEME_MGR_INCLUDE_DIRS}")
+
 ## Applications.
+### Launcher.
 add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
 include_directories("${GHOST_APP_LAUNCHER_INCLUDE_DIRS}")
 

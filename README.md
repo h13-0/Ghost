@@ -1,7 +1,8 @@
 # Ghost
-![](Images/Logo.jpg)
-
-An amazing watch.
+<div align = "center">
+  <img src = "Images/Logo.jpg">
+  <h1 align = "ceter">An amazing watch.</h1>
+</div>
 
 # Functions and tasks
 - [ ] Basic software framework.
@@ -12,11 +13,14 @@ An amazing watch.
   - [X] Ghost File system.
   - [X] Ghost safe lvgl.
   - [ ] lua interpreter.
-  - [ ] Power manager framework.
+  - [ ] Ghost Power manager.
 - [ ] Basic function realization.
-  - [ ] Basic clock function.
+  - [X] Basic clock function.
   - [ ] Launcher and theme.
-  - [ ] Calculator.
+  - [ ] Built in applications.
+    - [ ] Calculator.
+  - [ ] Built in games.
+    - [ ] Flappy bird.
 - [ ] Ghost installable application support.
   - [ ] Authority manager.
 - [ ] PCB and BOM.
@@ -25,13 +29,13 @@ An amazing watch.
 
 # Build
 ## Windows Simulator
-```Bash
+```Powershell
 git clone https://github.com/h13-0/Ghost.git
 git submodule update --init
 ```
 Open in visual studio and build.  
 **Note that QT needs to be deployed before running.**
-```
+```Powershell
 windeployqt WindowsSimulator.exe
 ```
 

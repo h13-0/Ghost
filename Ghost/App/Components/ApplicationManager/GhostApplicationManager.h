@@ -33,6 +33,7 @@ extern "C" {
 		GhostApplicationType_t ApplicationType;
 		char* PackageName;
 		char* ApplicationName;
+		int Version;
 		GhostError_t(*ApplicationEntryFunction)(int Argc, void** Args);
 		GhostError_t(*ApplicationDestructorFunction)(char** TranceBackMsg);
 	} GhostApplicationInfo_t;
