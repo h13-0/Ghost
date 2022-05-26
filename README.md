@@ -1,7 +1,8 @@
 # Ghost
-![](Images/Logo.jpg)
-
-An amazing watch.
+<div align = "center">
+  <img src = "Images/Logo.jpg">
+  <h1 align = "ceter">An amazing watch.</h1>
+</div>
 
 # Functions and tasks
 - [ ] Basic software framework.
