@@ -8,9 +8,6 @@ extern "C" {
 
 	GhostError_t GhostLauncherRun(int Argc, void** Args);
 
-
-
-
 #ifdef __cplusplus
 }
 #endif

@@ -41,6 +41,7 @@
 #define MacroGhostSystemInfo                       MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", 0, NULL, NULL)
 //>> Ghost launcher.
 #if(1)
+#define MacroGhostLauncherPackageName              ("tech.h13.ghost.launcher")
 #define MacroGhostLauncherInfo                     MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost.launcher", "Ghost Launcher", 0, GhostLauncherRun, NULL)
 #define MacroGhostLauncherConfigFileName           ("")
 #endif //>> Ghost launcher.

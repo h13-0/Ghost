@@ -180,14 +180,14 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mo
 	/// Free memory.
 	free(realPath);
 
-	// Check whether the file was successfully opened.
-	if (GhostFile->FileStream == NULL)
-		return GhostErrorFS_FileOpenFailed;
-
 	// Unlock mutex.
 	ret = GhostMutexUnlock(&GhostFile->Mutex);
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
+
+	// Check whether the file was successfully opened.
+	if (GhostFile->FileStream == NULL)
+		return GhostErrorFS_FileOpenFailed;
 
 	return GhostOK;
 }
@@ -337,9 +337,11 @@ size_t GhostFS_GetFileSize(GhostFile_t* GhostFile)
 		return 0;
 
 	// Calculate file size.
+	size_t originalOffset = ftell(GhostFile->FileStream);
 	fseek(GhostFile->FileStream, 0, SEEK_END);
 	size_t size = ftell(GhostFile->FileStream);
-	
+	fseek(GhostFile->FileStream, 0, originalOffset);
+
 	// Unlock mutex.
 	gret = GhostMutexUnlock(&GhostFile->Mutex);
 	if (gret.LayerErrorCode != GhostNoError)
