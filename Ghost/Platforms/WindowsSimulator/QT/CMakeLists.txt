@@ -6,10 +6,21 @@ project(GhostWindowsQT_Simulator)
 # Check dependencies.
 set(CMAKE_AUTOMOC ON) # Meta-Object Compiler
 set(CMAKE_AUTOUIC ON) # User Interface Compiler
-find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
+
+# Check Qt6.
+find_package(Qt6 COMPONENTS Widgets Core Gui)
+if(NOT Qt6_FOUND)
+	# Qt6 not found, use Qt5.
+	message(WARNING "Qt6 not found, Qt5 will be used.")
+	find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
+endif()
 
 # Set source files.
-QT5_WRAP_UI(GHOST_QT_SOURCE_FILES "${PROJECT_SOURCE_DIR}/Simulator.ui")
+if(Qt6_FOUND)
+	QT6_WRAP_UI(GHOST_QT_SOURCE_FILES "${PROJECT_SOURCE_DIR}/Simulator.ui")
+else()
+	QT5_WRAP_UI(GHOST_QT_SOURCE_FILES "${PROJECT_SOURCE_DIR}/Simulator.ui")
+endif()
 aux_source_directory(${PROJECT_SOURCE_DIR} GHOST_QT_SOURCE_FILES)
 
 # Generate libraries.
@@ -20,12 +31,22 @@ add_library(
 )
 
 # Link libraries.
-target_link_libraries(
-	${PROJECT_NAME}
-	"Qt5::Widgets"
-	"Qt5::Core"
-	"Qt5::Gui"
-)
+if(Qt6_FOUND)
+	target_link_libraries(
+		${PROJECT_NAME}
+		"Qt6::Widgets"
+		"Qt6::Core"
+		"Qt6::Gui"
+	)
+else()
+	target_link_libraries(
+		${PROJECT_NAME}
+		"Qt5::Widgets"
+		"Qt5::Core"
+		"Qt5::Gui"
+	)
+endif()
+
 
 # Set header paths.
 set(
@@ -35,7 +56,14 @@ set(
 	CACHE PATH "Ghost Windows QT interface header file paths list."
 )
 
-include_directories(
-	"${GHOST_WINDOWS_QSIM_INCLUDE_DIRS}"
-	"${Qt5Widgets_INCLUDE_DIRS}"
-)
+if(Qt6_FOUND)
+	include_directories(
+		"${GHOST_WINDOWS_QSIM_INCLUDE_DIRS}"
+		"${Qt6Widgets_INCLUDE_DIRS}"
+	)
+else()
+	include_directories(
+		"${GHOST_WINDOWS_QSIM_INCLUDE_DIRS}"
+		"${Qt5Widgets_INCLUDE_DIRS}"
+	)
+endif()

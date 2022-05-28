@@ -108,6 +108,9 @@ GhostError_t GhostAppMgrRegister(GhostApplicationInfo_t* ApplicationInfo)
 		nextApplicatonNode = &((*nextApplicatonNode)->NextApplicatonNode);
 	}
 
+	applicationList->IsRunning = false;
+	applicationList->IsForeground = false;
+	
 	return GhostOK;
 }
 

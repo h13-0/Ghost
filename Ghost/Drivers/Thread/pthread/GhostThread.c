@@ -18,6 +18,9 @@
 /// <returns>Function execution result.</returns>
 GhostError_t GhostThreadCreate(GhostThread_t* Thread, void* (*Function)(void*), const char* TaskName, size_t StackSize, void* Args, int Priority)
 {
+	if (!Function)
+		return GhostErrorFunctionHandleIllegal;
+
 	// Create thread.
 	if (!pthread_create(Thread, NULL, Function, Args))
 		return GhostErrorThreadCreateFailed;
@@ -94,7 +97,7 @@ GhostError_t GhostMutexLock(GhostMutex_t* Mutex)
 /// <returns>Function execution result.</returns>
 GhostError_t GhostMutexUnlock(GhostMutex_t* Mutex)
 {
-#ifdef DEBUG
+#ifdef _DEBUG
 	// Check handle.
 	if (Mutex == NULL)
 		return GhostErrorMutexUninitialized;

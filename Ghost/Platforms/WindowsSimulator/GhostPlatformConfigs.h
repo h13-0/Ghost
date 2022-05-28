@@ -38,10 +38,10 @@
 
 //> Register native applications.
 //>> Ghost system.
-#define MacroGhostSystemInfo                       MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", NULL, NULL)
+#define MacroGhostSystemInfo                       MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", 0, NULL, NULL)
 //>> Ghost launcher.
 #if(1)
-#define MacroGhostLauncherInfo                     MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost.launcher", "Ghost Launcher", GhostLauncherRun, NULL)
+#define MacroGhostLauncherInfo                     MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost.launcher", "Ghost Launcher", 0, GhostLauncherRun, NULL)
 #define MacroGhostLauncherConfigFileName           ("")
 #endif //>> Ghost launcher.
 

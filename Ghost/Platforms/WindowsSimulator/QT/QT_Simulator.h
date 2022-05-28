@@ -17,7 +17,7 @@ extern "C" {
 	typedef struct
 	{
 		void* QApplicationPtr;
-		void *SimulatorUI_Ptr;
+		void* SimulatorUI_Ptr;
 	} GhostQT_Simulator_t;
 	
 	/// <summary>
@@ -53,10 +53,17 @@ extern "C" {
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <param name="QT_Simulator"></param>
+	/// <param name="QT_Simulator">Simulator pointor.</param>
 	/// <param name="CallbackPtr"></param>
 	/// <returns></returns>
 	GhostError_t GhostQT_SimulatorSetTouchEventsCallback(GhostQT_Simulator_t* QT_Simulator, void (*CallbackPtr)(int X, int Y));
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="QT_Simulator">Simulator pointor.</param>
+	/// <returns>GhostOK will be returned if initialization is completed.</returns>
+	GhostError_t GhostQT_SimulatorInited(GhostQT_Simulator_t* QT_Simulator);
 
 #ifdef __cplusplus
 }

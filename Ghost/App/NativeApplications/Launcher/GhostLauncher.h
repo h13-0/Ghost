@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-	GhostError_t GhostLauncherRun(char* LauncherProfilePath);
+	GhostError_t GhostLauncherRun(int Argc, void** Args);
 
 
 

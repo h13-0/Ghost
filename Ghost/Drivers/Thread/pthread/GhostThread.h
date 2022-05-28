@@ -13,6 +13,7 @@
 #define GhostErrorMutexOutOfMemory         DeclareGhostError(GhostDriverLayerError, DriverModuleThreadError, 5)
 #define GhostErrorMutexLockFailed          DeclareGhostError(GhostDriverLayerError, DriverModuleThreadError, 6)
 #define GhostErrorMutexDeleteFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleThreadError, 7)
+#define GhostErrorFunctionHandleIllegal    DeclareGhostError(GhostDriverLayerError, DriverModuleThreadError, 8)
 
 #ifdef __cplusplus
 extern "C" {

@@ -9,7 +9,7 @@
 // Drivers
 #include "GhostClock.h"
 
-GhostError_t GhostLauncherRun(char* LauncherProfilePath)
+GhostError_t GhostLauncherRun(int Argc, void** Args)
 {
 	// TODO: Check whether the theme is used.
 

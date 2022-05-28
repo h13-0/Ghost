@@ -5,6 +5,8 @@
 
 #include "GhostPlatformConfigs.h"
 
+#include <mutex>
+
 #include <QMainWindow>
 #include <QPainter>
 
@@ -16,6 +18,12 @@ public:
     SimulatorUI(QWidget *parent = Q_NULLPTR);
     SimulatorUI(const SimulatorUI&) = delete;
     ~SimulatorUI();
+
+    bool inited(void)
+    {
+        std::unique_lock<std::mutex> lck(loadFinishedFlagMutex);
+        return loadFinishedFlag;
+    }
 
 signals:
     /// <summary>
@@ -35,6 +43,9 @@ private:
     unsigned char screenRawBuffer[MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution * 4] = { 0 };
 
     QGraphicsScene* screenScene;
+
+    std::mutex loadFinishedFlagMutex;
+    bool loadFinishedFlag = false;
 
 private slots:
     /// <summary>
