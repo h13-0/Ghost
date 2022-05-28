@@ -7,6 +7,7 @@
 
 // Ghost drivers.
 #include "GhostThread.h"
+#include "GhostFileSystem.h"
 
 /// <summary>
 /// The linked list typedef of GhostApplicationList.
@@ -226,5 +227,55 @@ GhostError_t GhostAppMgrGenerateApplicationList(GhostApplicationList_t* Applicat
 /// <returns></returns>
 GhostError_t GhostAppMgrDestoryApplicationList(GhostApplicationList_t* ApplicationListPtr)
 {
+	return GhostOK;
+}
+
+/// <summary>
+/// Get the default configs of the app.
+/// </summary>
+/// <param name="Application">Application info.</param>
+/// <param name="Configs">Configuration information in JSON format.</param>
+/// <returns></returns>
+GhostError_t GhostAppMgrGetAppConfigs(GhostApplicationInfo_t* Application, cJSON** Configs)
+{
+	GhostFile_t configFile;
+	GhostError_t ret = GhostOK;
+	if(Application->ApplicationType == GhostNativeApplication)
+	{
+		char* appPath = GhostFS_Join("/System/App", Application->PackageName);
+		char* path = GhostFS_Join(appPath, MacroGhostAppDefaultConfigFileName);
+		free(appPath);
+		ret = GhostFS_Open(path, &configFile, "r");
+		free(path);
+	}
+	else
+	{
+		char* appPath = GhostFS_Join("/App", Application->PackageName);
+		char* path = GhostFS_Join(appPath, MacroGhostAppDefaultConfigFileName);
+		free(appPath);
+		ret = GhostFS_Open(path, &configFile, "r");
+		free(path);
+	}
+
+	if (ret.LayerErrorCode != GhostNoError)
+		return ret;
+	
+	size_t size = GhostFS_GetFileSize(&configFile);
+	if (size > MacroGhostAppDefaultConfigFileSizeLimit)
+	{
+		return GhostErrorAppConfigFileTooLarge;
+	}
+	char* buffer = calloc(1, size + 1);
+	
+	int _size = GhostFS_Read(buffer, size, 1, &configFile);
+	if (_size == 0)
+	{
+		//return;
+	}
+	
+	*Configs = cJSON_Parse(buffer);
+
+	ret = GhostFS_Close(&configFile);
+	
 	return GhostOK;
 }

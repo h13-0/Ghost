@@ -1,7 +1,7 @@
 # Ghost
 <div align = "center">
   <img src = "Images/Logo.jpg">
-  <h1 align = "ceter">An amazing watch.</h1>
+  <h1 align = "center">An amazing watch.</h1>
 </div>
 
 # Functions and tasks

@@ -68,6 +68,16 @@ extern "C" {
 	GhostError_t GhostFS_Close(GhostFile_t* GhostFile);
 
 	/// <summary>
+	/// Read file stream.
+	/// </summary>
+	/// <param name="BufferPtr">Pointor of buffer.</param>
+	/// <param name="Size">Size of data.</param>
+	/// <param name="Count">Count of data.</param>
+	/// <param name="GhostFile">Pointor of file.</param>
+	/// <returns>ame as fread, equal to the data size actually read.</returns>
+	int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile);
+
+	/// <summary>
 	/// Write file stream.
 	/// </summary>
 	/// <param name="BufferPtr">Pointor of buffer.</param>
@@ -77,6 +87,21 @@ extern "C" {
 	/// <returns>Same as fwrite, equal to the data size actually written.</returns>
 	int GhostFS_Write(void* BufferPtr, size_t Size, size_t nmemb, GhostFile_t* GhostFile);
 
+	/// <summary>
+	/// Get file size.
+	/// </summary>
+	/// <param name="GhostFile">Pointor of file.</param>
+	/// <returns>File size in size_t.</returns>
+	size_t GhostFS_GetFileSize(GhostFile_t* GhostFile);
+
+	/// <summary>
+	/// Splice path.
+	///		You need to manually use the `free` function to free memory after the path is used.
+	/// </summary>
+	/// <param name="ParentPath">Parent path in char*.</param>
+	/// <param name="Subpath">Subpath in char*.</param>
+	/// <returns>Pointor of result.</returns>
+	char* GhostFS_Join(char* ParentPath, char* Subpath);
 
 #ifdef __cplusplus
 }

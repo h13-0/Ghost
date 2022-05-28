@@ -12,26 +12,19 @@
 /*******************************************************/
 
 // Ghost system configs.
-//> Application Register.
-//>> Ghost system.
-#define MacroGhostSystemInfo                       MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "Ghost System", "tech.h13.ghost", NULL, NULL)
-//>> Ghost launcher.
-#if(1)
-#define MacroGhostLauncherInfo                     MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "Ghost Launcher", "tech.h13.ghost.launcher", GhostLauncherRun, NULL)
-#define MacroGhostLauncherConfigFileName           ("")
-#endif //>> Ghost launcher.
+#define MacroSystemName                            ("Ghost")
+#define MacroSystemVersion                         ("")         // TODO: Reference cmake version number.
+//> Ghost components configs.
+//>> Application manager configs.
 
-//>> Ghost calculator
-#define MacroIsCalculatorEnabled                   (1)
-#if(MacroIsCalculatorEnabled)
-
-//// Ghost calculator configs.
-
-#endif //#if(MacroIsCalculatorEnabled)
+#define MacroGhostAppPackageInformationFileName    ("App.json")
+#define MacroGhostAppDefaultConfigFileName         ("Configs.json")
+#define MacroGhostAppDefaultConfigFileSizeLimit    (4096)       // 4KB.
 
 //> Ghost user configs.
 #define MacroAllowRoot	                           (1)
 #define MacroWhoAmI                                ("h13")
+
 
 //> Application configs.
 //>> Ghost launcher configs.
@@ -43,5 +36,20 @@
 
 #define MacroGhostLauncherBuiltInThemes            ()
 
+//> Register native applications.
+//>> Ghost system.
+#define MacroGhostSystemInfo                       MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", NULL, NULL)
+//>> Ghost launcher.
+#if(1)
+#define MacroGhostLauncherInfo                     MacroDeclareStructure(GhostApplicationInfo_t, GhostNativeApplication, "tech.h13.ghost.launcher", "Ghost Launcher", GhostLauncherRun, NULL)
+#define MacroGhostLauncherConfigFileName           ("")
+#endif //>> Ghost launcher.
 
+//>> Ghost calculator
+#define MacroIsCalculatorEnabled                   (1)
+#if(MacroIsCalculatorEnabled)
+
+//// Ghost calculator configs.
+
+#endif //#if(MacroIsCalculatorEnabled)
 

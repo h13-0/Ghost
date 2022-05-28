@@ -1,6 +1,7 @@
 #include "App.h"
 
 #include <stddef.h>
+#include <stdio.h>
 
 // Configs.
 #include "GhostPlatformConfigs.h"
@@ -17,13 +18,14 @@
 
 /// Applications.
 #include "GhostLauncher.h"
-
 #include "GhostClock.h"
 
 // Thirdparty layer.
 #include "lvgl.h"
+#include "cJSON.h"
 
-#include <stdio.h>
+// Temp test.
+#include "GhostFileSystem.h"
 
 GhostError_t GhostAppInit(void)
 {
@@ -53,6 +55,14 @@ void btn_event_cb(lv_event_t* e)
 
 GhostError_t GhostAppRun(void)
 {
+	GhostError_t ret = GhostOK;
+	GhostApplicationInfo_t info = MacroGhostLauncherInfo;
+	ret = GhostAppMgrGetInfoByPackageName("tech.h13.ghost.launcher", &info);
+	cJSON* json;
+	ret = GhostAppMgrGetAppConfigs(&info, &json);
+
+
+	
 	while (1)
 	{
 		GhostSleepMillisecond(1000);
