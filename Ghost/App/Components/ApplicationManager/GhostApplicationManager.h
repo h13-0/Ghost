@@ -3,6 +3,7 @@
 #include "GhostSoftwareErrorDefine.h"
 #include <stdbool.h>
 
+#include "cJSON.h"
 
 #define GhostErrorAppMgrUninitialized        DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 1)
 #define GhostErrorAppInfoIllegal             DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 2)
@@ -10,6 +11,7 @@
 #define GhostErrorAppDuplicatePackageName    DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 4)
 #define GhostErrorAppCreateThreadError       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 5)
 #define GhostErrorAppCreateOutOfMemory       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 6)
+#define GhostErrorAppConfigFileTooLarge      DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 7)
 
 #ifdef __cplusplus
 extern "C" {
@@ -111,6 +113,15 @@ extern "C" {
 	/// <param name="ApplicationListPtr">Pointer of application linked list.</param>
 	/// <returns></returns>
 	GhostError_t GhostAppMgrDestoryApplicationList(GhostApplicationList_t* ApplicationListPtr);
+
+
+	/// <summary>
+	/// Get the default configs of the app.
+	/// </summary>
+	/// <param name="Application">Application info.</param>
+	/// <param name="Configs">Configuration information in JSON format.</param>
+	/// <returns></returns>
+	GhostError_t GhostAppMgrGetAppConfigs(GhostApplicationInfo_t* Application, cJSON** Configs);
 
 #ifdef __cplusplus
 }

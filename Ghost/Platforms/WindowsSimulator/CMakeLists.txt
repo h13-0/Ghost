@@ -19,6 +19,15 @@ include("${CMAKE_CURRENT_LIST_DIR}/lvgl/CMakeLists.txt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 
+#### cJSON
+#add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/cJSON")
+set(
+	SOURCE_FILES
+	${SOURCE_FILES}
+	"${PROJECT_SOURCE_DIR}/ThirdParty/cJSON/cJSON.c"
+)
+include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/cJSON")
+
 #### lua
 include("${CMAKE_CURRENT_LIST_DIR}/lua/CMakeLists.txt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lua")
@@ -55,6 +64,7 @@ include_directories(${GhostWindowsQT_INCLUDE_DIRS})
 ## Add source files.
 set(
 	SOURCE_FILES
+	${SOURCE_FILES}
 	${GHOST_APP_SOURCE_FILES}
 	${CMAKE_CURRENT_LIST_DIR}/main.c
 )

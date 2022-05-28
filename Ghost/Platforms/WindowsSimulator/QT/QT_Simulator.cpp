@@ -72,6 +72,19 @@ GhostError_t GhostQT_SimulatorSetTouchEventsCallback(GhostQT_Simulator_t* QT_Sim
 	return GhostError_t();
 }
 
+GhostError_t GhostQT_SimulatorInited(GhostQT_Simulator_t* QT_Simulator)
+{
+	if (QT_Simulator)
+	{
+		if (((SimulatorUI*)(QT_Simulator->SimulatorUI_Ptr))->inited())
+		{
+			return GhostOK;
+		}
+	}
+
+	return GhostError_QT_SimulatorUninitialized;
+}
+
 GhostError_t GhostQT_SimulatorDraw(void)
 {
 	return GhostOK;

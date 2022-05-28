@@ -94,7 +94,7 @@ GhostError_t GhostFS_DeInit(void)
 	return GhostOK;
 }
 
-static GhostError_t getRealFilePath(char* AbsPath, char* RealPath, int MaximumPathLength)
+static GhostError_t getRealFilePath(const char* AbsPath, char* RealPath, int MaximumPathLength)
 {
 	if (strlen(AbsPath) > MacroMaximumPathLength)
 	{
@@ -260,6 +260,35 @@ GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 		return GhostErrorFS_CloseFailed;
 	}
 }
+/// <summary>
+/// Read file stream.
+/// </summary>
+/// <param name="BufferPtr">Pointor of buffer.</param>
+/// <param name="Size">Size of data.</param>
+/// <param name="Count">Count of data.</param>
+/// <param name="GhostFile">Pointor of file.</param>
+/// <returns>ame as fread, equal to the data size actually read.</returns>
+int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile)
+{
+	// Check file handle.
+	if (GhostFile == NULL)
+		return 0;
+
+	// Lock mutex.
+	GhostError_t gret = GhostMutexLock(&GhostFile->Mutex);
+	if (gret.LayerErrorCode != GhostNoError)
+		return 0;
+
+	// Write.
+	int ret = fread(BufferPtr, Size, Count, GhostFile->FileStream);
+
+	// Unlock mutex.
+	gret = GhostMutexUnlock(&GhostFile->Mutex);
+	if (gret.LayerErrorCode != GhostNoError)
+		return 0;
+
+	return ret;
+}
 
 /// <summary>
 /// Write file stream.
@@ -289,6 +318,97 @@ int GhostFS_Write(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* Ghost
 		return 0;
 
 	return ret;
+}
+
+/// <summary>
+/// Get file size.
+/// </summary>
+/// <param name="GhostFile">Pointor of file.</param>
+/// <returns>File size in size_t.</returns>
+size_t GhostFS_GetFileSize(GhostFile_t* GhostFile)
+{
+	// Check file handle.
+	if (GhostFile == NULL)
+		return 0;
+
+	// Lock mutex.
+	GhostError_t gret = GhostMutexLock(&GhostFile->Mutex);
+	if (gret.LayerErrorCode != GhostNoError)
+		return 0;
+
+	// Calculate file size.
+	fseek(GhostFile->FileStream, 0, SEEK_END);
+	size_t size = ftell(GhostFile->FileStream);
+	
+	// Unlock mutex.
+	gret = GhostMutexUnlock(&GhostFile->Mutex);
+	if (gret.LayerErrorCode != GhostNoError)
+		return 0;
+	
+	return size;
+}
+
+/// <summary>
+/// Splice path.
+///		You need to manually use the `free` function to free memory after the path is used.
+/// </summary>
+/// <param name="ParentPath">Parent path in char*.</param>
+/// <param name="Subpath">Subpath in char*.</param>
+char* GhostFS_Join(char* ParentPath, char* Subpath)
+{
+	GhostError_t ret = GhostOK;
+	
+	int length = 0;
+	int subpathLength = 0;
+	char* temp = NULL;
+	
+	// Splice string.
+	length = strlen(ParentPath);
+	subpathLength = strlen(Subpath);
+	if(*(ParentPath + strlen(ParentPath) - 1) != '/')
+	{
+		if (*(Subpath) != '/')
+		{
+			temp = calloc(1, sizeof(char) * (length + subpathLength + 2));
+			memcpy(temp, ParentPath, length);
+			*(temp + length) = '/';
+			memcpy(temp + length + 1, Subpath, subpathLength);
+			length = length + subpathLength + 1;
+		}
+		else {
+			temp = calloc(1, sizeof(char) * (length + subpathLength + 1));
+			memcpy(temp, ParentPath, length);
+			memcpy(temp + length, Subpath, subpathLength);
+			length = length + subpathLength;
+		}
+	}
+	else {
+		if (*(Subpath) != '/')
+		{
+			temp = calloc(1, sizeof(char) * (length + subpathLength + 1));
+			memcpy(temp, ParentPath, length);
+			memcpy(temp + length, Subpath, subpathLength);
+			length = length + subpathLength;
+		}
+		else {
+			temp = calloc(1, sizeof(char) * (length + subpathLength));
+			memcpy(temp, ParentPath, length);
+			memcpy(temp + length, Subpath + 1, subpathLength - 1);
+			length = length + subpathLength - 1;
+		}
+	}
+
+	// Calculate real path.
+	char* result = calloc(1, sizeof(char)*MacroMaximumPathLength);
+	return temp;
+	
+	ret = getRealFilePath(temp, result, MacroMaximumPathLength);
+	if(ret.LayerErrorCode != GhostNoError)
+	{
+		free(result);
+		return NULL;
+	}
+	return result;
 }
 
 

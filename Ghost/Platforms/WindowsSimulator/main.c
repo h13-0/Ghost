@@ -11,8 +11,16 @@
 
 #include "pthread.h"
 
+static GhostQT_Simulator_t simulator;
+
 static void* ghostRun(void* args)
 {
+	// Wait Qt Simulator inited.
+	while (GhostQT_SimulatorInited(&simulator).LayerErrorCode != GhostNoError)
+	{
+		GhostSleepMillisecond(100);
+	}
+
 	GhostError_t ret = GhostAppRun();
 	if (ret.LayerErrorCode == GhostNoError)
 	{
@@ -25,6 +33,13 @@ static void* ghostRun(void* args)
 
 static void* ghostTimer(void* args)
 {
+	// Wait Qt Simulator inited.
+	while (GhostQT_SimulatorInited(&simulator).LayerErrorCode != GhostNoError)
+	{
+		GhostSleepMillisecond(100);
+	}
+
+
 	static clock_t lastExecuteTime = 0;
 
 	pthread_cond_t cond;
@@ -48,7 +63,6 @@ static void* ghostTimer(void* args)
 int main(int argc, char* argv[])
 {
 	// Init Platform layer.
-	GhostQT_Simulator_t simulator;
 	GhostQT_SimulatorInit(&simulator, argc, argv);
 
 	// Init Drivers.
@@ -66,29 +80,24 @@ int main(int argc, char* argv[])
 	// Init and run Ghost project.
 	pthread_t ghostRunThread;
 	pthread_t ghostTimerThread;
-	GhostError_t ret = GhostAppInit();
-	if (ret.LayerErrorCode == GhostNoError)
+	// Run Ghost app.
+	int pret = pthread_create(&ghostRunThread, NULL, ghostRun, NULL);
+	if (pret != 0)
 	{
-		int pret = pthread_create(&ghostRunThread, NULL, ghostRun,NULL);
-		if (pret != 0)
-		{
-			//
-		}
-		else {
-
-		}
-
-		pret = pthread_create(&ghostTimerThread, NULL, ghostTimer, NULL);
-		if (pret != 0)
-		{
-			//
-		}
-		else {
-
-		}
+		//
 	}
 	else {
-		//Log.
+
+	}
+
+	// Run Ghost timer.
+	pret = pthread_create(&ghostTimerThread, NULL, ghostTimer, NULL);
+	if (pret != 0)
+	{
+		//
+	}
+	else {
+		
 	}
 
 	// Run simulator.
