@@ -245,7 +245,7 @@ GhostError_t GhostAppMgrGetAppConfigs(GhostApplicationInfo_t* Application, cJSON
 	GhostError_t ret = GhostOK;
 	if(Application->ApplicationType == GhostNativeApplication)
 	{
-		char* appPath = GhostFS_Join("/System/App", Application->PackageName);
+		char* appPath = GhostFS_Join("/System/Apps", Application->PackageName);
 		char* path = GhostFS_Join(appPath, MacroGhostAppDefaultConfigFileName);
 		free(appPath);
 		ret = GhostFS_Open(path, &configFile, "r");
@@ -253,7 +253,7 @@ GhostError_t GhostAppMgrGetAppConfigs(GhostApplicationInfo_t* Application, cJSON
 	}
 	else
 	{
-		char* appPath = GhostFS_Join("/App", Application->PackageName);
+		char* appPath = GhostFS_Join("/Apps", Application->PackageName);
 		char* path = GhostFS_Join(appPath, MacroGhostAppDefaultConfigFileName);
 		free(appPath);
 		ret = GhostFS_Open(path, &configFile, "r");
@@ -270,7 +270,7 @@ GhostError_t GhostAppMgrGetAppConfigs(GhostApplicationInfo_t* Application, cJSON
 	}
 	char* buffer = calloc(1, size + 1);
 	
-	int _size = GhostFS_Read(buffer, size, 1, &configFile);
+	int _size = GhostFS_Read(buffer, 1, size, &configFile);
 	if (_size == 0)
 	{
 		//return;

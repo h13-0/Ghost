@@ -1,0 +1,1 @@
+New-Item -ItemType SymbolicLink -Path .\Ghost -Target ..\..\..\Mount\

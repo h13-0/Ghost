@@ -49,7 +49,8 @@ static GhostError_t ghostAppInit(void)
 
 static GhostError_t ghostAppDeInit(void)
 {
-
+	// TODO.
+	return GhostOK;
 }
 
 void btn_event_cb(lv_event_t* e)
@@ -82,4 +83,10 @@ GhostError_t GhostTimerHandler(float TimeIntervalInMillisecond)
 {
 	// Refresh UI.
 	return GhostSafeLV_HeartBeat(TimeIntervalInMillisecond);
+}
+
+GhostError_t GhostPowerOff(void)
+{
+	//TODO.
+	return GhostOK;
 }
