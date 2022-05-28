@@ -5,13 +5,21 @@
 #include <stdio.h>
 
 #include "GhostSafeLVGL.h"
+#include "GhostApplicationManager.h"
 
 // Drivers
 #include "GhostClock.h"
 
+static GhostApplicationInfo_t appInfo;
+
 GhostError_t GhostLauncherRun(int Argc, void** Args)
 {
 	// TODO: Check whether the theme is used.
+	// Get application config.
+	appInfo = MacroGhostLauncherInfo;
+	cJSON* configs = NULL;
+	GhostAppMgrGetAppConfigJSON(&appInfo, &configs);
+
 
 	// TODO: Built in themes.
 	// Default theme.
@@ -19,13 +27,13 @@ GhostError_t GhostLauncherRun(int Argc, void** Args)
 	
 	char timeText[16] = { 0 };
 
-	LV_Safe(
+	GhostLV_Lock();
 	lv_obj_t* timeLabel = lv_label_create(lv_scr_act());
 	lv_obj_set_width(timeLabel, 150);
 	lv_label_set_text_static(timeLabel, timeText);
 	lv_obj_set_style_text_font(timeLabel, &lv_font_montserrat_48, 0);
 	lv_obj_align(timeLabel, LV_ALIGN_CENTER, 0, 40);
-	)
+	GhostLV_Unlock();
 
 	while (1)
 	{

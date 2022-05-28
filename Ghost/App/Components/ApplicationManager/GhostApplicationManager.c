@@ -9,6 +9,26 @@
 #include "GhostThread.h"
 #include "GhostFileSystem.h"
 
+typedef enum
+{
+	GhostAppNotRunning = 0,
+	GhostAppRunningForeground = 1,
+	GhostAppRunningBackground = 2,
+} GhostAppRunningStatus_t;
+
+typedef enum
+{
+	GhostAppPermissionsNormalUser = 0,
+	GhostAppPermissionsNativeApplication = 1,
+	GhostAppPermissionsRoot = 2,
+} GhostAppPermission_t;
+
+typedef struct GhostAppStatus
+{
+	GhostAppRunningStatus_t RunningStatus : 2;
+	GhostAppPermission_t Permission : 2;
+} GhostAppStatus_t;
+
 /// <summary>
 /// The linked list typedef of GhostApplicationList.
 /// </summary>
@@ -18,8 +38,7 @@ typedef struct GhostAppHandleList
 	GhostApplicationInfo_t CurrentApplicationInfo;
 
 	// Status.
-	bool IsRunning;
-	bool IsForeground;
+	GhostAppStatus_t GhostAppStatus;
 
 	// Handles.
 	GhostThread_t ThreadHandle;
@@ -108,9 +127,15 @@ GhostError_t GhostAppMgrRegister(GhostApplicationInfo_t* ApplicationInfo)
 		nextApplicatonNode = &((*nextApplicatonNode)->NextApplicatonNode);
 	}
 
-	applicationList->IsRunning = false;
-	applicationList->IsForeground = false;
-	
+	if (ApplicationInfo->ApplicationType == GhostNativeApplication)
+	{
+		applicationList->GhostAppStatus.Permission = GhostAppPermissionsNativeApplication;
+	}
+	else {
+		applicationList->GhostAppStatus.Permission = GhostAppPermissionsNormalUser;
+	}
+	applicationList->GhostAppStatus.RunningStatus = GhostAppNotRunning;
+
 	return GhostOK;
 }
 
@@ -182,6 +207,11 @@ GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args)
 {
 	GhostAppHandleList_t* nodePtr;
 	GhostError_t ret = ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr);
+	if (nodePtr->GhostAppStatus.RunningStatus == GhostAppRunningForeground)
+	{
+		return GhostOK;
+	}
+
 	if (ret.LayerErrorCode == GhostNoError)
 	{
 		ret = GhostThreadCreate(
@@ -193,7 +223,11 @@ GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args)
 			1
 		);
 
-		return ret;
+		if (ret.LayerErrorCode == GhostNoError)
+		{
+			nodePtr->GhostAppStatus.RunningStatus = GhostAppRunningForeground;
+			return ret;
+		}
 	}
 	else {
 		return ret;
@@ -237,9 +271,9 @@ GhostError_t GhostAppMgrDestoryApplicationList(GhostApplicationList_t* Applicati
 /// Get the default configs of the app.
 /// </summary>
 /// <param name="Application">Application info.</param>
-/// <param name="Configs">Configuration information in JSON format.</param>
+/// <param name="Configs">Configuration information in cJSON.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrGetAppConfigs(GhostApplicationInfo_t* Application, cJSON** Configs)
+GhostError_t GhostAppMgrGetAppConfigJSON(GhostApplicationInfo_t* Application, cJSON** Configs)
 {
 	GhostFile_t configFile;
 	GhostError_t ret = GhostOK;

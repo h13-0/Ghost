@@ -67,7 +67,7 @@ GhostError_t GhostAppRun(void)
 	GhostApplicationInfo_t info = MacroGhostLauncherInfo;
 	ret = GhostAppMgrGetInfoByPackageName("tech.h13.ghost.launcher", &info);
 	cJSON* json;
-	ret = GhostAppMgrGetAppConfigs(&info, &json);
+	ret = GhostAppMgrGetAppConfigJSON(&info, &json);
 	
 	while (1)
 	{
