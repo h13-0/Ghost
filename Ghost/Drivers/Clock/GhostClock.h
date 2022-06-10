@@ -26,13 +26,11 @@ extern "C" {
 	GhostError_t GhostGetCurrentSecond(int* Second);
 	GhostError_t GhostGetCurrentTime(int* Hour, int* Minute, int* Second);
 
-	GhostError_t GhostSleepMillisecond(int Milliseconds);
-
-	GhostError_t GhostSleepMicrosecond(int Microseconds);
-
 	GhostError_t GhostGetCurrentMilliseconds(int* Milliseconds);
-
 	GhostError_t GhostGetCurrentMicroseconds(int* Microseconds);
+
+	GhostError_t GhostSleepMillisecond(int Milliseconds);
+	GhostError_t GhostSleepMicrosecond(int Microseconds);
 
 #ifdef __cplusplus
 }

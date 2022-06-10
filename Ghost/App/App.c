@@ -10,6 +10,7 @@
 /// FileSystem.
 #include "GhostFileSystem.h"
 #include "GhostThread.h"
+#include "GhostClock.h"
 
 // App layer.
 /// Components.
@@ -17,15 +18,12 @@
 #include "GhostSafeLVGL.h"
 
 /// Applications.
+#include "GhostPermissionManager.h"
 #include "GhostLauncher.h"
-#include "GhostClock.h"
 
 // Thirdparty layer.
 #include "lvgl.h"
 #include "cJSON.h"
-
-// Temp test.
-#include "GhostFileSystem.h"
 
 static GhostError_t ghostAppInit(void)
 {
@@ -40,9 +38,21 @@ static GhostError_t ghostAppInit(void)
 		return ret;
 
 	// Register native applications.
-	GhostApplicationInfo_t app = MacroGhostLauncherInfo;
-	GhostAppMgrRegister(&app);
-	GhostAppMgrRunForeground(app.PackageName, 1, "Ghost system call.");
+	// Run Ghost System.
+	{
+		GhostApplicationInfo_t app = MacroGhostLauncherInfo;
+		GhostAppMgrRegister(&app);
+		// Run Ghost System(But do nothing).
+		GhostAppMgrRunForeground(app.PackageName, 1, "Ghost system call.");
+	}
+
+	// Run Ghost Permission Manager.
+	{
+		GhostApplicationInfo_t app = MacroGhostPM_PackageName;
+		GhostAppMgrRegister(&app);
+		// Run Ghost Permission Manager.
+		GhostAppMgrRunBackground(app.PackageName, 1, "Ghost system call.");
+	}
 
 	return GhostOK;
 }

@@ -94,7 +94,14 @@ GhostError_t GhostFS_DeInit(void)
 	return GhostOK;
 }
 
-static GhostError_t getRealFilePath(const char* AbsPath, char* RealPath, int MaximumPathLength)
+/// <summary>
+/// Get the real path of the file.
+/// </summary>
+/// <param name="AbsPath">Path from mount directory.</param>
+/// <param name="RealPath">Real path, this variable requires manual memory allocation.</param>
+/// <param name="RealPathBufferLength">Buffer size of real path.</param>
+/// <returns></returns>
+GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPathBufferLength)
 {
 	if (strlen(AbsPath) > MacroMaximumPathLength)
 	{
@@ -102,10 +109,11 @@ static GhostError_t getRealFilePath(const char* AbsPath, char* RealPath, int Max
 	}
 	else {
 #ifdef _WIN32
-		if (_fullpath(RealPath, AbsPath, MaximumPathLength) == NULL)
+		if (_fullpath(RealPath, AbsPath, RealPathBufferLength - 1) == NULL)
 			return GhostErrorFS_PathTooLong;
 #else
 #error "TODO in linux."
+#error "Welcome pull requests."
 #endif
 		return GhostOK;
 	}
@@ -146,7 +154,7 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mo
 		return GhostErrorFS_PathIllegal;
 	}
 
-	GhostError_t ret = getRealFilePath(realPath, realPath, MacroMaximumPathLength + rootDirectoryPathLen);
+	GhostError_t ret = GhostFS_GetRealPath(realPath, realPath, MacroMaximumPathLength + rootDirectoryPathLen);
 	if (ret.LayerErrorCode != GhostNoError)
 		return ret;
 
@@ -260,6 +268,7 @@ GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 		return GhostErrorFS_CloseFailed;
 	}
 }
+
 /// <summary>
 /// Read file stream.
 /// </summary>
@@ -404,7 +413,7 @@ char* GhostFS_Join(char* ParentPath, char* Subpath)
 	char* result = calloc(1, sizeof(char)*MacroMaximumPathLength);
 	return temp;
 	
-	ret = getRealFilePath(temp, result, MacroMaximumPathLength);
+	ret = GhostFS_GetRealPath(temp, result, MacroMaximumPathLength);
 	if(ret.LayerErrorCode != GhostNoError)
 	{
 		free(result);
@@ -412,5 +421,3 @@ char* GhostFS_Join(char* ParentPath, char* Subpath)
 	}
 	return result;
 }
-
-

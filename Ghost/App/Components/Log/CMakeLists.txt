@@ -1,20 +1,20 @@
 # The following are set after configuration is done:
-# GHOST_APP_PM_INCLUDE_DIRS
+# GHOST_APP_LOG_INCLUDE_DIRS
 
-project(GhostAppPermissionManager)
+project(GhostAppLog)
 
 # Generate libraries.
 add_library(
 	${PROJECT_NAME}
 	STATIC
-	"${PROJECT_SOURCE_DIR}/GhostPermissionManager.c"
+	"${PROJECT_SOURCE_DIR}/GhostLog.c"
 )
 
 # Set header paths.
 set(
-	GHOST_APP_PM_INCLUDE_DIRS
+	GHOST_APP_LOG_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}"
-	CACHE PATH "Ghost permission manager header file paths list."
+	CACHE PATH "Ghost log header file paths list."
 )
 
 target_include_directories(

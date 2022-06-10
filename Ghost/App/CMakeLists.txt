@@ -9,6 +9,10 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 # Include submodules.
 ## Components.
+### Ghost Log.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Components/Log")
+include_directories("${GHOST_APP_LOG_INCLUDE_DIRS}")
+
 ### Application Manager.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/ApplicationManager")
 include_directories("${GHOST_COMPONENT_APP_MGR_INCLUDE_DIRS}")
@@ -22,6 +26,10 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/Components/ThemeManager")
 include_directories("${GHOST_COMPONENT_THEME_MGR_INCLUDE_DIRS}")
 
 ## Applications.
+### Permission manager.
+add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/PermissionManager")
+include_directories("${GHOST_APP_PM_INCLUDE_DIRS}")
+
 ### Launcher.
 add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
 include_directories("${GHOST_APP_LAUNCHER_INCLUDE_DIRS}")
@@ -47,7 +55,8 @@ add_library(
 # Link libraries.
 target_link_libraries(
 	${PROJECT_NAME}
-	
+
+	GhostAppPermissionManager
 	GhostComponentAppMgr
 	SafeLVGL
 

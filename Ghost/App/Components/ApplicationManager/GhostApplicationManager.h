@@ -114,7 +114,6 @@ extern "C" {
 	/// <returns></returns>
 	GhostError_t GhostAppMgrDestoryApplicationList(GhostApplicationList_t* ApplicationListPtr);
 
-
 	/// <summary>
 	/// Get the default configs of the app.
 	/// @note: This function should be deprecated.

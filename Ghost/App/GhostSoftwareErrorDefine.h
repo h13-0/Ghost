@@ -7,8 +7,9 @@
 typedef enum
 {
 	SoftwareModuleNoError         = 0,
-	SoftwareModuleAppMgrError     = 1,
-	SoftwareModuleLauncherError   = 2,
-	SoftwareModuleGhostLogError   = 3,
-	SoftwareModuleSafeLV_Error    = 4,
+	SoftwareModuleLogError        = 1,
+	SoftwareModuleAppMgrError     = 2,
+	SoftwareModuleLauncherError   = 3,
+	SoftwareModuleGhostLogError   = 4,
+	SoftwareModuleSafeLV_Error    = 5,
 } SoftwareModuleErrorCode;

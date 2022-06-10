@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GhostSoftwareErrorDefine.h"
+
 #include "GhostFileSystem.h"
 #include "GhostApplicationManager.h"
 
@@ -10,13 +12,15 @@ extern "C" {
 	GhostError_t GhostPermissionManagerRun(int Argc, void** Args);
 
 	/// <summary>
-	/// Open the file in the name of app.
-	///		**After the file is opened, you can use ghostfs to operate the file.**
+	/// Open the file by the pointer of application info.
+	///		**After the file is opened, you can use `GhostFS` to operate the file.**
 	/// </summary>
-	/// <param name="Application">Application info.</param>
-	/// <param name="File"></param>
-	/// <returns></returns>
-	GhostError_t GhostAppOpenFile(GhostApplicationInfo_t* Application, GhostFile_t* File, char* Mode);
+	/// <param name="AppInfoPtr">Pointor of application info.</param>
+	/// <param name="FilePtr">Pointor of file.</param>
+	/// <param name="AbsPath">Absolute path of the file to open.</param>
+	/// <param name="Mode">Mode.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostAppOpenFile(GhostApplicationInfo_t* AppInfoPtr, GhostFile_t* FilePtr, char* AbsPath, char* Mode);
 	
 
 	
