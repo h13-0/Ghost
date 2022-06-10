@@ -12,8 +12,19 @@
 
 static GhostApplicationInfo_t appInfo;
 
+/// <summary>
+/// Entry function of Ghost Launcher.
+/// </summary>
+/// <param name="Argc">Arguments' count.</param>
+/// <param name="Args">Pointor of Arguments.</param>
+/// <returns></returns>
 GhostError_t GhostLauncherRun(int Argc, void** Args)
 {
+#ifdef _DEBUG
+	// TODO: Record and output arguments.
+	
+#endif
+	
 	// TODO: Check whether the theme is used.
 	// Get application config.
 	appInfo = MacroGhostLauncherInfo;
