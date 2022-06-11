@@ -1,19 +1,25 @@
-# Permission manager.
+# How to use application manager.
 
-## Function list
+
+## Package operations.
+### Register a new application.
+
+## Permission manager.
+
+### Function list
 - [ ] User grouping.
 - [ ] File permission management.
 
 
-## Initialize Permission manager.
-### Register application.
+### Initialize Permission manager.
+#### Register application.
 ```C
 
 ```
 
-## File manager.
+### File manager.
 **After opening the file, you can use `GhostFileSystem` for file operation.**
-### Open file.
+#### Open file.
 `GhostAppOpenFile` 
 
 ```C
@@ -26,5 +32,3 @@
 /// <returns></returns>
 GhostError_t GhostAppOpenFile(GhostApplicationInfo_t* Application, GhostFile_t* File, char* Mode);
 ```
-
-

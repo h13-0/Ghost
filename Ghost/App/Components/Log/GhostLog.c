@@ -80,9 +80,40 @@ GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, const char* FileName
 					// Get current time.
 					int milliseconds = 0;
 					GhostGetCurrentMilliseconds(&milliseconds);
-					fprintf(currentFilePtr, "%ldms : %s, %d: \r\n", milliseconds, FileName, LineNumber);
-					fprintf(currentFilePtr, "    ");
 
+					// Print log level.
+					switch (Level) {
+					case Debug:
+						printf("[Debug]: ");
+						break;
+
+					case Info:
+						printf("[Info]: ");
+						break;
+
+					case Warning:
+						printf("[Warning]: ");
+						break;
+
+					case Error:
+						printf("[Error]: ");
+						break;
+
+					case Fatal:
+						printf("[Fatal]: ");
+						break;
+
+					default:
+						break;
+					}
+
+					fprintf(currentFilePtr, "%ldms : %s, %d: ", milliseconds, FileName, LineNumber);
+
+					va_list arg;
+					va_start(arg, Format);
+					vfprintf(currentFilePtr, Format, arg);
+					fprintf(currentFilePtr, "\r\n");
+					va_end(arg);
 					//fprintf(currentFilePtr, Format, ##);
 				}
 			}
@@ -93,3 +124,43 @@ GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, const char* FileName
 		return GhostOK;
 	}
 }
+
+
+/// <summary>
+/// **Private** log implementation.
+///		**Please use subsequent public implementations.**
+/// </summary>
+/// <param name="LogLevel">Log level.</param>
+/// <param name="ErrorRet">Return value in GhostError_t.</param>
+/// <param name="FileName">File name with error.</param>
+/// <param name="LineNumber">Line number with errors.</param>
+/// <returns>Return true if error occurred.</returns>
+bool __ghostLogRetIfErrImpl__(GhostLogLevel_t LogLevel, GhostError_t ErrorRet, const char* FileName, int LineNumber)
+{
+	if (IfGhostError(ErrorRet))
+	{
+		__ghostPrivateLogImpl__(LogLevel, FileName, LineNumber, "Error occurred, LayerCode: %d, ModuleCode: %d, SubCode: %d , returned.", 
+			ErrorRet.LayerErrorCode, ErrorRet.ModuleErrorCode, ErrorRet.SubErrorCode);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+
+/// <summary>
+/// Reset log level.
+/// </summary>
+/// <param name="MinimumLogLevel">Lowest log level to be recorded.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostLogSetMinimumLogLevel(GhostLogLevel_t MinimumLogLevel)
+{
+	// Try lock?
+	GhostMutexLock(&logMutex);
+	minimumLogLevel = MinimumLogLevel;
+	GhostMutexUnlock(&logMutex);
+
+	return GhostOK;
+}
+

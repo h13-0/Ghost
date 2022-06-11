@@ -10,15 +10,14 @@
 // Drivers
 #include "GhostClock.h"
 
-static GhostApplicationInfo_t appInfo;
+static GhostAppInfo_t appInfo;
 
 /// <summary>
 /// Entry function of Ghost Launcher.
 /// </summary>
-/// <param name="Argc">Arguments' count.</param>
 /// <param name="Args">Pointor of Arguments.</param>
 /// <returns></returns>
-GhostError_t GhostLauncherRun(int Argc, void** Args)
+GhostError_t GhostLauncherRun(void* Args)
 {
 #ifdef _DEBUG
 	// TODO: Record and output arguments.

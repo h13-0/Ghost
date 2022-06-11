@@ -40,7 +40,16 @@ git submodule update --init
 ```
 Open in visual studio and build.  
 **Note that QT needs to be deployed before running.**
-```Powershell
+
+<details>  
+<summary>deactivate <b>FUCKING</b> anaconda.</summary>  
+
+```Powershell  
+conda deactivate
+```  
+</details>  
+Deploy Qt environment.
+```Powershell  
 windeployqt WindowsSimulator.exe
 ```
 
