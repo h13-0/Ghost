@@ -6,7 +6,12 @@
 extern "C" {
 #endif
 
-	GhostError_t GhostLauncherRun(int Argc, void** Args);
+	/// <summary>
+	/// Entry function of Ghost Launcher.
+	/// </summary>
+	/// <param name="Args">Pointor of Arguments.</param>
+	/// <returns></returns>
+	GhostError_t GhostLauncherRun(void* Args);
 
 #ifdef __cplusplus
 }

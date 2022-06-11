@@ -5,7 +5,6 @@
 
 #include "pthread.h"
 
-
 /// <summary>
 /// Create thread.
 /// </summary>
@@ -22,7 +21,7 @@ GhostError_t GhostThreadCreate(GhostThread_t* Thread, void* (*Function)(void*), 
 		return GhostErrorFunctionHandleIllegal;
 
 	// Create thread.
-	if (!pthread_create(Thread, NULL, Function, Args))
+	if (pthread_create(Thread, NULL, Function, Args))
 		return GhostErrorThreadCreateFailed;
 
 	return GhostOK;

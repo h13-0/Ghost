@@ -45,6 +45,15 @@ extern "C" {
 	GhostError_t GhostFS_DeInit(void);
 
 	/// <summary>
+	/// Get the real path of the file.
+	/// </summary>
+	/// <param name="AbsPath">Path from mount directory.</param>
+	/// <param name="RealPath">Real path, this variable requires manual memory allocation.</param>
+	/// <param name="RealPathBufferLength">Buffer size of real path.</param>
+	/// <returns></returns>
+	GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPathBufferLength);
+
+	/// <summary>
 	/// Open file.
 	/// </summary>
 	/// <param name="FilePath">Similar to the Linux style path starting from the root directory "/".</param>
@@ -74,7 +83,7 @@ extern "C" {
 	/// <param name="Size">Size of data.</param>
 	/// <param name="Count">Count of data.</param>
 	/// <param name="GhostFile">Pointor of file.</param>
-	/// <returns>ame as fread, equal to the data size actually read.</returns>
+	/// <returns>Same as fread, equal to the data size actually read.</returns>
 	int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile);
 
 	/// <summary>

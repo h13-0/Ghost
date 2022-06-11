@@ -9,6 +9,8 @@
 #include "GhostThread.h"
 #include "GhostFileSystem.h"
 
+#include "GhostLog.h"
+
 typedef enum
 {
 	GhostAppNotRunning = 0,
@@ -35,7 +37,7 @@ typedef struct GhostAppStatus
 typedef struct GhostAppHandleList
 {
 	// Application message.
-	GhostApplicationInfo_t CurrentApplicationInfo;
+	GhostAppInfo_t CurrentApplicationInfo;
 
 	// Status.
 	GhostAppStatus_t GhostAppStatus;
@@ -63,7 +65,7 @@ GhostError_t GhostAppMgrInit(void)
 	if (nativeApplicationNumbers == 0)
 	{
 		// Register Ghost System.
-		GhostApplicationInfo_t ghostSystem = MacroGhostSystemInfo;
+		GhostAppInfo_t ghostSystem = MacroGhostSystemInfo;
 		GhostAppMgrRegister(&ghostSystem);
 	}
 	return GhostOK;
@@ -74,7 +76,7 @@ GhostError_t GhostAppMgrInit(void)
 /// </summary>
 /// <param name="ApplicationInfo">Application info.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrRegister(GhostApplicationInfo_t* ApplicationInfo)
+GhostError_t GhostAppMgrRegister(GhostAppInfo_t* ApplicationInfo)
 {
 	// TODO: Check icons.
 
@@ -114,7 +116,7 @@ GhostError_t GhostAppMgrRegister(GhostApplicationInfo_t* ApplicationInfo)
 		applicationList = malloc(sizeof(GhostAppHandleList_t));
 		if (applicationList == NULL)
 			return GhostErrorAppCreateOutOfMemory;
-		memcpy(&(applicationList->CurrentApplicationInfo), ApplicationInfo, sizeof(GhostApplicationInfo_t));
+		memcpy(&(applicationList->CurrentApplicationInfo), ApplicationInfo, sizeof(GhostAppInfo_t));
 		applicationList->NextApplicatonNode = NULL;
 		nextApplicatonNode = &(applicationList->NextApplicatonNode);
 	}
@@ -145,7 +147,7 @@ GhostError_t GhostAppMgrRegister(GhostApplicationInfo_t* ApplicationInfo)
 /// <param name="PackageName">Package name.</param>
 /// <param name="ApplicationInfo">Pointor of Application info.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostApplicationInfo_t* ApplicationInfo)
+GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* ApplicationInfo)
 {
 	GhostAppHandleList_t* ptr = applicationList;
 	while (ptr != NULL)
@@ -206,32 +208,27 @@ GhostError_t GhostAppMgrUninstall(char* PackageName)
 GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args)
 {
 	GhostAppHandleList_t* nodePtr;
-	GhostError_t ret = ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr);
+	GhostLogRetIfErr(Fatal, ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr));
+
 	if (nodePtr->GhostAppStatus.RunningStatus == GhostAppRunningForeground)
 	{
 		return GhostOK;
 	}
 
-	if (ret.LayerErrorCode == GhostNoError)
-	{
-		ret = GhostThreadCreate(
+	GhostLogRetIfErr(Fatal, 
+		GhostThreadCreate(
 			&nodePtr->ThreadHandle,
 			nodePtr->CurrentApplicationInfo.ApplicationEntryFunction,
 			nodePtr->CurrentApplicationInfo.PackageName,
 			0,
 			NULL,
 			1
-		);
+		)
+	);
 
-		if (ret.LayerErrorCode == GhostNoError)
-		{
-			nodePtr->GhostAppStatus.RunningStatus = GhostAppRunningForeground;
-			return ret;
-		}
-	}
-	else {
-		return ret;
-	}
+	nodePtr->GhostAppStatus.RunningStatus = GhostAppRunningForeground;
+
+	return GhostOK;
 }
 
 /// <summary>
@@ -252,7 +249,7 @@ GhostError_t GhostAppMgrRunBackground(char* PackageName, int Argc, void** Args)
 /// </summary>
 /// <param name="ApplicationListPtr">Pointer of application linked list.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrGenerateApplicationList(GhostApplicationList_t* ApplicationListPtr)
+GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* ApplicationListPtr)
 {
 	return GhostOK;
 }
@@ -262,10 +259,51 @@ GhostError_t GhostAppMgrGenerateApplicationList(GhostApplicationList_t* Applicat
 /// </summary>
 /// <param name="ApplicationListPtr">Pointer of application linked list.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrDestoryApplicationList(GhostApplicationList_t* ApplicationListPtr)
+GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPtr)
 {
 	return GhostOK;
 }
+
+
+
+/// <summary>
+/// Open the file by the pointer of application info.
+///		**After the file is opened, you can use `GhostFS` to operate the file.**
+/// </summary>
+/// <param name="AppInfoPtr">Pointor of application info.</param>
+/// <param name="FilePtr">Pointor of file.</param>
+/// <param name="AbsPath">Absolute path of the file to open.</param>
+/// <param name="Mode">Mode.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostAppOpenFile(GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode)
+{
+	if (AppInfoPtr->ApplicationType == GhostNativeApplication)
+	{
+		// Open file.
+		GhostLogRetIfErr(Error, GhostFS_Open(AbsPath, FilePtr, Mode));
+	}
+	else
+	{
+#if(MacroAllowRoot)
+		// Check whether it is a root user.
+		// TODO:
+
+
+
+
+#endif
+
+		// Get real path.
+		char realPath[MacroMaximumPathLength] = { '\0' };
+		GhostLogRetIfErr(Error, GhostFS_GetRealPath(AbsPath, realPath, MacroMaximumPathLength));
+
+		// Check whether the path is legal.
+	}
+
+	return GhostOK;
+}
+
+
 
 /// <summary>
 /// Get the default configs of the app.
@@ -273,7 +311,7 @@ GhostError_t GhostAppMgrDestoryApplicationList(GhostApplicationList_t* Applicati
 /// <param name="Application">Application info.</param>
 /// <param name="Configs">Configuration information in cJSON.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrGetAppConfigJSON(GhostApplicationInfo_t* Application, cJSON** Configs)
+GhostError_t GhostAppMgrGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Configs)
 {
 	GhostFile_t configFile;
 	GhostError_t ret = GhostOK;

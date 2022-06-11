@@ -4,6 +4,11 @@
   <h1 align = "center">An amazing watch.</h1>
 </div>
 
+<p align="center">
+  <a href="https://github.com/h13-0/Ghost/releases"><img src="https://img.shields.io/github/release/h13-0/Ghost" alt="Release version"></a>
+  <a href="https://github.com/h13-0/Ghost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/h13-0/Ghost" alt="License"></a>
+</p>
+
 # Functions and tasks
 - [ ] Basic software framework.
   - [X] Support lvgl.
@@ -35,7 +40,16 @@ git submodule update --init
 ```
 Open in visual studio and build.  
 **Note that QT needs to be deployed before running.**
-```Powershell
+
+<details>  
+<summary>deactivate <b>FUCKING</b> anaconda.</summary>  
+
+```Powershell  
+conda deactivate
+```  
+</details>  
+Deploy Qt environment.
+```Powershell  
 windeployqt WindowsSimulator.exe
 ```
 

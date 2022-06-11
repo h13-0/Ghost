@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,6 +19,11 @@ extern "C" {
 		int ModuleErrorCode : 8;
 		int SubErrorCode : 16;
 	} GhostError_t;
+
+	static inline bool IfGhostError(GhostError_t Error)
+	{
+		return (Error.LayerErrorCode != GhostNoError);
+	}
 
 #ifdef __cplusplus
 #define DeclareGhostError(LayerErrorCode, ModuleErrorCode, SubErrorCode) \
