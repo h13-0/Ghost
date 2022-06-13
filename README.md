@@ -24,6 +24,7 @@
   - [ ] Launcher and theme.
   - [ ] Built in applications.
     - [ ] Calculator.
+    - [ ] Health.
   - [ ] Built in games.
     - [ ] Flappy bird.
 - [ ] Ghost installable application support.
@@ -48,10 +49,17 @@ Open in visual studio and build.
 conda deactivate
 ```  
 </details>  
-Deploy Qt environment.
+
+Enter the directory of `WindowsSimulator.exe`.  
+Deploy Qt environment.  
 ```Powershell  
 windeployqt WindowsSimulator.exe
+```  
+Mount file system.  
+```Powershell  
+New-Item -ItemType SymbolicLink -Path .\Ghost -Target ..\..\..\Mount\
 ```
+Now you can run the Qt Simulator.
 
 ## esp32s3
-Will launch soon(perhaps).
+Will launch soon(perhaps).  

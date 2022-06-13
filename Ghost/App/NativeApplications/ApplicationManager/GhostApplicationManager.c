@@ -231,6 +231,7 @@ GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args)
 	return GhostOK;
 }
 
+
 /// <summary>
 /// Run an app in background.
 /// </summary>
@@ -243,6 +244,7 @@ GhostError_t GhostAppMgrRunBackground(char* PackageName, int Argc, void** Args)
 	return GhostOK;
 }
 
+
 /// <summary>
 /// Generate application list.
 ///		**The `ApplicationListPtr` should be released after use!**
@@ -254,6 +256,7 @@ GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* ApplicationListP
 	return GhostOK;
 }
 
+
 /// <summary>
 /// Release application list.
 /// </summary>
@@ -263,7 +266,6 @@ GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPt
 {
 	return GhostOK;
 }
-
 
 
 /// <summary>
@@ -279,6 +281,8 @@ GhostError_t GhostAppOpenFile(GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, 
 {
 	if (AppInfoPtr->ApplicationType == GhostNativeApplication)
 	{
+		// TODO: Check Mode and path.
+
 		// Open file.
 		GhostLogRetIfErr(Error, GhostFS_Open(AbsPath, FilePtr, Mode));
 	}
@@ -304,14 +308,14 @@ GhostError_t GhostAppOpenFile(GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, 
 }
 
 
-
 /// <summary>
 /// Get the default configs of the app.
+/// @note: This function should be deprecated.
 /// </summary>
-/// <param name="Application">Application info.</param>
+/// <param name="AppInfoPtr">Pointor of application info.</param>
 /// <param name="Configs">Configuration information in cJSON.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Configs)
+GhostError_t GhostAppGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Configs)
 {
 	GhostFile_t configFile;
 	GhostError_t ret = GhostOK;
@@ -332,8 +336,8 @@ GhostError_t GhostAppMgrGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Co
 		free(path);
 	}
 
-	if (ret.LayerErrorCode != GhostNoError)
-		return ret;
+	// TODO: Check whether the `MacroGhostAppDefaultConfigFileName` exists.
+	GhostLogRetIfErr(Error, ret);
 	
 	size_t size = GhostFS_GetFileSize(&configFile);
 	if (size > MacroGhostAppDefaultConfigFileSizeLimit)

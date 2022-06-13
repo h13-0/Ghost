@@ -50,7 +50,7 @@ extern "C" {
 	/// <param name="AbsPath">Path from mount directory.</param>
 	/// <param name="RealPath">Real path, this variable requires manual memory allocation.</param>
 	/// <param name="RealPathBufferLength">Buffer size of real path.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPathBufferLength);
 
 	/// <summary>
@@ -66,8 +66,8 @@ extern "C" {
 	/// Flush buffer to file.
 	/// </summary>
 	/// <param name="GhostFile"></param>
-	/// <returns></returns>
-	GhostError_t GhostFS_Flush(GhostFile_t* GhostFile);
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostFS_Flush(const GhostFile_t* GhostFile);
 
 	/// <summary>
 	/// Close file.
@@ -84,7 +84,7 @@ extern "C" {
 	/// <param name="Count">Count of data.</param>
 	/// <param name="GhostFile">Pointor of file.</param>
 	/// <returns>Same as fread, equal to the data size actually read.</returns>
-	int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile);
+	int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile);
 
 	/// <summary>
 	/// Write file stream.
@@ -94,14 +94,14 @@ extern "C" {
 	/// <param name="Count">Count of data.</param>
 	/// <param name="GhostFile">Pointor of file.</param>
 	/// <returns>Same as fwrite, equal to the data size actually written.</returns>
-	int GhostFS_Write(void* BufferPtr, size_t Size, size_t nmemb, GhostFile_t* GhostFile);
+	int GhostFS_Write(void* BufferPtr, size_t Size, size_t nmemb, const GhostFile_t* GhostFile);
 
 	/// <summary>
 	/// Get file size.
 	/// </summary>
 	/// <param name="GhostFile">Pointor of file.</param>
 	/// <returns>File size in size_t.</returns>
-	size_t GhostFS_GetFileSize(GhostFile_t* GhostFile);
+	size_t GhostFS_GetFileSize(const GhostFile_t* GhostFile);
 
 	/// <summary>
 	/// Splice path.

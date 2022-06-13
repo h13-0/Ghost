@@ -1,7 +1,7 @@
 # The following are set after configuration is done:
 # GHOST_WINDOWS_QSIM_INCLUDE_DIRS
 
-project(GhostWindowsQT_Simulator)
+project(GhostWindowsQtSimulator)
 
 # Check dependencies.
 set(CMAKE_AUTOMOC ON) # Meta-Object Compiler

@@ -80,6 +80,11 @@ GhostError_t GhostFS_Init(char* RootDirectoryPath)
 	}
 #endif
 
+	// Check whether the file system is mounted.
+
+
+
+
 	return GhostOK;
 }
 
@@ -126,6 +131,7 @@ GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPa
 /// <param name="GhostFile">Pointor of file.</param>
 /// <param name="Mode">Mode.</param>
 /// <returns>Function execution result.</returns>
+/// TODO: Check whether the file exists.
 GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mode)
 {
 	// Get real path.
@@ -205,7 +211,7 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mo
 /// </summary>
 /// <param name="GhostFile"></param>
 /// <returns></returns>
-GhostError_t GhostFS_Flush(GhostFile_t* GhostFile)
+GhostError_t GhostFS_Flush(const GhostFile_t* GhostFile)
 {
 	// Check file handle.
 	if (GhostFile == NULL)
@@ -277,7 +283,7 @@ GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 /// <param name="Count">Count of data.</param>
 /// <param name="GhostFile">Pointor of file.</param>
 /// <returns>ame as fread, equal to the data size actually read.</returns>
-int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile)
+int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile)
 {
 	// Check file handle.
 	if (GhostFile == NULL)
@@ -307,7 +313,7 @@ int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostF
 /// <param name="Count">Count of data.</param>
 /// <param name="GhostFile">Pointor of file.</param>
 /// <returns>Same as fwrite, equal to the data size actually written.</returns>
-int GhostFS_Write(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* GhostFile)
+int GhostFS_Write(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile)
 {
 	// Check file handle.
 	if (GhostFile == NULL)
@@ -334,7 +340,7 @@ int GhostFS_Write(void* BufferPtr, size_t Size, size_t Count, GhostFile_t* Ghost
 /// </summary>
 /// <param name="GhostFile">Pointor of file.</param>
 /// <returns>File size in size_t.</returns>
-size_t GhostFS_GetFileSize(GhostFile_t* GhostFile)
+size_t GhostFS_GetFileSize(const GhostFile_t* GhostFile)
 {
 	// Check file handle.
 	if (GhostFile == NULL)
