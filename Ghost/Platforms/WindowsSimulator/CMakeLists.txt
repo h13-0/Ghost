@@ -38,6 +38,10 @@ include_directories("${LUA_INCLUDE_DIRS}")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Qt")
 include_directories(${GHOST_WINDOWS_QSIM_INCLUDE_DIRS})
 
+#### FileSystemPatch
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileSystemPatch")
+include_directories(${GHOST_WINDOWS_FSP_INCLUDE_DIRS})
+
 ### Driver layer.
 #### Thread (use pthread).
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Thread/pthread")
@@ -78,6 +82,7 @@ target_link_libraries(
 	lua
 	# Platform.
 	GhostWindowsQtSimulator
+	GhostWindowsFileSystemPatch
 
 	# Drivers.
 	GhostThread

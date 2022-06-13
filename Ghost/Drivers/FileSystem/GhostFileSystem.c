@@ -2,6 +2,8 @@
 
 #include "GhostPlatformConfigs.h"
 
+#include "GhostFileSystemPatch.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -15,7 +17,7 @@ static int rootDirectoryPathLen = 0;
 /// </summary>
 /// <param name="RootDirectoryPath">Path of root directory.</param>
 /// <returns></returns>
-GhostError_t GhostFS_Init(char* RootDirectoryPath)
+GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 {
 	char realPath[MacroMaximumPathLength] = { 0 };
 
@@ -25,6 +27,7 @@ GhostError_t GhostFS_Init(char* RootDirectoryPath)
 #else
 #error ""
 #endif
+
 	rootDirectoryPathLen = strlen(realPath);
 	
 	// Check the characters at the end of the path.
@@ -37,7 +40,8 @@ GhostError_t GhostFS_Init(char* RootDirectoryPath)
 
 		// Copy string.
 		memcpy(rootDirectoryPath, realPath, rootDirectoryPathLen * sizeof(char));
-	} 
+	}
+
 #ifdef _WIN32
 	else if (realPath[rootDirectoryPathLen - 1] == '\\')
 	{
@@ -81,9 +85,10 @@ GhostError_t GhostFS_Init(char* RootDirectoryPath)
 #endif
 
 	// Check whether the file system is mounted.
-
-
-
+	if (IfGhostError(GhostFSP_Access(rootDirectoryPath, GhostFSP_ReadWriteable)))
+	{
+		return GhostErrorFS_MountPointNotExist;
+	}
 
 	return GhostOK;
 }
@@ -132,7 +137,7 @@ GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPa
 /// <param name="Mode">Mode.</param>
 /// <returns>Function execution result.</returns>
 /// TODO: Check whether the file exists.
-GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, char* Mode)
+GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, const char* Mode)
 {
 	// Get real path.
 	/// Allocate memory.
@@ -313,7 +318,7 @@ int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* 
 /// <param name="Count">Count of data.</param>
 /// <param name="GhostFile">Pointor of file.</param>
 /// <returns>Same as fwrite, equal to the data size actually written.</returns>
-int GhostFS_Write(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile)
+int GhostFS_Write(const void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile)
 {
 	// Check file handle.
 	if (GhostFile == NULL)
@@ -371,7 +376,7 @@ size_t GhostFS_GetFileSize(const GhostFile_t* GhostFile)
 /// </summary>
 /// <param name="ParentPath">Parent path in char*.</param>
 /// <param name="Subpath">Subpath in char*.</param>
-char* GhostFS_Join(char* ParentPath, char* Subpath)
+char* GhostFS_Join(const char* ParentPath, const char* Subpath)
 {
 	GhostError_t ret = GhostOK;
 	

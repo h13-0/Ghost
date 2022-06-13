@@ -26,6 +26,9 @@
 #include "lvgl.h"
 #include "cJSON.h"
 
+// Test libraries.
+#include "GhostFileSystemPatch.h"
+
 static GhostError_t ghostAppInit(void)
 {
 	// Init Ghost log.
@@ -77,7 +80,7 @@ GhostError_t GhostAppRun(void)
 	GhostAppInfo_t info = MacroGhostLauncherInfo;
 	ret = GhostAppMgrGetInfoByPackageName("tech.h13.ghost.launcher", &info);
 	cJSON* json;
-	
+
 	while (1)
 	{
 		GhostSleepMillisecond(1000);

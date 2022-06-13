@@ -33,6 +33,11 @@
   - [ ] Migrate to esp-idf.
 - [ ] Mechanical structure.
 
+# Available platforms
+This project is recommended to be used in MCU or SOC of 32-bit MCU or above.  
+- [x] Windows simulator.
+- [ ] esp32s3.
+
 # Build
 ## Windows Simulator
 ```Powershell
@@ -40,7 +45,8 @@ git clone https://github.com/h13-0/Ghost.git
 git submodule update --init
 ```
 Open in visual studio and build.  
-**Note that QT needs to be deployed before running.**
+**Note that QT needs to be deployed before running.**  
+**Enter the directory of `WindowsSimulator.exe`, and open Powershell(not cmd).**  
 
 <details>  
 <summary>deactivate <b>FUCKING</b> anaconda.</summary>  
@@ -48,9 +54,8 @@ Open in visual studio and build.
 ```Powershell  
 conda deactivate
 ```  
-</details>  
+</details><br>  
 
-Enter the directory of `WindowsSimulator.exe`.  
 Deploy Qt environment.  
 ```Powershell  
 windeployqt WindowsSimulator.exe
