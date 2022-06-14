@@ -128,6 +128,26 @@ extern "C" {
 	/// <returns></returns>
 	GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPtr);
 
+  
+	/// <summary>
+	/// Open the file in the name of app.
+	///		**After the file is opened, you can use ghostfs to operate the file.**
+	/// </summary>
+	/// <param name="Application">Application info.</param>
+	/// <param name="File"></param>
+	/// <returns></returns>
+	GhostError_t GhostAppMgrOpenFile(GhostApplicationInfo_t* Application, GhostFile_t* File);
+
+
+	/// <summary>
+	/// Get the default configs of the app.
+	/// @note: This function should be deprecated.
+	/// </summary>
+	/// <param name="Application">Application info.</param>
+	/// <param name="Configs">Configuration information in cJSON.</param>
+	/// <returns></returns>
+	GhostError_t GhostAppMgrGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Configs);
+
 
 	/// <summary>
 	/// The following is the API of PermissionManager.
@@ -160,7 +180,6 @@ extern "C" {
 	/// <returns></returns>
 	GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* AppInfoPtr, cJSON** Configs);
 #define GhostNativeAppGetAppConfigJSON(Configs)						GhostAppGetAppConfigJSON(&__applicationInfo__, Configs)
-
 
 
 #ifdef __cplusplus

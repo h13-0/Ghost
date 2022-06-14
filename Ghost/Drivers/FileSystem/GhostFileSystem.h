@@ -31,6 +31,7 @@ extern "C" {
 		GhostMutex_t Mutex;
 	} GhostFile_t;
 
+  
 	/// <summary>
 	/// Init Ghost file system.
 	/// </summary>
@@ -38,6 +39,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_Init(const char* RootDirectoryPath);
 
+  
 	/// <summary>
 	/// De init Ghost file system.
 	/// </summary>
@@ -45,6 +47,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_DeInit(void);
 
+  
 	/// <summary>
 	/// Get the real path of the file.
 	/// </summary>
@@ -54,6 +57,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPathBufferLength);
 
+  
 	/// <summary>
 	/// Open file.
 	/// </summary>
@@ -63,6 +67,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, const char* Mode);
 
+  
 	/// <summary>
 	/// Flush buffer to file.
 	/// </summary>
@@ -77,6 +82,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostFS_Close(GhostFile_t* GhostFile);
 
+  
 	/// <summary>
 	/// Read file stream.
 	/// </summary>
@@ -87,6 +93,7 @@ extern "C" {
 	/// <returns>Same as fread, equal to the data size actually read.</returns>
 	int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile);
 
+  
 	/// <summary>
 	/// Write file stream.
 	/// </summary>
@@ -97,6 +104,7 @@ extern "C" {
 	/// <returns>Same as fwrite, equal to the data size actually written.</returns>
 	int GhostFS_Write(const void* BufferPtr, size_t Size, size_t nmemb, const GhostFile_t* GhostFile);
 
+  
 	/// <summary>
 	/// Get file size.
 	/// </summary>
@@ -104,6 +112,7 @@ extern "C" {
 	/// <returns>File size in size_t.</returns>
 	size_t GhostFS_GetFileSize(const GhostFile_t* GhostFile);
 
+  
 	/// <summary>
 	/// Splice path.
 	///		You need to manually use the `free` function to free memory after the path is used.
@@ -114,6 +123,7 @@ extern "C" {
 	/// TODO: Change function result parameter transfer method.
 	char* GhostFS_Join(const char* ParentPath, const char* Subpath);
 
+  
 #ifdef __cplusplus
 }
 #endif
