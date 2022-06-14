@@ -7,7 +7,9 @@
 <p align="center">
   <a href="https://github.com/h13-0/Ghost/releases"><img src="https://img.shields.io/github/release/h13-0/Ghost" alt="Release version"></a>
   <a href="https://github.com/h13-0/Ghost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/h13-0/Ghost" alt="License"></a>
-</p>
+</p>  
+
+<!-- 人来来去去，离开了一个又一个，这个表还只是个Demo. -->  
 
 # Functions and tasks
 - [ ] Basic software framework.
@@ -17,6 +19,7 @@
   - [X] Ghost Thread.
   - [X] Ghost File system.
   - [X] Ghost safe lvgl.
+  - [X] Ghost Log.
   - [ ] lua interpreter.
   - [ ] Ghost Power manager.
 - [ ] Basic function realization.
@@ -34,7 +37,7 @@
 - [ ] Mechanical structure.
 
 # Available platforms
-This project is recommended to be used in MCU or SOC of 32-bit MCU or above.  
+This project is recommended to be used in MCU or SOC of 32-bit or above.  
 - [x] Windows simulator.
 - [ ] esp32s3.
 
