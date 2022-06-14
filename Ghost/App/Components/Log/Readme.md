@@ -1,6 +1,6 @@
 # Ghost Log library.
 This component will init in `GhostAppRun()` and **CANNOT** be used until then.  
-That is, this component **CAN ONLY** be used in the GhostApp layer, but not in the GhostDriver and GhostPlatform.  
+That is, this component **CAN ONLY** be used in the GhostApp layer, but **NOT** in the GhostDriver and GhostPlatform.  
 In the GhostDriver and GhostPlatform, you only need to return the error information with the `GhostError_t` type as the return value.  
 
 ## Native development.
