@@ -150,6 +150,29 @@ bool __ghostLogRetIfErrImpl__(GhostLogLevel_t LogLevel, GhostError_t ErrorRet, c
 
 
 /// <summary>
+/// **Private** log implementation.
+///		**Please use subsequent public implementations.**
+/// </summary>
+/// <param name="LogLevel">Log level.</param>
+/// <param name="ErrorRet">Return value in GhostError_t.</param>
+/// <param name="SourceCode">Source code of the function.</param>
+/// <param name="FileName">File name with error.</param>
+/// <param name="LineNumber">Line number with errors.</param>
+void __ghostLogFuncResultImpl__(GhostLogLevel_t LogLevel, GhostError_t ErrorRet, const char* SourceCode, const char* FileName, int LineNumber)
+{
+	if (IfGhostError(ErrorRet))
+	{
+		__ghostPrivateLogImpl__(LogLevel, FileName, LineNumber, "Error in function `%s`, LayerCode: %d, ModuleCode: %d, SubCode: %d.",
+			SourceCode, ErrorRet.LayerErrorCode, ErrorRet.ModuleErrorCode, ErrorRet.SubErrorCode);
+	}
+	else {
+		__ghostPrivateLogImpl__(LogLevel, FileName, LineNumber, "Function `%s` executed successfully.",
+			SourceCode, ErrorRet.LayerErrorCode, ErrorRet.ModuleErrorCode, ErrorRet.SubErrorCode);
+	}
+}
+
+
+/// <summary>
 /// Reset log level.
 /// </summary>
 /// <param name="MinimumLogLevel">Lowest log level to be recorded.</param>

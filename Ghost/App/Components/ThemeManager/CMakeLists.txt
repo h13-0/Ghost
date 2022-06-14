@@ -1,7 +1,12 @@
 # The following are set after configuration is done:
 # GHOST_COMPONENT_THEME_MGR_INCLUDE_DIRS
 
-project(GhostComponentThemeMgr)
+project(GhostCompThemeMgr)
+
+# Include submodules.
+## Built in themes.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Themes")
+include_directories("${GHOST_COMPONENT_THEMES_INCLUDE_DIRS}")
 
 # Generate libraries.
 add_library(
@@ -22,5 +27,8 @@ target_include_directories(
 	PUBLIC "${PROJECT_SOURCE_DIR}"
 )
 
-
-
+# Link libraries.
+target_link_libraries(
+	${PROJECT_NAME}
+	GhostCompThemes
+)

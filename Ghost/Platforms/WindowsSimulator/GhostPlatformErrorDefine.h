@@ -4,5 +4,6 @@
 typedef enum
 {
 	PlatformModuleNoError = 0,
-	PlatformModuleQT_Error = 1,
+	PlatformModuleQtError = 1,
+	PlatformModuleFS_PatchError = 2,
 } PlatformModuleErrorCode;

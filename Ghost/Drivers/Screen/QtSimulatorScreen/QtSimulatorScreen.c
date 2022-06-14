@@ -2,7 +2,7 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "QT_Simulator.h"
+#include "QtSimulator.h"
 #include "lvgl.h"
 #include "GhostPlatformConfigs.h"
 
@@ -17,7 +17,7 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-static void disp_init(GhostQT_Simulator_t* QT_SimulatorPtr);
+static void disp_init(GhostQtSimulator_t* QtSimulatorPtr);
 
 static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p);
 //static void gpu_fill(lv_disp_drv_t * disp_drv, lv_color_t * dest_buf, lv_coord_t dest_width,
@@ -26,7 +26,7 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 /**********************
  *  STATIC VARIABLES
  **********************/
-static GhostQT_Simulator_t* simulatorPtr = NULL;
+static GhostQtSimulator_t* simulatorPtr = NULL;
 
 /**********************
  *      MACROS
@@ -36,12 +36,12 @@ static GhostQT_Simulator_t* simulatorPtr = NULL;
  *   GLOBAL FUNCTIONS
  **********************/
 
-void lv_port_disp_init(GhostQT_Simulator_t* QT_SimulatorPtr)
+void lv_port_disp_init(GhostQtSimulator_t* QtSimulatorPtr)
 {
     /*-------------------------
      * Initialize your display
      * -----------------------*/
-    disp_init(QT_SimulatorPtr);
+    disp_init(QtSimulatorPtr);
 
     /*-----------------------------
      * Create a buffer for drawing
@@ -89,10 +89,10 @@ void lv_port_disp_init(GhostQT_Simulator_t* QT_SimulatorPtr)
  **********************/
 
  /*Initialize your display and the required peripherals.*/
-static void disp_init(GhostQT_Simulator_t* QT_SimulatorPtr)
+static void disp_init(GhostQtSimulator_t* QtSimulatorPtr)
 {
     /*You code here*/
-    simulatorPtr = QT_SimulatorPtr;
+    simulatorPtr = QtSimulatorPtr;
 }
 
 /*Flush the content of the internal buffer the specific area on the display
@@ -102,7 +102,7 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 {
     /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
-    GhostQT_SimulatorDrawScreen(simulatorPtr, area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, color_p);
+    GhostQtSimulatorDrawScreen(simulatorPtr, area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, color_p);
 
     /*IMPORTANT!!!
      *Inform the graphics library that you are ready with the flushing*/

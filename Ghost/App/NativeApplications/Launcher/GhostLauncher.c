@@ -4,13 +4,14 @@
 
 #include <stdio.h>
 
+#include "GhostLog.h"
 #include "GhostSafeLVGL.h"
 #include "GhostApplicationManager.h"
 
 // Drivers
 #include "GhostClock.h"
 
-static GhostAppInfo_t appInfo;
+DeclareNativeAppInfo();
 
 /// <summary>
 /// Entry function of Ghost Launcher.
@@ -19,16 +20,17 @@ static GhostAppInfo_t appInfo;
 /// <returns></returns>
 GhostError_t GhostLauncherRun(void* Args)
 {
+	GhostAppNativeInfoInit(MacroGhostLauncherPackageName);
+
 #ifdef _DEBUG
 	// TODO: Record and output arguments.
 	
 #endif
-	
+
 	// TODO: Check whether the theme is used.
 	// Get application config.
-	appInfo = MacroGhostLauncherInfo;
 	cJSON* configs = NULL;
-	GhostAppMgrGetAppConfigJSON(&appInfo, &configs);
+	GhostLogRetIfErr(Fatal, GhostNativeAppGetAppConfigJSON(&configs));
 
 
 	// TODO: Built in themes.

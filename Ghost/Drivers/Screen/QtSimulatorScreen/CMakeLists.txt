@@ -1,9 +1,9 @@
-project(QT_SimulatorScreen)
+project(QtSimulatorScreen)
 
 add_library(
 	${PROJECT_NAME}
 	STATIC
-	"${PROJECT_SOURCE_DIR}/QT_SimulatorScreen.c"
+	"${PROJECT_SOURCE_DIR}/QtSimulatorScreen.c"
 )
 
 target_include_directories(

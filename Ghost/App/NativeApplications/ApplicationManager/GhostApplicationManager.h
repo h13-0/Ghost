@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "GhostFileSystem.h"
+#include "GhostLog.h"
 #include "cJSON.h"
 
 
@@ -127,6 +128,7 @@ extern "C" {
 	/// <returns></returns>
 	GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPtr);
 
+  
 	/// <summary>
 	/// Open the file in the name of app.
 	///		**After the file is opened, you can use ghostfs to operate the file.**
@@ -152,7 +154,8 @@ extern "C" {
 	/// </summary>
 	
 
-#define DeclareNativeAppInfo(PackageName)              static const char __packageName__[] = "PackageName";
+#define DeclareNativeAppInfo()										static GhostAppInfo_t __applicationInfo__;
+#define GhostAppNativeInfoInit(PackageName)                         do{ GhostLogRetIfErr(Fatal, GhostAppMgrGetInfoByPackageName(PackageName, &__applicationInfo__)); } while(0); GhostOK
 
 
 	/// <summary>
@@ -164,7 +167,19 @@ extern "C" {
 	/// <param name="AbsPath">Absolute path of the file to open.</param>
 	/// <param name="Mode">Mode.</param>
 	/// <returns>Function execution result.</returns>
-	GhostError_t GhostAppOpenFile(GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode);
+	GhostError_t GhostAppOpenFile(const GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode);
+#define GhostNativeAppOpenFile(FilePtr, AbsPath, Mode)				GhostAppOpenFile(&__applicationInfo__, FilePtr, AbsPath, Mode)
+
+
+	/// <summary>
+	/// Get the default configs of the app.
+	/// @note: This function should be deprecated.
+	/// </summary>
+	/// <param name="AppInfoPtr">Pointor of application info.</param>
+	/// <param name="Configs">Configuration information in cJSON.</param>
+	/// <returns></returns>
+	GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* AppInfoPtr, cJSON** Configs);
+#define GhostNativeAppGetAppConfigJSON(Configs)						GhostAppGetAppConfigJSON(&__applicationInfo__, Configs)
 
 
 #ifdef __cplusplus

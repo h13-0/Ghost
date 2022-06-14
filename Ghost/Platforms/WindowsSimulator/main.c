@@ -1,6 +1,6 @@
 #include "GhostPlatformConfigs.h"
 
-#include "QT_Simulator.h"
+#include "QtSimulator.h"
 
 #include "App.h"
 
@@ -11,12 +11,12 @@
 
 #include "pthread.h"
 
-static GhostQT_Simulator_t simulator;
+static GhostQtSimulator_t simulator;
 
 static void* ghostRun(void* args)
 {
 	// Wait Qt Simulator inited.
-	while (GhostQT_SimulatorInited(&simulator).LayerErrorCode != GhostNoError)
+	while (GhostQtSimulatorInited(&simulator).LayerErrorCode != GhostNoError)
 	{
 		GhostSleepMillisecond(100);
 	}
@@ -34,7 +34,7 @@ static void* ghostRun(void* args)
 static void* ghostTimer(void* args)
 {
 	// Wait Qt Simulator inited.
-	while (GhostQT_SimulatorInited(&simulator).LayerErrorCode != GhostNoError)
+	while (GhostQtSimulatorInited(&simulator).LayerErrorCode != GhostNoError)
 	{
 		GhostSleepMillisecond(100);
 	}
@@ -63,7 +63,7 @@ static void* ghostTimer(void* args)
 int main(int argc, char* argv[])
 {
 	// Init Platform layer.
-	GhostQT_SimulatorInit(&simulator, argc, argv);
+	GhostQtSimulatorInit(&simulator, argc, argv);
 
 	// Init Drivers.
 	/// Clock.
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Run simulator.
-	GhostQT_SimulatorRun(&simulator);
+	GhostQtSimulatorRun(&simulator);
 
 	// Wait for the child thread to end.
 	pthread_join(ghostRunThread, NULL);
