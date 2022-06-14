@@ -7,18 +7,9 @@
 <p align="center">
   <a href="https://github.com/h13-0/Ghost/releases"><img src="https://img.shields.io/github/release/h13-0/Ghost" alt="Release version"></a>
   <a href="https://github.com/h13-0/Ghost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/h13-0/Ghost" alt="License"></a>
-</p>
+</p>  
 
-<html>
-  <style type="text/css">
-    story {display: none}
-  </style>
-  <body>
-    <story>
-      人来来去去，离开了一个又一个，这个表还只是个Demo.
-    </story>
-  </body>
-</html>
+<!-- 人来来去去，离开了一个又一个，这个表还只是个Demo. -->  
 
 # Functions and tasks
 - [ ] Basic software framework.
