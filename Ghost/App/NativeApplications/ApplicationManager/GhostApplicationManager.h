@@ -128,16 +128,6 @@ extern "C" {
 	/// <returns></returns>
 	GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPtr);
 
-  
-	/// <summary>
-	/// Open the file in the name of app.
-	///		**After the file is opened, you can use ghostfs to operate the file.**
-	/// </summary>
-	/// <param name="Application">Application info.</param>
-	/// <param name="File"></param>
-	/// <returns></returns>
-	GhostError_t GhostAppMgrOpenFile(GhostApplicationInfo_t* Application, GhostFile_t* File);
-
 
 	/// <summary>
 	/// Get the default configs of the app.

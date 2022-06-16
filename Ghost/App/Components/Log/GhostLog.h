@@ -100,8 +100,8 @@ extern "C" {
 	/// <param name="GhostErrorRet">Function with GhostError_t as return value or return value of GhostError_t.</param>
 	/// <returns>Same as GhostErrorRet.</returns>
 #define GhostLogFuncResult(LogLevel, GhostErrorRet)   do{ \
-															__ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
-														} while(0); GhostErrorRet
+                                                            __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
+                                                        } while(0); GhostErrorRet
 
 
 	/// <summary>
@@ -114,23 +114,11 @@ extern "C" {
 	/// <param name="GhostErrorRet">Function with GhostError_t as return value or return value of GhostError_t.</param>
 	/// <returns>Same as GhostErrorRet.</returns>
 #define GhostLogRetIfErr(LogLevel, GhostErrorRet)     do{ \
-															if(__ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FILE__, __LINE__)) { \
-																return GhostErrorRet; \
-															} \
-														} while(0); GhostErrorRet
+                                                            if(__ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FILE__, __LINE__)) { \
+                                                                return GhostErrorRet; \
+                                                            } \
+                                                        } while(0); GhostErrorRet
 
-	/// <summary>
-	/// Check whether the Ghost function is successfully executed. If not, **return** the return value of the Ghost function in advance.
-	///		This function **CANNOT** be understood as a common C language function.
-	/// </summary>
-	/// <param name="Format">Formatted error message.</param>
-	/// <param name="...">Variable parameters.</param>
-	/// <returns>If GhostErrorRet is GhostOK, the function returns GhostOK.</returns>
-#define GhostLogRetIfErr(LogLevel, GhostErrorRet)     do{ \
-															if(__ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FILE__, __LINE__)) { \
-																return GhostErrorRet; \
-															} \
-														} while(0); GhostOK
 
 #ifdef __cplusplus
 }

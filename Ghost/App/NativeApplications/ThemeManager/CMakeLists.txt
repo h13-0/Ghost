@@ -1,7 +1,7 @@
 # The following are set after configuration is done:
-# GHOST_COMPONENT_THEME_MGR_INCLUDE_DIRS
+# GHOST_APP_THEME_MGR_INCLUDE_DIRS
 
-project(GhostCompThemeMgr)
+project(GhostAppThemeMgr)
 
 # Include submodules.
 ## Built in themes.
@@ -17,7 +17,7 @@ add_library(
 
 # Set header paths.
 set(
-	GHOST_COMPONENT_THEME_MGR_INCLUDE_DIRS
+	GHOST_APP_THEME_MGR_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}"
 	CACHE PATH "Ghost theme manager header file paths list."
 )

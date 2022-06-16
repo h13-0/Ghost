@@ -17,5 +17,5 @@ set(
 )
 
 include_directories(
-	"${GHOST_FILESYSTEM_INCLUDE_DIRS}"
+	"${GHOST_WINDOWS_FSP_INCLUDE_DIRS}"
 )

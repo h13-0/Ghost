@@ -41,6 +41,7 @@
 //>>> Built-in themes.
 #define MacroGhostLauncherThemeBigWhite                               ("Big White")
 #define MacroGhostLauncherThemeLiteBlack                              ("Lite Black")
+#define MacroGhostLauncherThemeAppleLike                              ("Apple Like")
 //>>> Default theme.
 #define MacroGhostLauncherDefaultTheme                                (MacroGhostLauncherThemeBigWhite)
 

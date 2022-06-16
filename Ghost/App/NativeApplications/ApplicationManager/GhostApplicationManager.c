@@ -277,7 +277,7 @@ GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPt
 /// <param name="AbsPath">Absolute path of the file to open.</param>
 /// <param name="Mode">Mode.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppOpenFile(GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode)
+GhostError_t GhostAppOpenFile(const GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode)
 {
 	if (AppInfoPtr->ApplicationType == GhostNativeApplication)
 	{
@@ -315,7 +315,7 @@ GhostError_t GhostAppOpenFile(GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, 
 /// <param name="AppInfoPtr">Pointor of application info.</param>
 /// <param name="Configs">Configuration information in cJSON.</param>
 /// <returns></returns>
-GhostError_t GhostAppGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Configs)
+GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* Application, cJSON** Configs)
 {
 	GhostFile_t configFile;
 	GhostError_t ret = GhostOK;

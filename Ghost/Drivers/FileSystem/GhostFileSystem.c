@@ -28,7 +28,7 @@ GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 #error ""
 #endif
 
-	rootDirectoryPathLen = strlen(realPath);
+	rootDirectoryPathLen = (int)strlen(realPath);
 	
 	// Check the characters at the end of the path.
 	if (realPath[rootDirectoryPathLen - 1] == '/')
@@ -174,7 +174,7 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, const ch
 	if (rootDirectoryPathLen < strlen(realPath))
 		minimumPath = rootDirectoryPathLen;
 	else
-		minimumPath = strlen(realPath);
+		minimumPath = (int)strlen(realPath);
 
 	if (memcmp(rootDirectoryPath, realPath, minimumPath))
 	{

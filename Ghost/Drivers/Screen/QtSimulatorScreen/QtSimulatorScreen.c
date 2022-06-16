@@ -102,7 +102,7 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 {
     /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
-    GhostQtSimulatorDrawScreen(simulatorPtr, area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, color_p);
+    GhostQtSimulatorDrawScreen(simulatorPtr, area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, (unsigned char*)color_p);
 
     /*IMPORTANT!!!
      *Inform the graphics library that you are ready with the flushing*/

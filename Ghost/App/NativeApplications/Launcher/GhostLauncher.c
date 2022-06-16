@@ -11,7 +11,49 @@
 // Drivers
 #include "GhostClock.h"
 
+#include "safe_lvgl.h"
+
 DeclareNativeAppInfo();
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <returns></returns>
+static GhostError_t themeInit();
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="mainPage"></param>
+/// <returns></returns>
+static GhostError_t mainPageCreate(lv_obj_t* mainPage);
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="mainPage"></param>
+/// <returns></returns>
+static GhostError_t mainPageRefresh(lv_obj_t* mainPage);
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="standbyPage"></param>
+/// <returns></returns>
+static GhostError_t standbyPageCreate(lv_obj_t* standbyPage);
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="standbyPage"></param>
+/// <returns></returns>
+static GhostError_t standbyPageRefresh(lv_obj_t* standbyPage);
+
 
 /// <summary>
 /// Entry function of Ghost Launcher.
@@ -69,3 +111,34 @@ GhostError_t GhostLauncherRun(void* Args)
 
 	return GhostOK;
 }
+
+
+static GhostError_t themeInit()
+{
+
+}
+
+static GhostError_t mainPageCreate(lv_obj_t* mainPage)
+{
+
+}
+
+
+static GhostError_t mainPageRefresh(lv_obj_t* mainPage)
+{
+
+}
+
+
+static GhostError_t standbyPageCreate(lv_obj_t* standbyPage)
+{
+
+}
+
+
+static GhostError_t standbyPageRefresh(lv_obj_t* standbyPage)
+{
+
+}
+
+

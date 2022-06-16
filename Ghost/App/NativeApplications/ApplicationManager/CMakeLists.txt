@@ -1,7 +1,7 @@
 # The following are set after configuration is done:
-# GHOST_APP_MGR_INCLUDE_DIRS
+# GHOST_APP_APP_MGR_INCLUDE_DIRS
 
-project(GhostComponentAppMgr)
+project(GhostAppAppMgr)
 
 # Generate libraries.
 add_library(
@@ -12,7 +12,7 @@ add_library(
 
 # Set header paths.
 set(
-	GHOST_APP_MGR_INCLUDE_DIRS
+	GHOST_APP_APP_MGR_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}"
 	CACHE PATH "Ghost application manager header file paths list."
 )

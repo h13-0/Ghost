@@ -47,7 +47,7 @@ This project is recommended to be used in MCU or SOC of 32-bit or above.
 git clone https://github.com/h13-0/Ghost.git
 git submodule update --init
 ```
-Open in visual studio and build.  
+Open in visual studio in folder [Ghost](./Ghost/) and build.  
 **Note that QT needs to be deployed before running.**  
 **Enter the directory of `WindowsSimulator.exe`, and open Powershell(not cmd).**  
 
