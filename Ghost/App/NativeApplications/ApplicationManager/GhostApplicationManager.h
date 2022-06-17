@@ -130,16 +130,6 @@ extern "C" {
 
 
 	/// <summary>
-	/// Get the default configs of the app.
-	/// @note: This function should be deprecated.
-	/// </summary>
-	/// <param name="Application">Application info.</param>
-	/// <param name="Configs">Configuration information in cJSON.</param>
-	/// <returns></returns>
-	GhostError_t GhostAppMgrGetAppConfigJSON(GhostAppInfo_t* Application, cJSON** Configs);
-
-
-	/// <summary>
 	/// The following is the API of PermissionManager.
 	/// </summary>
 	

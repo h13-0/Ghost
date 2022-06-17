@@ -10,8 +10,11 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     ui.setupUi(this);
 
     // Init screenScene.
+
+    // AW7 424-56*654-206 368*448
+
     screenScene = new QGraphicsScene();
-    ui.ScreenView->setScene(screenScene);
+    ui.screenView->setScene(screenScene);
 
     // Create screen image buffer.
 

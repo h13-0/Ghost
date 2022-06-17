@@ -33,7 +33,7 @@ static GhostError_t ghostAppInit(void)
 {
 	// Init Ghost log.
 	{
-		GhostError_t ret = GhostLogInit(MacroMinimumLogLevel);
+		GhostError_t ret = GhostLogInit(MacroGhostLogMinimumLogLevel);
 		if (IfGhostError(ret))
 		{
 			return ret;

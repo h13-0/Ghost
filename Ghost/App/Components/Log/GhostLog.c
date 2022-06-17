@@ -36,7 +36,7 @@ GhostError_t GhostLogInit(GhostLogLevel_t MinimumLogLevel)
 	GhostMutexInit(&logMutex);
 
 	// Initialize custom output streams.
-	MacroLogOutputInit(outputListPtr, outputLogNum);
+	MacroGhostLogOutputInit(outputListPtr, outputLogNum);
 
 	ghostLogInited = true;
 
@@ -107,7 +107,15 @@ GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, const char* FileName
 						break;
 					}
 
+#if(MacroGhostLogOutputFileName && MacroGhostLogOutputLineNumber)
 					fprintf(currentFilePtr, "%ldms : %s, %d: ", milliseconds, FileName, LineNumber);
+#elif(MacroGhostLogOutputFileName)
+					fprintf(currentFilePtr, "%ldms : %s: ", milliseconds, FileName);
+#elif(MacroGhostLogOutputLineNumber)
+					fprintf(currentFilePtr, "%ldms : %d: ", milliseconds, LineNumber);
+#else
+					fprintf(currentFilePtr, "%ldms : ", milliseconds);
+#endif
 
 					va_list arg;
 					va_start(arg, Format);

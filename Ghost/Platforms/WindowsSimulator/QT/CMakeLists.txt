@@ -23,6 +23,15 @@ else()
 endif()
 aux_source_directory(${PROJECT_SOURCE_DIR} GHOST_QT_SOURCE_FILES)
 
+# Set executable icon.
+if(WIN32)
+	set(GHOST_QT_SOURCE_FILES "${GHOST_QT_SOURCE_FILES}" "${PROJECT_SOURCE_DIR}/Icon.qrc")
+elseif(UNIX)
+	# TODO: Icon in linux.
+else()
+	# I don't have iMac.
+endif()
+
 # Generate libraries.
 add_library(
 	${PROJECT_NAME} 
@@ -47,6 +56,8 @@ else()
 	)
 endif()
 
+# Add Qt resource file.
+set(QRC_SOURCE_FILES Resources.qrc)
 
 # Set header paths.
 set(

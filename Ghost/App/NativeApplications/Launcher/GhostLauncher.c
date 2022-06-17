@@ -16,6 +16,9 @@
 DeclareNativeAppInfo();
 
 
+static lv_obj_t* mainPage;
+
+
 /// <summary>
 /// 
 /// </summary>
@@ -74,13 +77,29 @@ GhostError_t GhostLauncherRun(void* Args)
 	cJSON* configs = NULL;
 	GhostLogRetIfErr(Fatal, GhostNativeAppGetAppConfigJSON(&configs));
 
+	
+	// Theme init.
+	GhostLogRetIfErr(Fatal, themeInit());
+
+	// Init pages.
+#if(MacroGhostLauncherMemOptimizeLevel != MacroGhostMemOptimizeStrict)
+	// Init main page.
+	//mainPage = lv_obj_create(lv_scr_act());
+#else
+
+#endif
 
 	// TODO: Built in themes.
 	// Default theme.
-
 	
-	char timeText[16] = { 0 };
+	
+	while (1)
+	{
+		mainPageRefresh(mainPage);
+	}
+	
 
+	char timeText[16] = { 0 };
 	GhostLV_Lock();
 	lv_obj_t* timeLabel = lv_label_create(lv_scr_act());
 	lv_obj_set_width(timeLabel, 150);
@@ -109,6 +128,7 @@ GhostError_t GhostLauncherRun(void* Args)
 		GhostSleepMillisecond(50);
 	}
 
+
 	return GhostOK;
 }
 
@@ -116,11 +136,14 @@ GhostError_t GhostLauncherRun(void* Args)
 static GhostError_t themeInit()
 {
 
+	return GhostOK;
 }
 
 static GhostError_t mainPageCreate(lv_obj_t* mainPage)
 {
 
+
+	return GhostOK;
 }
 
 

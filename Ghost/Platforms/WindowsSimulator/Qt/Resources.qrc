@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>Resources/apple-watch-2-42mm-gold-cocoa.png</file>
+        <file>Resources/apple-watch-series-5-44mm-alaskan-blue.png</file>
+        <file>Resources/sony-smartwatch-3-black.png</file>
+    </qresource>
+</RCC>
