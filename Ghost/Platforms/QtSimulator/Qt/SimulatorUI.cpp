@@ -7,6 +7,7 @@
 SimulatorUI::SimulatorUI(QWidget *parent) :
     QMainWindow(parent)
 {
+    Q_INIT_RESOURCE(Resources);
     ui.setupUi(this);
 
     // Init screenScene.
@@ -27,6 +28,7 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
 SimulatorUI::~SimulatorUI()
 {
     delete screenScene;
+    Q_CLEANUP_RESOURCE(Resources);
 }
 
 /// <summary>

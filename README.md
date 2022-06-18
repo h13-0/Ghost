@@ -14,17 +14,18 @@
 # Functions and tasks
 - [ ] Basic software framework.
   - [X] Support lvgl.
-  - [X] Ghost Package manager.
-  - [X] Ghost Clock.
-  - [X] Ghost Thread.
-  - [X] Ghost File system.
+  - [X] Ghost package manager.
+  - [X] Ghost clock.
+  - [X] Ghost thread.
+  - [X] Ghost file system.
   - [X] Ghost safe lvgl.
-  - [X] Ghost Log.
-  - [ ] lua interpreter.
+  - [X] Ghost log.
+  - [x] Ghost launcher.
+  - [ ] Ghost Theme manager.
   - [ ] Ghost Power manager.
+  - [ ] lua interpreter.
 - [ ] Basic function realization.
   - [X] Basic clock function.
-  - [ ] Launcher and theme.
   - [ ] Built in applications.
     - [ ] Calculator.
     - [ ] Health.
@@ -38,11 +39,13 @@
 
 # Available platforms
 This project is recommended to be used in MCU or SOC of 32-bit or above.  
-- [x] Windows simulator.
+- [x] Windows/Linux Qt simulator.
 - [ ] esp32s3.
+- [ ] Linux frame buffer.
 
 # Build
-## Windows Simulator
+## Windows/Linux Simulator  
+[Development documentation](./Ghost/Platforms/QtSimulator/Readme.md)  
 ![WindowsSimulator.jpg](./Images/WindowsSimulator.jpg)
 ```Powershell
 git clone https://github.com/h13-0/Ghost.git
@@ -63,11 +66,11 @@ conda deactivate
 Deploy Qt environment.  
 ```Powershell  
 windeployqt WindowsSimulator.exe
-```  
+```    
 Mount file system.  
 ```Powershell  
 New-Item -ItemType SymbolicLink -Path .\Ghost -Target ..\..\..\Mount\
-```
+```  
 Now you can run the Qt Simulator.
 
 ## esp32s3

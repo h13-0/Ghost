@@ -36,11 +36,12 @@ include_directories("${LUA_INCLUDE_DIRS}")
 ### Platforms layer.
 #### Qt.
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Qt")
-include_directories(${GHOST_WINDOWS_QSIM_INCLUDE_DIRS})
+include_directories("${GHOST_QSIM_INCLUDE_DIRS}")
+set(SOURCE_FILES "${SOURCE_FILES}" "${GHOST_QSIM_SOURCE_FILES}")
 
 #### FileSystemPatch
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileSystemPatch")
-include_directories(${GHOST_WINDOWS_FSP_INCLUDE_DIRS})
+include_directories(${GHOST_FSP_INCLUDE_DIRS})
 
 ### Driver layer.
 #### Thread (use pthread).
@@ -73,23 +74,24 @@ set(
 	${CMAKE_CURRENT_LIST_DIR}/main.c
 )
 
+
 # Compile executable file.
-add_executable(WindowsSimulator ${SOURCE_FILES})
+add_executable(QtSimulator ${SOURCE_FILES})
 target_link_libraries(
-	WindowsSimulator
+	QtSimulator
 	# ThirdParty.
 	lvgl
 	lua
 	# Platform.
-	GhostWindowsQtSimulator
-	GhostWindowsFileSystemPatch
+	GhostQtSimulator
+	GhostFileSystemPatch
 
 	# Drivers.
 	GhostThread
-	
 	QtSimulatorScreen 
 	GhostStandardClock
 	GhostFileSystem
 	GhostApps
 
 )
+

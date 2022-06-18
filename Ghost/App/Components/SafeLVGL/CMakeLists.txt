@@ -21,6 +21,6 @@ set(
 )
 
 include_directories(
-	"${GHOST_SAFELVGL_INCLUDE_DIRS}"
+	"${GHOST_CMP_SAFELVGL_INCLUDE_DIRS}"
 )
 

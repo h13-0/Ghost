@@ -84,23 +84,23 @@ GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, const char* FileName
 					// Print log level.
 					switch (Level) {
 					case Debug:
-						printf("[Debug]: ");
+						fprintf(currentFilePtr, "[Debug]: ");
 						break;
 
 					case Info:
-						printf("[Info]: ");
+						fprintf(currentFilePtr, "[Info]: ");
 						break;
 
 					case Warning:
-						printf("[Warning]: ");
+						fprintf(currentFilePtr, "[Warning]: ");
 						break;
 
 					case Error:
-						printf("[Error]: ");
+						fprintf(currentFilePtr, "[Error]: ");
 						break;
 
 					case Fatal:
-						printf("[Fatal]: ");
+						fprintf(currentFilePtr, "[Fatal]: ");
 						break;
 
 					default:

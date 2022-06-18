@@ -16,6 +16,10 @@
 #define MacroDisplayHorizontalResolution                              (240)
 #define MacroDisplayVerticalResolution                                (240)
 
+//> 
+#define MacroDisplayMaximumHorizontalResolution                       (1080)
+#define MacroDisplayMaximumVerticalResolution                         (1080)
+
 
 /******************************************************** Ghost driver configs ********************************************************/
 //> File system configs.

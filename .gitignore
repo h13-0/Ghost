@@ -1,3 +1,4 @@
 /Ghost/Build
 /Ghost/.vs
 /Ghost/out
+/Ghost/Platforms/QtSimulator/build-Qt*
