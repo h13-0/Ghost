@@ -20,7 +20,7 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     // Create screen image buffer.
 
     // Connect signals and slots.
-    connect(this, &SimulatorUI::DrawScreen, this, &SimulatorUI::drawScreenMethod, Qt::BlockingQueuedConnection);
+    connect(this, &SimulatorUI::drawScreen, this, &SimulatorUI::drawScreenMethod, Qt::BlockingQueuedConnection);
 
     QTimer::singleShot(0, this, [this] { std::unique_lock<std::mutex> lck(loadFinishedFlagMutex); loadFinishedFlag = true; });
 }

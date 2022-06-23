@@ -15,6 +15,7 @@
 //> Virtual Screen configs.
 #define MacroDisplayHorizontalResolution                              (240)
 #define MacroDisplayVerticalResolution                                (240)
+#define MacroDisplayFilletRadius                                      (10)
 
 //> 
 #define MacroDisplayMaximumHorizontalResolution                       (1080)

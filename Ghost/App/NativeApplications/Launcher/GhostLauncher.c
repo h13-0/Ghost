@@ -83,8 +83,21 @@ GhostError_t GhostLauncherRun(void* Args)
 
 	// Init pages.
 #if(MacroGhostLauncherMemOptimizeLevel != MacroGhostMemOptimizeStrict)
+	lv_style_t pageStyle;
+	lv_style_init(&pageStyle);
+	lv_style_set_border_width(&pageStyle, 0);
+	lv_style_set_radius(&pageStyle, MacroDisplayFilletRadius);
+	
+
 	// Init main page.
-	//mainPage = lv_obj_create(lv_scr_act());
+	GhostLV_Lock();
+	mainPage = lv_obj_create(lv_scr_act());
+	//lv_obj_remove_style_all(mainPage);
+	lv_obj_set_pos(mainPage, 0, 0);
+	lv_obj_set_size(mainPage, MacroDisplayHorizontalResolution, MacroDisplayVerticalResolution / 2);
+	lv_obj_add_style(mainPage, &pageStyle, 0);
+	lv_obj_set_style_bg_color(mainPage, lv_color_black(), 0);
+	GhostLV_Unlock();
 #else
 
 #endif
@@ -98,37 +111,6 @@ GhostError_t GhostLauncherRun(void* Args)
 		mainPageRefresh(mainPage);
 	}
 	
-
-	char timeText[16] = { 0 };
-	GhostLV_Lock();
-	lv_obj_t* timeLabel = lv_label_create(lv_scr_act());
-	lv_obj_set_width(timeLabel, 150);
-	lv_label_set_text_static(timeLabel, timeText);
-	lv_obj_set_style_text_font(timeLabel, &lv_font_montserrat_48, 0);
-	lv_obj_align(timeLabel, LV_ALIGN_CENTER, 0, 40);
-	GhostLV_Unlock();
-
-	while (1)
-	{
-		int hour, minute, second;
-		GhostGetCurrentTime(&hour, &minute, &second);
-
-		if (second % 2 == 0)
-		{
-			sprintf(timeText, "%02d:%02d", hour, minute);
-		}
-		else {
-			sprintf(timeText, "%02d %02d", hour, minute);
-		}
-
-		LV_Safe(
-		lv_label_set_text_static(timeLabel, NULL);
-		)
-
-		GhostSleepMillisecond(50);
-	}
-
-
 	return GhostOK;
 }
 

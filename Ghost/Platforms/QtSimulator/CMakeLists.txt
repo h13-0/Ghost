@@ -56,6 +56,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/FileSystem")
 include_directories(${GHOST_FILESYSTEM_INCLUDE_DIRS})
 #### Screen.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Screen/QtSimulatorScreen")
+include_directories("${GHOST_SCREEN_INCLUDE_DIRS}")
 #### Touch Screen.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/TouchScreen")
 

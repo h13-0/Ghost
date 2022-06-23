@@ -20,22 +20,25 @@ extern "C" {
 		void* SimulatorUI_Ptr;
 	} GhostQtSimulator_t;
 	
+	
 	/// <summary>
 	/// Init QT Simulator.
 	/// </summary>
 	/// <param name="QtSimulator">Simulator pointor.</param>
 	/// <param name="argc"></param>
 	/// <param name="argv"></param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostQtSimulatorInit(GhostQtSimulator_t* QtSimulator, int argc, char** argv);
 
+	
 	/// <summary>
 	/// Run QT Simulator.
 	/// </summary>
 	/// <param name="QtSimulator">Simulator pointor.</param>
-	/// <returns>GhostError_t</returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostQtSimulatorRun(GhostQtSimulator_t* QtSimulator);
 
+	
 	/// <summary>
 	/// Draw image in the virtual screen of the simulator.
 	/// </summary>
@@ -45,19 +48,38 @@ extern "C" {
 	/// <param name="Width">Width.</param>
 	/// <param name="Height">Height.</param>
 	/// <param name="ARGB32_Pixels">ARGB32 Pixels in uint8_t.</param>
-	/// <returns>GhostError_t</returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostQtSimulatorDrawScreen(GhostQtSimulator_t* QtSimulator, int X, int Y, int Width, int Height, unsigned char* ARGB32_Pixels);
 
-	GhostError_t GhostQtSimulatorGetScreenResolution(GhostQtSimulator_t* QtSimulator, int* X_Resolution, int* Y_Resolution);
 
+	/// <summary>
+	/// Get screen resolution.
+	/// </summary>
+	/// <param name="QtSimulator">Pointor to simulator.</param>
+	/// <param name="Width">Width.</param>
+	/// <param name="Hegith">Hegith.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostQtSimulatorGetScreenResolution(GhostQtSimulator_t* QtSimulator, int* Width, int* Height);
+
+	
+	/// <summary>
+	/// Get screen fillet radius.
+	/// </summary>
+	/// <param name="QtSimulator">Pointor to simulator.</param>
+	/// <param name="Radius">Radius.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostQtSimulatorGetRadius(GhostQtSimulator_t* QtSimulator, int* Radius);
+
+	
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="QtSimulator">Simulator pointor.</param>
 	/// <param name="CallbackPtr"></param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostQtSimulatorSetTouchEventsCallback(GhostQtSimulator_t* QtSimulator, void (*CallbackPtr)(int X, int Y));
 
+	
 	/// <summary>
 	/// 
 	/// </summary>
@@ -65,6 +87,7 @@ extern "C" {
 	/// <returns>GhostOK will be returned if initialization is completed.</returns>
 	GhostError_t GhostQtSimulatorInited(GhostQtSimulator_t* QtSimulator);
 
+	
 #ifdef __cplusplus
 }
 #endif

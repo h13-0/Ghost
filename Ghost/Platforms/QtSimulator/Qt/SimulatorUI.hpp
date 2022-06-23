@@ -19,10 +19,26 @@ public:
     SimulatorUI(const SimulatorUI&) = delete;
     ~SimulatorUI();
 
+    /// <summary>
+    /// Judge whether the current simulator has been initialized.
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns>Return ture if the simulator initialized.</returns>
     bool inited(void)
     {
         std::unique_lock<std::mutex> lck(loadFinishedFlagMutex);
         return loadFinishedFlag;
+    }
+
+    /// <summary>
+    /// Get the resolution of screen in the simulator.
+    /// </summary>
+    /// <param name="Width">Width.</param>
+    /// <param name="Height">Height.</param>
+    void getScreenResolution(int& Width, int& Height)
+    {
+        Width = ui.screenView->width();
+        Height = ui.screenView->height();
     }
 
 signals:
@@ -34,7 +50,7 @@ signals:
     /// <param name="Width">Width.</param>
     /// <param name="Height">Height.</param>
     /// <param name="ARGB32_Pixels">ARGB32 Pixels in uint8_t.</param>
-    void DrawScreen(int X, int Y, int Width, int Height, unsigned char* ARGB32_Pixels);
+    void drawScreen(int X, int Y, int Width, int Height, unsigned char* ARGB32_Pixels);
 
 private:
     Ui::MainWindow ui;

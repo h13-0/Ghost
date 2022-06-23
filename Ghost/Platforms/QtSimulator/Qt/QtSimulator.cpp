@@ -36,10 +36,6 @@ GhostError_t GhostQtSimulatorRun(GhostQtSimulator_t* QtSimulator)
 	
 }
 
-GhostError_t GhostQtSimulatorGetResolution(GhostQtSimulator_t* QtSimulator, int* X_Resolution, int* Y_Resolution)
-{
-	return GhostOK;
-}
 
 GhostError_t GhostQtSimulatorDraw(GhostQtSimulator_t* QtSimulator)
 {
@@ -63,7 +59,28 @@ GhostError_t GhostQtSimulatorDrawScreen(GhostQtSimulator_t* QtSimulator, int X, 
 		return GhostError_QtSimulatorUninitialized;
 	}
 
-	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->DrawScreen(X, Y, Width, Height, ARGB32_Pixels);
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->drawScreen(X, Y, Width, Height, ARGB32_Pixels);
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Get screen resolution.
+/// </summary>
+/// <param name="QtSimulator">Pointor to simulator.</param>
+/// <param name="Width">Width.</param>
+/// <param name="Hegith">Hegith.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostQtSimulatorGetScreenResolution(GhostQtSimulator_t* QtSimulator, int* Width, int* Height)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenResolution(*Width, *Height);
+
+		
 	return GhostOK;
 }
 

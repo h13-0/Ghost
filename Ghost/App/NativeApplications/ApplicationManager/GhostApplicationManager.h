@@ -6,8 +6,10 @@
 #include "GhostFileSystem.h"
 #include "GhostLog.h"
 #include "cJSON.h"
+#include "safe_lvgl.h"
 
 
+//TODO: Use __COUNTER__
 #define GhostErrorAppMgrUninitialized        DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 1)
 #define GhostErrorAppInfoIllegal             DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 2)
 #define GhostErrorAppNotFound                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppMgrError, 3)
@@ -59,7 +61,7 @@ extern "C" {
 	/// </summary>
 	/// <param name="Application">Application info.</param>
 	/// <returns></returns>
-	GhostError_t GhostAppMgrRegister(GhostAppInfo_t* Application);
+	GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const Application);
 	
 
 	/// <summary>
@@ -68,7 +70,7 @@ extern "C" {
 	/// <param name="PackageName">Package name.</param>
 	/// <param name="ApplicationInfo">Pointor of Application info.</param>
 	/// <returns></returns>
-	GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* ApplicationInfo);
+	GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* const ApplicationInfo);
 
 
 	/// <summary>
@@ -86,7 +88,7 @@ extern "C" {
 	/// <param name="Argc">Number of args.</param>
 	/// <param name="Args">Pointers of args.</param>
 	/// <returns></returns>
-	GhostError_t GhostAppMgrRunForeground(char* PackageName, int Argc, void** Args);
+	GhostError_t GhostAppMgrRunForeground(const char* const PackageName, int Argc, void** Args);
 	
 
 	/// <summary>
@@ -96,7 +98,7 @@ extern "C" {
 	/// <param name="Argc">Number of args.</param>
 	/// <param name="Args">Pointers of args.</param>
 	/// <returns></returns>
-	GhostError_t GhostAppMgrRunBackground(char* PackageName, int Argc, void** Args);
+	GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, void** Args);
 
 
 	/// <summary>
@@ -118,7 +120,7 @@ extern "C" {
 	/// </summary>
 	/// <param name="ApplicationListPtr">Pointer of application linked list.</param>
 	/// <returns></returns>
-	GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* ApplicationListPtr);
+	GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* const ApplicationListPtr);
 	
 
 	/// <summary>
@@ -147,7 +149,7 @@ extern "C" {
 	/// <param name="AbsPath">Absolute path of the file to open.</param>
 	/// <param name="Mode">Mode.</param>
 	/// <returns>Function execution result.</returns>
-	GhostError_t GhostAppOpenFile(const GhostAppInfo_t* AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode);
+	GhostError_t GhostAppOpenFile(const GhostAppInfo_t* const AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode);
 #define GhostNativeAppOpenFile(FilePtr, AbsPath, Mode)				GhostAppOpenFile(&__applicationInfo__, FilePtr, AbsPath, Mode)
 
 
@@ -157,10 +159,21 @@ extern "C" {
 	/// </summary>
 	/// <param name="AppInfoPtr">Pointor of application info.</param>
 	/// <param name="Configs">Configuration information in cJSON.</param>
-	/// <returns></returns>
-	GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* AppInfoPtr, cJSON** Configs);
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* const AppInfoPtr, cJSON** Configs);
 #define GhostNativeAppGetAppConfigJSON(Configs)						GhostAppGetAppConfigJSON(&__applicationInfo__, Configs)
 
+
+	/// <summary>
+	/// Create page by the pointer of application info.
+	/// </summary>
+	/// <param name="AppInfoPtr">Pointor of application info.</param>
+	/// <param name="PagePtr">Pointor of page(pointor to lv_obj_t*)</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostAppCreatePage(const GhostAppInfo_t* const AppInfoPtr, lv_obj_t** const PagePtr);
+#define GhostNativeAppCreatePage(PagePtr)							GhostAppCreatePage(&__applicationInfo__, PagePtr)
+
+	
 
 #ifdef __cplusplus
 }

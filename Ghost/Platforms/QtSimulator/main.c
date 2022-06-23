@@ -7,7 +7,7 @@
 #include "GhostClock.h"
 #include "GhostFileSystem.h"
 
-#include <time.h>
+#include <stdlib.h>
 
 #include "pthread.h"
 
@@ -63,13 +63,17 @@ static void* ghostTimer(void* args)
 int main(int argc, char* argv[])
 {
 	// Init Platform layer.
-	GhostQtSimulatorInit(&simulator, argc, argv);
+	if (IfGhostError(GhostQtSimulatorInit(&simulator, argc, argv)))
+		exit(1);
 
 	// Init Drivers.
 	/// Clock.
-	GhostClockInit();
+	if(IfGhostError(GhostClockInit()))
+		exit(2);
+
 	/// FileSystem.
-	GhostFS_Init(MacroFileSystemMountPoint);
+	if(IfGhostError(GhostFS_Init(MacroFileSystemMountPoint)))
+		exit(3);
 
 	// Init software.
 	// Init lvgl.
