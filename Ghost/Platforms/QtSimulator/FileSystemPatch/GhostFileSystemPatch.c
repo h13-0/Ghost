@@ -79,7 +79,7 @@ GhostError_t GhostFSP_Access(const char* RealPath, GhostFSP_AccessMode_t Mode)
 /// </summary>
 /// <param name="RealPath">The real path that ghost can read directly is the system path in windows/linux system or FatFs.</param>
 /// <returns></returns>
-GhostError_t GhostFSP_IsFolderExist(const char* RealPath, const char* Mode)
+GhostError_t GhostFSP_IsFolderExist(const char* RealPath)
 {
 #if defined(_WIN32)
 	// Windows

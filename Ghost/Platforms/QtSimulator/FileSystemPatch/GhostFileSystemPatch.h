@@ -2,6 +2,8 @@
 
 #include "GhostPlatformErrorDefine.h"
 
+#include <stddef.h>
+
 #define GhostErrorFS_PatchPermissionDenied                 DeclareGhostError(GhostPlatformLayerError, PlatformModuleFS_PatchError, 1)
 #define GhostErrorFS_PatchIsNotFile                        DeclareGhostError(GhostPlatformLayerError, PlatformModuleFS_PatchError, 2)
 #define GhostErrorFS_PatchIsNotFolder                      DeclareGhostError(GhostPlatformLayerError, PlatformModuleFS_PatchError, 3)
@@ -74,6 +76,13 @@ extern "C" {
 	/// <param name="RealPath">The real path that ghost can read directly is the system path in windows/linux system or FatFs.</param>
 	/// <returns></returns>
 	GhostError_t GhostFSP_IsFolder(const char* RealPath);
+
+
+	/// <summary>
+	/// Typedef of GhostFolderPatch(`DIR*`)
+	/// </summary>
+	typedef void* GhostFolderPatch_t;
+
 
 
 #ifdef __cplusplus

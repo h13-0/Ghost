@@ -103,6 +103,10 @@ extern "C" {
                                                             __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
                                                         } while(0); GhostErrorRet
 
+#define GhostLogIfError(LogLevel, GhostErrorRet)      do{ \
+                                                            if(IfGhostError(GhostErrorRet)) \
+                                                                __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
+                                                        } while(0); GhostErrorRet
 
 	/// <summary>
 	/// Check whether the Ghost function is successfully executed. If not, **return** the return value of the Ghost function in advance.

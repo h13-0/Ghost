@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "GhostSafeLVGL.h"
+
 // Ghost drivers.
 #include "GhostLog.h"
 #include "GhostThread.h"
@@ -40,6 +42,7 @@ typedef struct GhostAppStatus
 {
 	GhostAppRunningStatus_t RunningStatus : 2;
 	GhostAppPermission_t Permission : 2;
+	int HaveVirtualScreen : 1;
 } GhostAppStatus_t;
 
 
@@ -67,8 +70,11 @@ typedef struct GhostAppHandleList
 	// Status.
 	GhostAppStatus_t GhostAppStatus;
 
-	// Handles.
+	// Thread.
 	GhostThread_t ThreadHandle;
+
+	// Virtual screen.
+	lv_obj_t** VirtualScreen;
 
 	// Resources.
 	GhostAppResources_t* ResourceList;
@@ -83,7 +89,7 @@ typedef struct GhostAppHandleList
 /// Static variables of Application Manager.
 ///		TODO: Using external struct to save static variables.
 /// </summary>
-static lv_style_t pageStyle;
+static lv_style_t screenStyle;
 static GhostAppHandleList_t* applicationList = NULL;
 static GhostAppHandleList_t** nextApplicatonNode = NULL;
 
@@ -106,9 +112,19 @@ GhostError_t GhostAppMgrInit(void)
 	}
 
 	// Create default page style.
-	lv_style_init(&pageStyle);
-	lv_style_set_border_width(&pageStyle, 0);
-	lv_style_set_radius(&pageStyle, MacroDisplayFilletRadius);
+	lv_style_init(&screenStyle);
+	lv_style_set_border_width(&screenStyle, 0);
+	lv_style_set_pad_all(&screenStyle, 0);
+	int radius;
+	if (IfGhostError(GhostScreenGetRadius(&radius)))
+	{
+		GhostLogE("Failed to obtain screen radius.");
+		lv_style_set_radius(&screenStyle, MacroDisplayFilletRadius);
+	}
+	else {
+		lv_style_set_radius(&screenStyle, radius);
+	}
+	
 	
 	return GhostOK;
 }
@@ -180,6 +196,8 @@ GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const ApplicationInfo)
 	}
 	applicationList->GhostAppStatus.RunningStatus = GhostAppNotRunning;
 
+	applicationList->GhostAppStatus.HaveVirtualScreen = 0;
+
 	return GhostOK;
 }
 
@@ -212,7 +230,7 @@ GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* 
 /// <param name="PackageName">Package name.</param>
 /// <param name="ApplicationInfo">Pointor of Application handle node.</param>
 /// <returns></returns>
-static GhostError_t ghostAppMgrGetHandleNodeByPackageName(char* PackageName, GhostAppHandleList_t** ApplicationNode)
+static GhostError_t ghostAppMgrGetHandleNodeByPackageName(const char* PackageName, GhostAppHandleList_t** ApplicationNode)
 {
 	const GhostAppHandleList_t* ptr = applicationList;
 	while (ptr != NULL)
@@ -230,14 +248,14 @@ static GhostError_t ghostAppMgrGetHandleNodeByPackageName(char* PackageName, Gho
 }
 
 /// <summary>
-/// Uninstall an app.
+/// Get appliaction handle node by package name.
 /// </summary>
 /// <param name="PackageName">Package name.</param>
+/// <param name="ApplicationInfo">Pointor of Application handle node.</param>
 /// <returns></returns>
-GhostError_t GhostAppMgrUninstall(char* PackageName)
+static GhostError_t ghostAppMgrGetHandleNodeByAppInfo(const GhostAppInfo_t* AppInfo, GhostAppHandleList_t** ApplicationNode)
 {
-	
-	return GhostOK;
+
 }
 
 /// <summary>
@@ -286,6 +304,41 @@ GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, v
 	return GhostOK;
 }
 
+
+/// <summary>
+/// Stop app by appliaction info.
+/// </summary>
+/// <param name="ApplicationInfo"></param>
+/// <returns></returns>
+GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t* ApplicationInfo)
+{
+	GhostError_t ret = GhostOK;
+	// Wait for UI to idle.
+	GhostLogIfError(Warning, GhostLV_Lock());
+	// 
+
+	GhostLogIfError(Warning, GhostLV_Unlock());
+
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Uninstall an app.
+/// </summary>
+/// <param name="PackageName">Package name.</param>
+/// <returns></returns>
+GhostError_t GhostAppMgrUninstall(const char* PackageName)
+{
+	GhostAppInfo_t info;
+	GhostLogRetIfErr(Error, GhostAppMgrGetInfoByPackageName(PackageName, &info));
+	GhostLogRetIfErr(Error, GhostAppMgrStopApp(&info));
+
+	// Delete files.
+	// TODO:
+
+	return GhostOK;
+}
 
 /// <summary>
 /// Generate application list.
@@ -403,15 +456,56 @@ GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* const Application, c
 
 
 /// <summary>
-/// Create page by the pointer of application info.
+/// Get virtual screen by the pointer of application info.
 /// </summary>
 /// <param name="AppInfoPtr">Pointor of application info.</param>
-/// <param name="PagePtr">Pointor of page(pointor to lv_obj_t*)</param>
+/// <param name="ScreenPtr">Pointor of virtual screen.(pointor to lv_obj_t*)</param>
 /// <returns>Function execution result.</returns>
 /// TODO: Release page automatically when releasing the running program.
-GhostError_t GhostAppCreatePage(const GhostAppInfo_t* const AppInfoPtr, lv_obj_t** const PagePtr)
+GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t* const AppInfoPtr, lv_obj_t** const ScreenPtr)
 {
-
+	//GhostLogIfError(Warning, GhostLV_Lock());
+	GhostLV_Lock();
+	lv_obj_t* screen = lv_obj_create(lv_scr_act());
 	
+	if (screen != NULL)
+	{
+		// TODO: Check front or background.
+		// lv_obj_add_flag(screen, LV_OBJ_FLAG_HIDDEN);
+
+		// Set style.
+		int width, height, radius;
+		if (IfGhostError(GhostScreenGetResolution(&width, &height)))
+		{
+			GhostLogE("Failed to obtain screen resolution.");
+			width = MacroDisplayHorizontalResolution;
+			height = MacroDisplayVerticalResolution;
+		}
+
+		if (IfGhostError(GhostScreenGetRadius(&radius)))
+		{
+			GhostLogE("Failed to obtain screen radius.");
+			lv_style_set_radius(&screenStyle, MacroDisplayFilletRadius);
+		}
+		else {
+			lv_style_set_radius(&screenStyle, radius);
+		}
+
+		lv_obj_add_style(screen, &screenStyle, 0);
+		lv_obj_set_pos(screen, 0, 0);
+		lv_obj_set_size(screen, width, height);
+	}
+	
+	GhostLogIfError(Warning, GhostLV_Unlock());
+	if (screen == NULL)
+	{
+
+	}
+	else {
+		*ScreenPtr = screen;
+		//*VirtualScreen = screen;
+		return GhostOK;
+	}
+
 	return GhostOK;
 }

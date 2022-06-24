@@ -74,14 +74,6 @@ extern "C" {
 
 
 	/// <summary>
-	/// Uninstall an app.
-	/// </summary>
-	/// <param name="PackageName">Package name.</param>
-	/// <returns></returns>
-	GhostError_t GhostAppMgrUninstall(char* PackageName);
-
-
-	/// <summary>
 	/// Run an app in foreground.
 	/// </summary>
 	/// <param name="PackageName">Package name.</param>
@@ -99,6 +91,30 @@ extern "C" {
 	/// <param name="Args">Pointers of args.</param>
 	/// <returns></returns>
 	GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, void** Args);
+
+
+	/// <summary>
+	/// Stop app by appliaction info.
+	/// </summary>
+	/// <param name="ApplicationInfo"></param>
+	/// <returns></returns>
+	GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t* ApplicationInfo);
+
+
+	/// <summary>
+	/// Stop app by package name.
+	/// </summary>
+	/// <param name="PackageName">Package name.</param>
+	/// <returns></returns>
+	GhostError_t GhostAppMgrStopAppByPackageName(char* PackageName);
+
+
+	/// <summary>
+	/// Uninstall an app.
+	/// </summary>
+	/// <param name="PackageName">Package name.</param>
+	/// <returns></returns>
+	GhostError_t GhostAppMgrUninstall(const char* PackageName);
 
 
 	/// <summary>
@@ -165,13 +181,13 @@ extern "C" {
 
 
 	/// <summary>
-	/// Create page by the pointer of application info.
+	/// Get virtual screen by the pointer of application info.
 	/// </summary>
 	/// <param name="AppInfoPtr">Pointor of application info.</param>
-	/// <param name="PagePtr">Pointor of page(pointor to lv_obj_t*)</param>
+	/// <param name="ScreenPtr">Pointor of virtual screen.(pointor to lv_obj_t*)</param>
 	/// <returns>Function execution result.</returns>
-	GhostError_t GhostAppCreatePage(const GhostAppInfo_t* const AppInfoPtr, lv_obj_t** const PagePtr);
-#define GhostNativeAppCreatePage(PagePtr)							GhostAppCreatePage(&__applicationInfo__, PagePtr)
+	GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t* const AppInfoPtr, lv_obj_t** const ScreenPtr);
+#define GhostNativeAppGetVirtualScreen(PagePtr)						GhostAppGetVirtualScreen(&__applicationInfo__, PagePtr)
 
 	
 

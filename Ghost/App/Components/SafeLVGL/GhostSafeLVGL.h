@@ -1,7 +1,7 @@
 #pragma once
 #include "GhostSoftwareErrorDefine.h"
 
-#include "lvgl.h"
+#include "safe_lvgl.h"
 
 /// Declare Ghost_LV error.
 
@@ -51,15 +51,6 @@ extern "C" {
 	/// <param name=""></param>
 	/// <returns></returns>
 	GhostError_t GhostLV_TryLock(void);
-
-	/// <summary>
-	/// Do functions with lvgl mutex.
-	/// </summary>
-	/// <param name="">Functions.</param>
-	#define LV_Safe(functions) \
-		GhostLV_Lock(); \
-		functions; \
-		GhostLV_Unlock(); \
 
 #ifdef __cplusplus
 }

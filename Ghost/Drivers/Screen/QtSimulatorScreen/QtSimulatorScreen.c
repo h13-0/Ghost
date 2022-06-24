@@ -128,12 +128,23 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 //    }
 //}
 
-inline GhostError_t GhostScreenGetResolution(int* Width, int* Height)
+/// <summary>
+/// Get screen resolution.
+/// </summary>
+/// <param name="Width">Width.</param>
+/// <param name="Height">Height.</param>
+/// <returns></returns>
+GhostError_t GhostScreenGetResolution(int* Width, int* Height)
 {
     return GhostQtSimulatorGetScreenResolution(simulatorPtr, Width, Height);
 }
 
-inline GhostError_t GhostScreenGetRadius(int* Radius)
+/// <summary>
+/// Get screen fillet radius.
+/// </summary>
+/// <param name="Radius">Radius.</param>
+/// <returns></returns>
+GhostError_t GhostScreenGetRadius(int* Radius)
 {
 	
     return GhostOK;

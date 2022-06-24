@@ -17,6 +17,7 @@
 #define GhostErrorFS_HandleInvalid          DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 9)
 #define GhostErrorFS_FileUninitialized      DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 10)
 #define GhostErrorFS_FileFlushFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 11)
+#define GhostErrorFS_SeekFailed             DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 12)
 
 #ifdef __cplusplus
 extern "C" {
@@ -104,7 +105,36 @@ extern "C" {
 	/// <returns>Same as fwrite, equal to the data size actually written.</returns>
 	int GhostFS_Write(const void* BufferPtr, size_t Size, size_t nmemb, const GhostFile_t* GhostFile);
 
-  
+
+	/// <summary>
+	/// Typedef of GhostFS_Whence_t, value equivalent to parameter `whence` in fseek.
+	/// </summary>
+	typedef enum
+	{
+		GhostFS_SeekFromStart   = 0x00,
+		GhostFS_SeekFromCurrent = 0x01,
+		GhostFS_SeekFromEnd     = 0x02,
+	} GhostFS_Whence_t;
+
+
+	/// <summary>
+	/// File offset(seek).
+	/// </summary>
+	/// <param name="GhostFile">Pointor of file.</param>
+	/// <param name="Offset">Offset.</param>
+	/// <param name="Whence">Offset start position.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostFS_Seek(const GhostFile_t* GhostFile, long int Offset, GhostFS_Whence_t Whence);
+
+
+	/// <summary>
+	/// Returns the current file pointer position(ftell).
+	/// </summary>
+	/// <param name="GhostFile">Pointor of file.</param>
+	/// <returns>Same as ftell, return -1L if failed.</returns>
+	long int GhostFS_Tell(const GhostFile_t* GhostFile);
+
+
 	/// <summary>
 	/// Get file size.
 	/// </summary>
@@ -123,7 +153,17 @@ extern "C" {
 	/// TODO: Change function result parameter transfer method.
 	char* GhostFS_Join(const char* ParentPath, const char* Subpath);
 
-  
+
+	/// <summary>
+	/// Typedef of GhostFolder.
+	/// </summary>
+	typedef struct
+	{
+		GhostFolderPatch_t Folder;
+		GhostMutex_t Mutex;
+	} GhostFolder_t;
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -21,12 +21,13 @@ GhostError_t GhostSafeLV_Init(void)
 /// </summary>
 /// <param name="HeartbeatPeriod">Heartbeat period in millisecond.</param>
 /// <returns></returns>
+/// TODO: Use log.
 GhostError_t GhostSafeLV_HeartBeat(int HeartbeatPeriod)
 {
-	LV_Safe(
-		lv_tick_inc(HeartbeatPeriod);
-		lv_timer_handler();
-	)
+	GhostLV_Lock();
+	lv_tick_inc(HeartbeatPeriod);
+	lv_timer_handler();
+	GhostLV_Unlock();
 	return GhostOK;
 }
 
