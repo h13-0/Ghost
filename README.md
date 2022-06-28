@@ -46,7 +46,7 @@ This project is recommended to be used in MCU or SOC of 32-bit or above.
 # Build
 ## Windows/Linux Simulator  
 [Development documentation](./Ghost/Platforms/QtSimulator/Readme.md)  
-![WindowsSimulator.jpg](./Images/WindowsSimulator.jpg)
+![WindowsSimulator.jpg](./Images/QtSimulator.jpg)
 ```Powershell
 git clone https://github.com/h13-0/Ghost.git
 git submodule update --init
