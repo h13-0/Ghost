@@ -73,5 +73,11 @@ New-Item -ItemType SymbolicLink -Path .\Ghost -Target ..\..\..\Mount\
 ```  
 Now you can run the Qt Simulator.
 
+<details>  
+<summary>If there is jagged effect when displaying</summary><br>  
+
+Change the Windows settings as shown below.  
+![Solution.jpg](./Images/QtSimulatorVagueSolution.jpg)  
+</details><br>  
 ## esp32s3
 Will launch soon(perhaps).  
