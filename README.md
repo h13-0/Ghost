@@ -76,6 +76,8 @@ Now you can run the Qt Simulator.
 <details>  
 <summary>If there is jagged effect when displaying</summary><br>  
 
+Such as this:  
+![Vague.jpg](./Images/QtSimulatorVague.jpg)  
 Change the Windows settings as shown below.  
 ![Solution.jpg](./Images/QtSimulatorVagueSolution.jpg)  
 </details><br>  
