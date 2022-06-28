@@ -4,3 +4,6 @@
 [submodule "Ghost/ThirdParty/cJSON"]
 	path = Ghost/ThirdParty/cJSON
 	url = https://github.com/DaveGamble/cJSON.git
+[submodule ".\\Ghost\\ThirdParty\\lv_lib_png"]
+	path = .\\Ghost\\ThirdParty\\lv_lib_png
+	url = https://github.com/lvgl/lv_lib_png.git

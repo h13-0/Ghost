@@ -5,6 +5,17 @@
 
 #include "pthread.h"
 
+
+/// <summary>
+/// Initialize GhostThread module.
+/// </summary>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostThreadInit()
+{
+	return GhostOK;
+}
+
+
 /// <summary>
 /// Create thread.
 /// </summary>
@@ -77,7 +88,7 @@ GhostError_t GhostMutexDestroy(GhostMutex_t* Mutex)
 /// <returns>Function execution result.</returns>
 GhostError_t GhostMutexLock(GhostMutex_t* Mutex)
 {
-#ifdef DEBUG
+#ifdef _DEBUG
 	// Check handle.
 	if (Mutex == NULL)
 		return GhostErrorMutexUninitialized;

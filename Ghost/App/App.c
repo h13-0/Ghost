@@ -29,38 +29,39 @@
 // Test libraries.
 #include "GhostFileSystemPatch.h"
 
-static GhostError_t ghostAppInit(void)
+// Ghost app status.
+static GhostMutex_t statusMutex;
+static GhostStatus_t ghostStatus = GhostUninitialized;
+
+GhostError_t GhostAppInit(void)
 {
-	// Init Ghost log.
-	{
-		GhostError_t ret = GhostLogInit(MacroMinimumLogLevel);
-		if (IfGhostError(ret))
-		{
-			return ret;
-		}
-	}
+	GhostMutexInit(&statusMutex);
 
 	// Init Ghost safe lvgl.
-	GhostLogRetIfErr(Fatal, GhostSafeLV_Init());
+	GhostLogTerminateIfErr(Fatal, GhostSafeLV_Init());
 
 	// Init Ghost application manager.
-	GhostLogRetIfErr(Fatal, GhostAppMgrInit());
+	GhostLogTerminateIfErr(Fatal, GhostAppMgrInit());
 
 	// Register native applications.
 	// Run Ghost System.
 	{
 		GhostAppInfo_t app = MacroGhostLauncherInfo;
-		GhostLogRetIfErr(Fatal, GhostAppMgrRegister(&app));
+		GhostLogTerminateIfErr(Fatal, GhostAppMgrRegister(&app));
 		// Run Ghost System(But do nothing).
-		GhostLogRetIfErr(Fatal, GhostAppMgrRunForeground(app.PackageName, 1, "Ghost system call."));
+		GhostLogTerminateIfErr(Fatal, GhostAppMgrRunForeground(app.PackageName, 1, "Ghost system call."));
 	}
 
 	GhostLogI("Ghost init successfully.");
 
+	GhostLogTerminateIfErr(Fatal, GhostMutexLock(&statusMutex));
+	ghostStatus = GhostRunning;
+	GhostLogTerminateIfErr(Fatal, GhostMutexUnlock(&statusMutex));
+
 	return GhostOK;
 }
 
-static GhostError_t ghostAppDeInit(void)
+GhostError_t GhostAppDeInit(void)
 {
 	// TODO.
 	return GhostOK;
@@ -74,21 +75,32 @@ void btn_event_cb(lv_event_t* e)
 
 GhostError_t GhostAppRun(void)
 {
-	ghostAppInit();
-	
-	GhostError_t ret = GhostOK;
 	GhostAppInfo_t info = MacroGhostLauncherInfo;
-	ret = GhostAppMgrGetInfoByPackageName("tech.h13.ghost.launcher", &info);
-	cJSON* json;
+	GhostLogTerminateIfErr(Fatal, GhostAppMgrGetInfoByPackageName("tech.h13.ghost.launcher", &info));
 
 	while (1)
 	{
 		GhostSleepMillisecond(1000);
 	}
 
-	ghostAppDeInit();
+	GhostAppDeInit();
 
 	return GhostOK;
+}
+
+GhostStatus_t GhostAppStatus(void)
+{
+	GhostStatus_t status = GhostUninitialized;
+	if (IfGhostError(GhostMutexLock(&statusMutex)))
+	{
+		return GhostUninitialized;
+	}
+	status = ghostStatus;
+	if (IfGhostError(GhostMutexUnlock(&statusMutex)))
+	{
+		return GhostUninitialized;
+	}
+	return status;
 }
 
 GhostError_t GhostTimerHandler(float TimeIntervalInMillisecond)

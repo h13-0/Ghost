@@ -82,6 +82,30 @@ GhostError_t GhostGetCurrentTime(int* Hour, int* Minute, int* Second)
 	return GhostOK;
 }
 
+
+/// <summary>
+/// Get the time from startup to now.
+/// </summary>
+/// <returns></returns>
+GhostError_t GhostGetCurrentMilliseconds(double* Milliseconds)
+{
+	duration<double, std::milli> timeGap = time_point_cast<chrono::microseconds>(system_clock::now()) - initialTimePoint;
+	*Milliseconds = timeGap.count();
+	return GhostOK;
+}
+
+GhostError_t GhostGetCurrentMicroseconds(double* Microseconds)
+{
+	duration<double, std::micro> timeGap = time_point_cast<chrono::microseconds>(system_clock::now()) - initialTimePoint;
+	*Microseconds = timeGap.count();
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Sleep functions.
+/// </summary>
+/// <returns></returns>
 GhostError_t GhostSleepMillisecond(int Milliseconds)
 {
 	this_thread::sleep_for(milliseconds(Milliseconds));
@@ -91,19 +115,5 @@ GhostError_t GhostSleepMillisecond(int Milliseconds)
 GhostError_t GhostSleepMicrosecond(int Microseconds)
 {
 	this_thread::sleep_for(microseconds(Microseconds));
-	return GhostOK;
-}
-
-GhostError_t GhostGetCurrentMilliseconds(int* Milliseconds)
-{
-	duration<double, std::milli> timeGap = time_point_cast<chrono::microseconds>(system_clock::now()) - initialTimePoint;
-	*Milliseconds = timeGap.count();
-	return GhostOK;
-}
-
-GhostError_t GhostGetCurrentMicroseconds(int* Microseconds)
-{
-	duration<double, std::micro> timeGap = time_point_cast<chrono::microseconds>(system_clock::now()) - initialTimePoint;
-	*Microseconds = timeGap.count();
 	return GhostOK;
 }

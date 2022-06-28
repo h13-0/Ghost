@@ -11,20 +11,20 @@ include_directories("${PROJECT_SOURCE_DIR}")
 ## Components.
 ### Ghost Log.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/Log")
-include_directories("${GHOST_APP_LOG_INCLUDE_DIRS}")
+include_directories("${GHOST_CMP_LOG_INCLUDE_DIRS}")
 
 ### SafeLVGL
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/SafeLVGL")
-include_directories("${GHOST_SAFELVGL_INCLUDE_DIRS}")
-
-### Theme manager.
-add_subdirectory("${PROJECT_SOURCE_DIR}/Components/ThemeManager")
-include_directories("${GHOST_COMPONENT_THEME_MGR_INCLUDE_DIRS}")
+include_directories("${GHOST_CMP_SAFELVGL_INCLUDE_DIRS}")
 
 ## Applications.
 ### Application Manager.
 add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/ApplicationManager")
-include_directories("${GHOST_APP_MGR_INCLUDE_DIRS}")
+include_directories("${GHOST_APP_APP_MGR_INCLUDE_DIRS}")
+
+### Theme manager.
+add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/ThemeManager")
+include_directories("${GHOST_APP_THEME_MGR_INCLUDE_DIRS}")
 
 ### Launcher.
 add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
@@ -52,10 +52,13 @@ add_library(
 target_link_libraries(
 	${PROJECT_NAME}
 
-	GhostAppLog
-	GhostComponentAppMgr
-	SafeLVGL
+	# Components.
+	GhostCmpLog
+	GhostCmpSafeLVGL
 
+	# NativeApplications.
+	GhostAppAppMgr
+	GhostAppThemeMgr
 	GhostAppLauncher
 )
 

@@ -11,10 +11,10 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 # Select platform profile.
 if(${Platform_Config} STREQUAL "AutoSelect")
-	if(WIN32)
-		message(STATUS "Auto select profile: " ${PROJECT_SOURCE_DIR}/Platforms/WindowsSimulator/CMakeLists.txt " to build.")
-		include(${PROJECT_SOURCE_DIR}/Platforms/WindowsSimulator/CMakeLists.txt)
-	elseif(UNIX)
+	if(WIN32 OR UNIX)
+		message(STATUS "Auto select profile: " ${PROJECT_SOURCE_DIR}/Platforms/QtSimulator/CMakeLists.txt " to build.")
+		include(${PROJECT_SOURCE_DIR}/Platforms/QtSimulator/CMakeLists.txt)
+	#elseif(UNIX)
 		# include
 	endif()
 else()

@@ -5,6 +5,9 @@
 #include "QtSimulator.h"
 #include "lvgl.h"
 #include "GhostPlatformConfigs.h"
+#include "GhostScreen.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 /*********************
  *      DEFINES
@@ -49,9 +52,19 @@ void lv_port_disp_init(GhostQtSimulator_t* QtSimulatorPtr)
 
     /* Example for 3) also set disp_drv.full_refresh = 1 below*/
     static lv_disp_draw_buf_t draw_buf_dsc;
-    static lv_color_t buf_3_1[MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution];            /*A screen sized buffer*/
-    static lv_color_t buf_3_2[MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution];            /*An other screen sized buffer*/
-    lv_disp_draw_buf_init(&draw_buf_dsc, buf_3_1, buf_3_2, MacroDisplayVerticalResolution * MacroDisplayVerticalResolution);   /*Initialize the display buffer*/
+    static lv_color_t* buf_3_1 = NULL;
+    static lv_color_t* buf_3_2 = NULL;
+    if (buf_3_1 == NULL)
+    {
+        buf_3_1 = calloc(1, MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution * sizeof(lv_color_t));
+    }
+    
+    if (buf_3_2 == NULL)
+    {
+        buf_3_2 = calloc(1, MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution * sizeof(lv_color_t));
+    }
+
+    lv_disp_draw_buf_init(&draw_buf_dsc, buf_3_1, buf_3_2, MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution);   /*Initialize the display buffer*/
 
     /*-----------------------------------
      * Register the display in LVGL
@@ -63,7 +76,7 @@ void lv_port_disp_init(GhostQtSimulator_t* QtSimulatorPtr)
     /*Set up the functions to access to your display*/
 
     /*Set the resolution of the display*/
-    disp_drv.hor_res = MacroDisplayVerticalResolution;
+    disp_drv.hor_res = MacroDisplayHorizontalResolution;
     disp_drv.ver_res = MacroDisplayVerticalResolution;
 
     /*Used to copy the buffer's content to the display*/
@@ -102,7 +115,7 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 {
     /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
-    GhostQtSimulatorDrawScreen(simulatorPtr, area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, color_p);
+    GhostQtSimulatorDrawScreen(simulatorPtr, area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, (unsigned char*)color_p);
 
     /*IMPORTANT!!!
      *Inform the graphics library that you are ready with the flushing*/
@@ -128,3 +141,26 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 //}
 
 
+/// <summary>
+/// Get screen resolution.
+/// </summary>
+/// <param name="Width">Width.</param>
+/// <param name="Height">Height.</param>
+/// <returns>Always GhostOK.</returns>
+GhostError_t GhostScreenGetResolution(int* Width, int* Height)
+{
+    return GhostQtSimulatorGetScreenResolution(simulatorPtr, Width, Height);
+}
+
+
+/// <summary>
+/// Get screen fillet radius.
+/// </summary>
+/// <param name="Radius">Radius.</param>
+/// <returns>Always GhostOK.</returns>
+GhostError_t GhostScreenGetRadius(int* Radius)
+{
+	//
+    return GhostOK;
+}
+    
