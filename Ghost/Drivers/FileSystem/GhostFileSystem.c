@@ -13,6 +13,7 @@
 // rootDirectoryPath will end with '/'.
 static char* rootDirectoryPath = NULL;
 static int rootDirectoryPathLen = 0;
+static bool ghostFS_Inited = false;
 
 // lvgl port functions.
 static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode);
@@ -104,25 +105,7 @@ GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 		return GhostErrorFS_MountPointNotExist;
 	}
 
-	// Init lvgl file system.
-	static lv_fs_drv_t fs_drv;
-	lv_fs_drv_init(&fs_drv);
-
-	/*Set up fields...*/
-	fs_drv.letter = 'P';
-	fs_drv.open_cb = fs_open;
-	fs_drv.close_cb = fs_close;
-	fs_drv.read_cb = fs_read;
-	fs_drv.write_cb = fs_write;
-	fs_drv.seek_cb = fs_seek;
-	fs_drv.tell_cb = fs_tell;
-
-	fs_drv.dir_close_cb = fs_dir_close;
-	fs_drv.dir_open_cb = fs_dir_open;
-	fs_drv.dir_read_cb = fs_dir_read;
-
-	//lv_fs_drv_register(&fs_drv);
-
+	ghostFS_Inited = true;
 	return GhostOK;
 }
 
@@ -136,6 +119,43 @@ GhostError_t GhostFS_DeInit(void)
 	free(rootDirectoryPath);
 	return GhostOK;
 }
+
+
+/// <summary>
+/// Initializing file system support for lvgl.
+///		This function MUST be called AFTER `lv_init` and `GhostFS_Init`.
+/// </summary>
+/// <param name=""></param>
+/// <returns></returns>
+GhostError_t GhostLVGL_FS_Init(void)
+{
+	if (ghostFS_Inited)
+	{
+		// Init lvgl file system.
+		static lv_fs_drv_t fs_drv;
+		lv_fs_drv_init(&fs_drv);
+
+		/*Set up fields...*/
+		fs_drv.letter = 'C';
+		fs_drv.open_cb = fs_open;
+		fs_drv.close_cb = fs_close;
+		fs_drv.read_cb = fs_read;
+		fs_drv.write_cb = fs_write;
+		fs_drv.seek_cb = fs_seek;
+		fs_drv.tell_cb = fs_tell;
+
+		fs_drv.dir_close_cb = NULL;// fs_dir_close;
+		fs_drv.dir_open_cb = NULL;// fs_dir_open;
+		fs_drv.dir_read_cb = NULL;// fs_dir_read;
+
+		lv_fs_drv_register(&fs_drv);
+		return GhostOK;
+	}
+	else {
+		return GhostErrorFS_Uninitialized;
+	}
+}
+
 
 /// <summary>
 /// Get the real path of the file.
@@ -166,7 +186,7 @@ GhostError_t GhostFS_GetRealPath(const char* AbsPath, char* RealPath, int RealPa
 /// Open file.
 /// </summary>
 /// <param name="FilePath">Similar to the Linux style path starting from the root directory "/".</param>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <param name="Mode">Mode.</param>
 /// <returns>Function execution result.</returns>
 /// TODO: Check whether the file exists.
@@ -279,7 +299,7 @@ GhostError_t GhostFS_Flush(const GhostFile_t* GhostFile)
 /// <summary>
 /// Close file.
 /// </summary>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <returns>Function execution result.</returns>
 GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 {
@@ -316,10 +336,10 @@ GhostError_t GhostFS_Close(GhostFile_t* GhostFile)
 /// <summary>
 /// Read file stream.
 /// </summary>
-/// <param name="BufferPtr">Pointor of buffer.</param>
+/// <param name="BufferPtr">Pointor to buffer.</param>
 /// <param name="Size">Size of data.</param>
 /// <param name="Count">Count of data.</param>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <returns>ame as fread, equal to the data size actually read.</returns>
 int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile)
 {
@@ -346,10 +366,10 @@ int GhostFS_Read(void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* 
 /// <summary>
 /// Write file stream.
 /// </summary>
-/// <param name="BufferPtr">Pointor of buffer.</param>
+/// <param name="BufferPtr">Pointor to buffer.</param>
 /// <param name="Size">Size of data.</param>
 /// <param name="Count">Count of data.</param>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <returns>Same as fwrite, equal to the data size actually written.</returns>
 int GhostFS_Write(const void* BufferPtr, size_t Size, size_t Count, const GhostFile_t* GhostFile)
 {
@@ -377,7 +397,7 @@ int GhostFS_Write(const void* BufferPtr, size_t Size, size_t Count, const GhostF
 /// <summary>
 /// File offset(seek).
 /// </summary>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <param name="Offset">Offset.</param>
 /// <param name="Whence">Offset start position.</param>
 /// <returns>Function execution result.</returns>
@@ -406,7 +426,7 @@ GhostError_t GhostFS_Seek(const GhostFile_t* GhostFile, long int Offset, GhostFS
 /// <summary>
 /// Returns the current file pointer position(ftell).
 /// </summary>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <returns>Same as ftell, return -1L if failed.</returns>
 long int GhostFS_Tell(const GhostFile_t* GhostFile)
 {
@@ -432,7 +452,7 @@ long int GhostFS_Tell(const GhostFile_t* GhostFile)
 /// <summary>
 /// Get file size.
 /// </summary>
-/// <param name="GhostFile">Pointor of file.</param>
+/// <param name="GhostFile">Pointor to file.</param>
 /// <returns>File size in size_t.</returns>
 size_t GhostFS_GetFileSize(const GhostFile_t* GhostFile)
 {

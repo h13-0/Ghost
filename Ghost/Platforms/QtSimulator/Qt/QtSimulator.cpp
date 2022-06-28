@@ -1,12 +1,14 @@
 #include "QtSimulator.h"
 #include "SimulatorUI.hpp"
-//#include "GhostLog.h"
+
 
 /// <summary>
-/// 
+/// Init QT Simulator.
 /// </summary>
-/// <param name=""></param>
-/// <returns></returns>
+/// <param name="QtSimulator">Simulator pointor.</param>
+/// <param name="argc"></param>
+/// <param name="argv"></param>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostQtSimulatorInit(GhostQtSimulator_t* QtSimulator, int argc, char** argv)
 {
 	try {
@@ -22,6 +24,12 @@ GhostError_t GhostQtSimulatorInit(GhostQtSimulator_t* QtSimulator, int argc, cha
 	return GhostOK;
 }
 
+
+/// <summary>
+/// Run QT Simulator.
+/// </summary>
+/// <param name="QtSimulator">Simulator pointor.</param>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostQtSimulatorRun(GhostQtSimulator_t* QtSimulator)
 {
 	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->show();
@@ -36,11 +44,6 @@ GhostError_t GhostQtSimulatorRun(GhostQtSimulator_t* QtSimulator)
 	
 }
 
-
-GhostError_t GhostQtSimulatorDraw(GhostQtSimulator_t* QtSimulator)
-{
-	return GhostError_t();
-}
 
 /// <summary>
 /// Draw image in the virtual screen of the simulator.
@@ -78,11 +81,55 @@ GhostError_t GhostQtSimulatorGetScreenResolution(GhostQtSimulator_t* QtSimulator
 		return GhostError_QtSimulatorUninitialized;
 	}
 
-	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenResolution(*Width, *Height);
-
-		
+	*Width = ((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenWidth();
+	*Height = ((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenHeight();
+	
 	return GhostOK;
 }
+
+
+/// <summary>
+/// Output log to Qt simulator ui.
+/// </summary>
+/// <param name="QtSimulator">Pointor to simulator.</param>
+/// <param name="Level">Log level in GhostLogLevel_t.</param>
+/// <param name="FileName">File name with error.</param>
+/// <param name="LineNumber">Line number with errors.</param>
+/// <param name="Contents">Log contents.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostQtSimulatorLog(GhostQtSimulator_t* QtSimulator, GhostQtSimLogLevel_t Level, double Time, const char* FileName, int LineNumber, const char* Contents)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	switch (Level)
+	{
+	case GhostQtSimLogLevel_t::QtSimDebug:
+		((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->log(SimulatorUI::GhostQtLogLevel_t::Debug, Time, FileName, LineNumber, Contents);
+		break;
+
+	case GhostQtSimLogLevel_t::QtSimInfo:
+		((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->log(SimulatorUI::GhostQtLogLevel_t::Info, Time, FileName, LineNumber, Contents);
+		break;
+
+	case GhostQtSimLogLevel_t::QtSimWarning:
+		((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->log(SimulatorUI::GhostQtLogLevel_t::Warning, Time, FileName, LineNumber, Contents);
+		break;
+
+	case GhostQtSimLogLevel_t::QtSimError:
+		((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->log(SimulatorUI::GhostQtLogLevel_t::Error, Time, FileName, LineNumber, Contents);
+		break;
+
+	case GhostQtSimLogLevel_t::QtSimFatal:
+		((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->log(SimulatorUI::GhostQtLogLevel_t::Fatal, Time, FileName, LineNumber, Contents);
+		break;
+	}
+
+	return GhostOK;
+}
+
 
 GhostError_t GhostQtSimulatorSetTouchEventsCallback(GhostQtSimulator_t* QtSimulator, void(*CallbackPtr)(int X, int Y))
 {

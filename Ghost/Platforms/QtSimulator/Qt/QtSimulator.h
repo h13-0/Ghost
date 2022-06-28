@@ -72,6 +72,33 @@ extern "C" {
 
 	
 	/// <summary>
+	/// Typedef of GhostQtLevel_t.
+	///     Should be same as GhostLogLevel_t
+	/// </summary>
+	typedef enum
+	{
+		QtSimDebug = 0,
+		QtSimInfo = 1,
+		QtSimWarning = 2,
+		QtSimError = 3,
+		QtSimFatal = 4
+	} GhostQtSimLogLevel_t;
+
+
+	/// <summary>
+	/// Output log to Qt simulator ui.
+	/// </summary>
+	/// <param name="QtSimulator">Pointor to simulator.</param>
+	/// <param name="Level">Log level in GhostLogLevel_t.</param>
+	/// <param name="Time">Microseconds since startup.</param>
+	/// <param name="FileName">File name with error.</param>
+	/// <param name="LineNumber">Line number with errors.</param>
+	/// <param name="Contents">Log contents.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostQtSimulatorLog(GhostQtSimulator_t* QtSimulator, GhostQtSimLogLevel_t Level, double Time, const char* FileName, int LineNumber, const char* Contents);
+
+
+	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="QtSimulator">Simulator pointor.</param>

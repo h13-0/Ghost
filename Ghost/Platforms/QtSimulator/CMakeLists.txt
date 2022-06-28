@@ -19,6 +19,11 @@ include("${CMAKE_CURRENT_LIST_DIR}/lvgl/CMakeLists.txt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 
+#### lv_lib_png
+add_definitions(-DLV_PNG_USE_LV_FILESYSTEM=1 -DLV_LVGL_H_INCLUDE_SIMPLE)
+add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
+include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
+
 #### cJSON
 #add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/cJSON")
 set(
@@ -83,6 +88,8 @@ target_link_libraries(
 	# ThirdParty.
 	lvgl
 	lua
+	#lv_lib_png
+
 	# Platform.
 	GhostQtSimulator
 	GhostFileSystemPatch

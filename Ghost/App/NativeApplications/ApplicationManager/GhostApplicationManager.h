@@ -153,7 +153,7 @@ extern "C" {
 	
 
 #define DeclareNativeAppInfo()										static GhostAppInfo_t __applicationInfo__;
-#define GhostAppNativeInfoInit(PackageName)                         do{ GhostLogRetIfErr(Fatal, GhostAppMgrGetInfoByPackageName(PackageName, &__applicationInfo__)); } while(0); GhostOK
+#define GhostAppNativeInfoInit(PackageName)                         do{ GhostLogTerminateIfErr(Fatal, GhostAppMgrGetInfoByPackageName(PackageName, &__applicationInfo__)); } while(0); GhostOK
 
 
 	/// <summary>
@@ -189,7 +189,7 @@ extern "C" {
 	GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t* const AppInfoPtr, lv_obj_t** const ScreenPtr);
 #define GhostNativeAppGetVirtualScreen(PagePtr)						GhostAppGetVirtualScreen(&__applicationInfo__, PagePtr)
 
-	
+	//GhostError_t GhostAppGet
 
 #ifdef __cplusplus
 }

@@ -359,7 +359,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTextBrowser" name="textBrowser"/>
+          <widget class="QTextBrowser" name="logBrowser"/>
          </item>
         </layout>
        </widget>

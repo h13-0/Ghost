@@ -20,10 +20,18 @@ extern "C" {
 #endif
 
 	/// <summary>
+	/// Initialize GhostThread module.
+	/// </summary>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostThreadInit();
+
+
+	/// <summary>
 	/// Typedef of GhostThread_t.
 	/// </summary>
 	typedef pthread_t GhostThread_t;
 	
+
 	/// <summary>
 	/// Create thread.
 	/// </summary>
@@ -37,6 +45,7 @@ extern "C" {
 	GhostError_t GhostThreadCreate(GhostThread_t* Thread, 
 		void*(*Function)(void*), const char* TaskName, size_t StackSize, void *Args, int Priority);
 	
+
 	/// <summary>
 	/// Force threads to stop and reclaim resources.
 	/// </summary>
@@ -44,10 +53,12 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostThreadDelete(GhostThread_t* Thread);
 
+
 	/// <summary>
 	/// Typedef of Ghost
 	/// </summary>
 	typedef pthread_mutex_t GhostMutex_t;
+
 
 	/// <summary>
 	/// Create mutex.
@@ -56,6 +67,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostMutexInit(GhostMutex_t* Mutex);
 
+
 	/// <summary>
 	/// Destroy mutex.
 	/// </summary>
@@ -63,12 +75,14 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostMutexDestroy(GhostMutex_t* Mutex);
 
+
 	/// <summary>
 	/// Lock mutex.
 	/// </summary>
 	/// <param name="Mutex">Mutex handle.</param>
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostMutexLock(GhostMutex_t* Mutex);
+
 
 	/// <summary>
 	/// Unlock mutex.

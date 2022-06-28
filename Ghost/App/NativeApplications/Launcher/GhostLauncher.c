@@ -15,6 +15,8 @@
 #include "GhostScreen.h"
 #include "safe_lvgl.h"
 
+#include "lv_png.h"
+
 DeclareNativeAppInfo();
 
 
@@ -77,20 +79,32 @@ GhostError_t GhostLauncherRun(void* Args)
 	// TODO: Check whether the theme is used.
 	// Get application config.
 	cJSON* configs = NULL;
-	GhostLogRetIfErr(Fatal, GhostNativeAppGetAppConfigJSON(&configs));
+	//GhostLogTerminateIfErr(Fatal, GhostNativeAppGetAppConfigJSON(&configs));
 
 	
 	// Theme init.
-	GhostLogRetIfErr(Fatal, themeInit());
+	GhostLogTerminateIfErr(Fatal, themeInit());
 
 	lv_obj_t* screen;
-	GhostLogRetIfErr(Fatal, GhostNativeAppGetVirtualScreen(&screen));
+	GhostLogTerminateIfErr(Fatal, GhostNativeAppGetVirtualScreen(&screen));
 
 	// Init pages.
 	// Get screen info.
 	int width, height, radius;
-	GhostLogRetIfErr(Fatal, GhostScreenGetResolution(&width, &height));
-	GhostLogRetIfErr(Fatal, GhostScreenGetRadius(&radius));
+	GhostLogTerminateIfErr(Fatal, GhostScreenGetResolution(&width, &height));
+	GhostLogTerminateIfErr(Fatal, GhostScreenGetRadius(&radius));
+
+	/*
+	GhostLV_Lock();
+	lv_obj_t* img = lv_img_create(lv_scr_act());
+	//lv_img_set_src(img, "C:./System/Apps/tech.h13.ghost.launcher/Themes/AppleInfograph/Resources/wink.png");
+	lv_img_set_src(img, "C:./System/Apps/tech.h13.ghost.launcher/Themes/AppleInfograph/Resources/888.bin");
+	void* ptr = lv_img_get_src(img);
+	lv_obj_set_pos(img, 0, 100);
+	GhostLV_Unlock();
+
+	while (1);
+	*/
 
 	// Init page style.
 	lv_style_t pageStyle;
@@ -156,7 +170,11 @@ GhostError_t GhostLauncherRun(void* Args)
 	//
 	//lv_meter_indicator_t* indic_min = lv_meter_add_needle_img(scale, scale_min, NULL, 5, 5);
 	//lv_meter_indicator_t* indic_hour = lv_meter_add_needle_img(scale, scale_min, &img_hand, 5, 5);
-	
+	lv_obj_t* min_img = lv_img_create(scale);
+	lv_img_set_src(min_img, "C:./System/Apps/tech.h13.ghost.launcher/Themes/AppleInfograph/Resources/888.bin");
+	lv_meter_indicator_t* indic_min = lv_meter_add_needle_img(scale, scale_min, NULL, 5, 5);
+	//lv_meter_indicator_t* indic_min = lv_meter_add_needle_line(scale, scale_min, 3, lv_color_black(), 10);
+
 
 	GhostLV_Unlock();
 
@@ -167,6 +185,7 @@ GhostError_t GhostLauncherRun(void* Args)
 	while (1)
 	{
 		mainPageRefresh(mainPage);
+		GhostSleepMillisecond(10);
 	}
 	
 	return GhostOK;

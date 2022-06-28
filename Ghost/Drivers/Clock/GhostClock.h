@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GhostPlatformErrorDefine.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,8 +35,8 @@ extern "C" {
 	/// Get the time from startup to now.
 	/// </summary>
 	/// <returns></returns>
-	GhostError_t GhostGetCurrentMilliseconds(int* Milliseconds);
-	GhostError_t GhostGetCurrentMicroseconds(int* Microseconds);
+	GhostError_t GhostGetCurrentMilliseconds(double* Milliseconds);
+	GhostError_t GhostGetCurrentMicroseconds(double* Microseconds);
 
 	/// <summary>
 	/// Sleep functions.

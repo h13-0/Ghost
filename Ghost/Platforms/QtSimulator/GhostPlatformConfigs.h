@@ -13,14 +13,21 @@
 
 /******************************************************* Ghost platform configs *******************************************************/
 //> Virtual Screen configs.
+#define MacroDynamicScreenResolution                                  (1) //Used when using qtsimulator for UI development.
+
+#if(MacroDynamicScreenResolution)
+#include "main.h"
+#define MacroDisplayHorizontalResolution                              GhostQtSimulatorGetHorizontalResolution()
+#define MacroDisplayVerticalResolution                                GhostQtSimulatorGetVerticalResolution()
+
+//> Qt simulator configs.
+#define MacroQtMaximumHorizontalResolution                            (1080)
+#define MacroQtMaximumVerticalResolution                              (1080)
+#define MacroQtDefaultFilletRadius                                    (10)
+#else
 #define MacroDisplayHorizontalResolution                              (240)
 #define MacroDisplayVerticalResolution                                (240)
-#define MacroDisplayFilletRadius                                      (10)
-
-//> 
-#define MacroDisplayMaximumHorizontalResolution                       (1080)
-#define MacroDisplayMaximumVerticalResolution                         (1080)
-
+#endif
 
 /******************************************************** Ghost driver configs ********************************************************/
 //> File system configs.
@@ -51,16 +58,15 @@
 //> Ghost components configs.
 //>> Ghost log configs.
 #if(1)
-#define MacroGhostLogOutputInit(OutputStreamListPtr, OutputNum)       do{ \
-                                                                            OutputStreamListPtr = calloc(sizeof(FILE*), 1); \
-                                                                            *OutputStreamListPtr = stdout; \
-                                                                            OutputNum = 1; \
-                                                                            if(0) { return GhostErrorLogInitFailed; } \
-                                                                        }while(0)
-
+#define MacroGhostLogMaximumContentsSize                              (256)
 #define MacroGhostLogMinimumLogLevel                                  (Debug)
 
+// Output functions.
+#include "QtSimulator.h"
+#define MacroGhostLogOutputFunctions                                  { }
 
+// Output files.
+#define MacroGhostLogOutputFiles                                      { stdout }
 
 #if defined(_DEBUG)
 #define MacroGhostLogOutputFileName                                   (1)

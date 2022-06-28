@@ -7,10 +7,14 @@
 
 #define GhostErrorLogInitFailed        DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleLogError, 1)
 #define GhostErrorLogUninitialized     DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleLogError, 2)
+#define GhostErrorLogOutOfMemory       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleLogError, 3)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+	/// <summary>
+	/// Typedef of GhostLogLevel.
+	/// </summary>
 	typedef enum
 	{
 		Debug = 0,
@@ -20,6 +24,7 @@ extern "C" {
 		Fatal = 4
 	} GhostLogLevel_t;
 
+
 	/// <summary>
 	/// Initialize Ghost log.
 	/// </summary>
@@ -27,12 +32,33 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostLogInit(GhostLogLevel_t MinimumLogLevel);
 
+
+	/// <summary>
+	/// Typedef of GhostLogFunc_t.
+	/// <param name="Level">Log level in GhostLogLevel_t.</param>
+	/// <param name="Time">Microseconds since startup.</param>
+	/// <param name="FileName">File name with error.</param>
+	/// <param name="LineNumber">Line number with errors.</param>
+	/// <param name="Contents">Log contents.</param>
+	/// </summary>
+	typedef void(*GhostLogFunc_t)(GhostLogLevel_t Level, double Time, const char* FileName, int LineNumber, const char* Contents);
+
+
+	/// <summary>
+	/// Register ghost log output function.
+	/// </summary>
+	/// <param name="Func">Pointor to function.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostLogOutputFuncRegister(GhostLogFunc_t Func);
+
+
 	/// <summary>
 	/// Reset log level.
 	/// </summary>
 	/// <param name="MinimumLogLevel">Lowest log level to be recorded.</param>
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostLogSetMinimumLogLevel(GhostLogLevel_t MinimumLogLevel);
+
 
 	/// <summary>
 	/// **Private** log implementation.
@@ -44,7 +70,33 @@ extern "C" {
 	/// <param name="Format">Formatted error message.</param>
 	/// <param name="...">Variable parameters.</param>
 	/// <returns>Function execution result.</returns>
+#if(MacroGhostLogOutputFileName && MacroGhostLogOutputLineNumber)
 	GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, const char* FileName, int LineNumber, char* Format, ...);
+#define __ghostLog__(Level, FileName, LineNumber, Format, ...)   __ghostPrivateLogImpl__(Level, FileName, LineNumber, Format, ##__VA_ARGS__) 
+#elif(MacroGhostLogOutputFileName)
+	GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, const char* FileName, char* Format, ...);
+#define __ghostLog__(Level, FileName, LineNumber, Format, ...)   __ghostPrivateLogImpl__(Level, FileName, Format, ##__VA_ARGS__)
+#elif(MacroGhostLogOutputLineNumber)
+	GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, int LineNumber, char* Format, ...);
+#define __ghostLog__(Level, FileName, LineNumber, Format, ...)   __ghostPrivateLogImpl__(Level, LineNumber, Format, ##__VA_ARGS__)
+#else
+	GhostError_t __ghostPrivateLogImpl__(GhostLogLevel_t Level, char* Format, ...);
+#define __ghostLog__(Level, FileName, LineNumber, Format, ...)   __ghostPrivateLogImpl__(Level, Format, ##__VA_ARGS__)
+#endif
+
+
+#if (MacroGhostLogOutputFileName)
+	/// <summary>
+	/// This function is used to share the `__FILE__` constant in the same file to reduce the storage usage.
+	/// </summary>
+	static inline const char* __FileName__(void)
+	{
+		return __FILE__;
+	}
+
+//#define __FILE__    __FileName__()
+#endif
+
 
 	/// <summary>
 	/// **Private** log implementation.
@@ -77,7 +129,8 @@ extern "C" {
 	/// <param name="Format">Formatted error message.</param>
 	/// <param name="...">Variable parameters.</param>
 	/// <returns>Function execution result.</returns>
-#define GhostLog(LogLevel, Format, ...)               __ghostPrivateLogImpl__(LogLevel, __FILE__, __LINE__, Format, ##__VA_ARGS__)
+#define GhostLog(LogLevel, Format, ...)               __ghostLog__(LogLevel, __FileName__(), __LINE__, Format, ##__VA_ARGS__)
+
 
 	/// <summary>
 	/// Abbreviated GhostLog functions.
@@ -98,15 +151,15 @@ extern "C" {
 	/// </summary>
 	/// <param name="LogLevel">Log level.</param>
 	/// <param name="GhostErrorRet">Function with GhostError_t as return value or return value of GhostError_t.</param>
-	/// <returns>Same as GhostErrorRet.</returns>
 #define GhostLogFuncResult(LogLevel, GhostErrorRet)   do{ \
-                                                            __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
-                                                        } while(0); GhostErrorRet
+                                                            __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FileName__(), __LINE__); \
+                                                        } while(0);
 
 #define GhostLogIfError(LogLevel, GhostErrorRet)      do{ \
                                                             if(IfGhostError(GhostErrorRet)) \
-                                                                __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
-                                                        } while(0); GhostErrorRet
+                                                                __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FileName__(), __LINE__); \
+                                                        } while(0);
+
 
 	/// <summary>
 	/// Check whether the Ghost function is successfully executed. If not, **return** the return value of the Ghost function in advance.
@@ -117,14 +170,15 @@ extern "C" {
 	/// <param name="LogLevel">Log level.</param>
 	/// <param name="GhostErrorRet">Function with GhostError_t as return value or return value of GhostError_t.</param>
 	/// <returns>Same as GhostErrorRet.</returns>
-#define GhostLogRetIfErr(LogLevel, GhostErrorRet)     do{ \
-                                                            if(__ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FILE__, __LINE__)) { \
-                                                                return GhostErrorRet; \
-                                                            } \
-                                                        } while(0); GhostErrorRet
+#define GhostLogTerminateIfErr(LogLevel, GhostErrorRet)        do{ \
+                                                                    if(IfGhostError(GhostErrorRet)) { \
+                                                                        __ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FileName__(), __LINE__); \
+                                                                        return GhostErrorRet; \
+                                                                    } \
+                                                                 } while(0);
+
 
 
 #ifdef __cplusplus
 }
 #endif
-

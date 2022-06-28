@@ -1,8 +1,16 @@
 #pragma once
 
+// This library is only a platform interface library and does not require thread safety.
+
 #include "GhostPlatformErrorDefine.h"
 
 #include <stddef.h>
+
+#if _WIN32
+#include <Windows.h>
+#elif __linux__
+
+#endif
 
 #define GhostErrorFS_PatchPermissionDenied                 DeclareGhostError(GhostPlatformLayerError, PlatformModuleFS_PatchError, 1)
 #define GhostErrorFS_PatchIsNotFile                        DeclareGhostError(GhostPlatformLayerError, PlatformModuleFS_PatchError, 2)
@@ -79,11 +87,43 @@ extern "C" {
 
 
 	/// <summary>
-	/// Typedef of GhostFolderPatch(`DIR*`)
+	/// Typedef of GhostFolderPatch(`DIR*`).
 	/// </summary>
-	typedef void* GhostFolderPatch_t;
+#if _WIN32
+	typedef struct
+	{
+		int a;
+	} GhostFolderPatch_t;
+#elif __linux__ 
+
+#endif
 
 
+	/// <summary>
+	/// Open folder by real path.
+	///		This function is **NON thread safe**.
+	/// </summary>
+	/// <param name="Folder">Pointor to folder.</param>
+	/// <param name="RealPath">The real path that ghost can read directly is the system path in windows/linux system or FatFs.</param>
+	/// <returns></returns>
+	GhostError_t GhostFSP_FolderOpen(GhostFolderPatch_t* Folder, const char* RealPath);
+
+
+	/// <summary>
+	/// Close folder.
+	///		This function is **NON thread safe**.
+	/// </summary>
+	/// <param name="Folder">Pointor to folder.</param>
+	/// <returns></returns>
+	GhostError_t GhostFSP_FolderClose(const GhostFolderPatch_t* Folder);
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Folder">Pointor to folder.</param>
+	/// <returns></returns>
+	GhostError_t GhostFSP_FolderRead(const GhostFolderPatch_t* Folder);
 
 #ifdef __cplusplus
 }

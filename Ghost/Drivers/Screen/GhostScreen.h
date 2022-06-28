@@ -11,7 +11,7 @@ extern "C" {
 	/// </summary>
 	/// <param name="Width">Width.</param>
 	/// <param name="Height">Height.</param>
-	/// <returns></returns>
+	/// <returns>Always GhostOK.</returns>
 	GhostError_t GhostScreenGetResolution(int* Width, int* Height);
 
 	
@@ -19,7 +19,7 @@ extern "C" {
 	/// Get screen fillet radius.
 	/// </summary>
 	/// <param name="Radius">Radius.</param>
-	/// <returns></returns>
+	/// <returns>Always GhostOK.</returns>
 	GhostError_t GhostScreenGetRadius(int* Radius);
 
 	

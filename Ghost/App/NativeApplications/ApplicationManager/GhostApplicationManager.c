@@ -116,15 +116,8 @@ GhostError_t GhostAppMgrInit(void)
 	lv_style_set_border_width(&screenStyle, 0);
 	lv_style_set_pad_all(&screenStyle, 0);
 	int radius;
-	if (IfGhostError(GhostScreenGetRadius(&radius)))
-	{
-		GhostLogE("Failed to obtain screen radius.");
-		lv_style_set_radius(&screenStyle, MacroDisplayFilletRadius);
-	}
-	else {
-		lv_style_set_radius(&screenStyle, radius);
-	}
-	
+	GhostScreenGetRadius(&radius);
+	lv_style_set_radius(&screenStyle, MacroQtDefaultFilletRadius);
 	
 	return GhostOK;
 }
@@ -268,14 +261,14 @@ static GhostError_t ghostAppMgrGetHandleNodeByAppInfo(const GhostAppInfo_t* AppI
 GhostError_t GhostAppMgrRunForeground(const char* const PackageName, int Argc, void** Args)
 {
 	GhostAppHandleList_t* nodePtr;
-	GhostLogRetIfErr(Fatal, ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr));
+	GhostLogTerminateIfErr(Fatal, ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr));
 
 	if (nodePtr->GhostAppStatus.RunningStatus == GhostAppRunningForeground)
 	{
 		return GhostOK;
 	}
 
-	GhostLogRetIfErr(Fatal, 
+	GhostLogTerminateIfErr(Fatal, 
 		GhostThreadCreate(
 			&nodePtr->ThreadHandle,
 			nodePtr->CurrentApplicationInfo.ApplicationEntryFunction,
@@ -331,8 +324,8 @@ GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t* ApplicationInfo)
 GhostError_t GhostAppMgrUninstall(const char* PackageName)
 {
 	GhostAppInfo_t info;
-	GhostLogRetIfErr(Error, GhostAppMgrGetInfoByPackageName(PackageName, &info));
-	GhostLogRetIfErr(Error, GhostAppMgrStopApp(&info));
+	GhostLogTerminateIfErr(Error, GhostAppMgrGetInfoByPackageName(PackageName, &info));
+	GhostLogTerminateIfErr(Error, GhostAppMgrStopApp(&info));
 
 	// Delete files.
 	// TODO:
@@ -379,7 +372,7 @@ GhostError_t GhostAppOpenFile(const GhostAppInfo_t* const AppInfoPtr, GhostFile_
 		// TODO: Check Mode and path.
 
 		// Open file.
-		GhostLogRetIfErr(Error, GhostFS_Open(AbsPath, FilePtr, Mode));
+		GhostLogTerminateIfErr(Error, GhostFS_Open(AbsPath, FilePtr, Mode));
 	}
 	else
 	{
@@ -394,7 +387,7 @@ GhostError_t GhostAppOpenFile(const GhostAppInfo_t* const AppInfoPtr, GhostFile_
 
 		// Get real path.
 		char realPath[MacroMaximumPathLength] = { '\0' };
-		GhostLogRetIfErr(Error, GhostFS_GetRealPath(AbsPath, realPath, MacroMaximumPathLength));
+		GhostLogTerminateIfErr(Error, GhostFS_GetRealPath(AbsPath, realPath, MacroMaximumPathLength));
 
 		// Check whether the path is legal.
 	}
@@ -432,7 +425,7 @@ GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* const Application, c
 	}
 
 	// TODO: Check whether the `MacroGhostAppDefaultConfigFileName` exists.
-	GhostLogRetIfErr(Error, ret);
+	GhostLogTerminateIfErr(Error, ret);
 	
 	size_t size = GhostFS_GetFileSize(&configFile);
 	if (size > MacroGhostAppDefaultConfigFileSizeLimit)
@@ -475,22 +468,9 @@ GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t* const AppInfoPtr, lv
 
 		// Set style.
 		int width, height, radius;
-		if (IfGhostError(GhostScreenGetResolution(&width, &height)))
-		{
-			GhostLogE("Failed to obtain screen resolution.");
-			width = MacroDisplayHorizontalResolution;
-			height = MacroDisplayVerticalResolution;
-		}
-
-		if (IfGhostError(GhostScreenGetRadius(&radius)))
-		{
-			GhostLogE("Failed to obtain screen radius.");
-			lv_style_set_radius(&screenStyle, MacroDisplayFilletRadius);
-		}
-		else {
-			lv_style_set_radius(&screenStyle, radius);
-		}
-
+		GhostScreenGetResolution(&width, &height);
+		GhostScreenGetRadius(&radius);
+		lv_style_set_radius(&screenStyle, radius);
 		lv_obj_add_style(screen, &screenStyle, 0);
 		lv_obj_set_pos(screen, 0, 0);
 		lv_obj_set_size(screen, width, height);
