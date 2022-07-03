@@ -21,8 +21,8 @@ include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 
 #### lv_lib_png
 add_definitions(-DLV_PNG_USE_LV_FILESYSTEM=1 -DLV_LVGL_H_INCLUDE_SIMPLE)
-add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
-include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
+#add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
+#include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
 
 #### cJSON
 #add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/cJSON")
@@ -56,6 +56,11 @@ include_directories("${GHOST_THREAD_INCLUDE_DIRS}")
 #### Clock.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Clock/StandardClock")
 include_directories(${GHOST_STANDARD_CLOCK_INCLUDE_DIRS})
+
+#### Log.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Log")
+include_directories("${GHOST_LOG_INCLUDE_DIRS}")
+
 #### FileSystem
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/FileSystem")
 include_directories(${GHOST_FILESYSTEM_INCLUDE_DIRS})
@@ -96,6 +101,7 @@ target_link_libraries(
 
 	# Drivers.
 	GhostThread
+	GhostLog
 	QtSimulatorScreen 
 	GhostStandardClock
 	GhostFileSystem

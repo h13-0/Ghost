@@ -1,4 +1,4 @@
-#include "GhostApplicationManager.h"
+﻿#include "GhostApplicationManager.h"
 #include "GhostPlatformConfigs.h"
 
 // Standard libraries.
@@ -472,8 +472,10 @@ GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t* const AppInfoPtr, lv
 		GhostScreenGetRadius(&radius);
 		lv_style_set_radius(&screenStyle, radius);
 		lv_obj_add_style(screen, &screenStyle, 0);
+		lv_obj_set_scrollbar_mode(screen, LV_SCROLLBAR_MODE_OFF);
 		lv_obj_set_pos(screen, 0, 0);
 		lv_obj_set_size(screen, width, height);
+
 	}
 	
 	GhostLogIfError(Warning, GhostLV_Unlock());

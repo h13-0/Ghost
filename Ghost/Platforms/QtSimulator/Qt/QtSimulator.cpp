@@ -87,6 +87,30 @@ GhostError_t GhostQtSimulatorGetScreenResolution(GhostQtSimulator_t* QtSimulator
 	return GhostOK;
 }
 
+GhostError_t GhostQtSimulatorGetScreenWidth(GhostQtSimulator_t* QtSimulator, int* Width)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	*Width = ((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenWidth();
+
+	return GhostOK;
+}
+
+GhostError_t GhostQtSimulatorGetScreenHeight(GhostQtSimulator_t* QtSimulator, int* Height)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	*Height = ((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenHeight();
+
+	return GhostOK;
+}
+
 
 /// <summary>
 /// Output log to Qt simulator ui.

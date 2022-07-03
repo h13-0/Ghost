@@ -5,7 +5,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 	/// <summary>
 	/// Get screen resolution.
 	/// </summary>
@@ -13,6 +13,14 @@ extern "C" {
 	/// <param name="Height">Height.</param>
 	/// <returns>Always GhostOK.</returns>
 	GhostError_t GhostScreenGetResolution(int* Width, int* Height);
+	
+	/// <summary>
+	/// Get screen resolution.
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns>Width or heigth.</returns>
+	int GhostScreenGetWidth(void);
+	int GhostScreenGetHeight(void);
 
 	
 	/// <summary>

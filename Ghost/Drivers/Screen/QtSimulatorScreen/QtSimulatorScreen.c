@@ -56,15 +56,15 @@ void lv_port_disp_init(GhostQtSimulator_t* QtSimulatorPtr)
     static lv_color_t* buf_3_2 = NULL;
     if (buf_3_1 == NULL)
     {
-        buf_3_1 = calloc(1, MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution * sizeof(lv_color_t));
+        buf_3_1 = calloc(1, GhostScreenGetWidth() * GhostScreenGetHeight() * sizeof(lv_color_t));
     }
     
     if (buf_3_2 == NULL)
     {
-        buf_3_2 = calloc(1, MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution * sizeof(lv_color_t));
+        buf_3_2 = calloc(1, GhostScreenGetWidth() * GhostScreenGetHeight() * sizeof(lv_color_t));
     }
 
-    lv_disp_draw_buf_init(&draw_buf_dsc, buf_3_1, buf_3_2, MacroDisplayHorizontalResolution * MacroDisplayVerticalResolution);   /*Initialize the display buffer*/
+    lv_disp_draw_buf_init(&draw_buf_dsc, buf_3_1, buf_3_2, GhostScreenGetWidth() * GhostScreenGetHeight());   /*Initialize the display buffer*/
 
     /*-----------------------------------
      * Register the display in LVGL
@@ -76,8 +76,8 @@ void lv_port_disp_init(GhostQtSimulator_t* QtSimulatorPtr)
     /*Set up the functions to access to your display*/
 
     /*Set the resolution of the display*/
-    disp_drv.hor_res = MacroDisplayHorizontalResolution;
-    disp_drv.ver_res = MacroDisplayVerticalResolution;
+    disp_drv.hor_res = GhostScreenGetWidth();
+    disp_drv.ver_res = GhostScreenGetHeight();
 
     /*Used to copy the buffer's content to the display*/
     disp_drv.flush_cb = disp_flush;
@@ -150,6 +150,25 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 GhostError_t GhostScreenGetResolution(int* Width, int* Height)
 {
     return GhostQtSimulatorGetScreenResolution(simulatorPtr, Width, Height);
+}
+
+/// <summary>
+/// Get screen resolution.
+/// </summary>
+/// <param name=""></param>
+/// <returns>Width or heigth.</returns>
+int GhostScreenGetWidth(void)
+{
+    int width;
+    GhostQtSimulatorGetScreenWidth(simulatorPtr, &width);
+    return width;
+}
+
+int GhostScreenGetHeight(void)
+{
+    int height;
+    GhostQtSimulatorGetScreenHeight(simulatorPtr, &height);
+    return height;
 }
 
 

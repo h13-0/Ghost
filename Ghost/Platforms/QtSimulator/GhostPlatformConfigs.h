@@ -16,9 +16,9 @@
 #define MacroDynamicScreenResolution                                  (1) //Used when using qtsimulator for UI development.
 
 #if(MacroDynamicScreenResolution)
-#include "main.h"
-#define MacroDisplayHorizontalResolution                              GhostQtSimulatorGetHorizontalResolution()
-#define MacroDisplayVerticalResolution                                GhostQtSimulatorGetVerticalResolution()
+
+//#define MacroDisplayHorizontalResolution                              GhostScreenGetWidth()
+//#define MacroDisplayVerticalResolution                                GhostScreenGetHeight()
 
 //> Qt simulator configs.
 #define MacroQtMaximumHorizontalResolution                            (1080)

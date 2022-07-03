@@ -85,19 +85,6 @@ extern "C" {
 #endif
 
 
-#if (MacroGhostLogOutputFileName)
-	/// <summary>
-	/// This function is used to share the `__FILE__` constant in the same file to reduce the storage usage.
-	/// </summary>
-	static inline const char* __FileName__(void)
-	{
-		return __FILE__;
-	}
-
-//#define __FILE__    __FileName__()
-#endif
-
-
 	/// <summary>
 	/// **Private** log implementation.
 	///		**Please use subsequent public implementations.**
@@ -129,7 +116,7 @@ extern "C" {
 	/// <param name="Format">Formatted error message.</param>
 	/// <param name="...">Variable parameters.</param>
 	/// <returns>Function execution result.</returns>
-#define GhostLog(LogLevel, Format, ...)               __ghostLog__(LogLevel, __FileName__(), __LINE__, Format, ##__VA_ARGS__)
+#define GhostLog(LogLevel, Format, ...)               __ghostLog__(LogLevel, __FILE__, __LINE__, Format, ##__VA_ARGS__)
 
 
 	/// <summary>
@@ -152,12 +139,12 @@ extern "C" {
 	/// <param name="LogLevel">Log level.</param>
 	/// <param name="GhostErrorRet">Function with GhostError_t as return value or return value of GhostError_t.</param>
 #define GhostLogFuncResult(LogLevel, GhostErrorRet)   do{ \
-                                                            __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FileName__(), __LINE__); \
+                                                            __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
                                                         } while(0);
 
 #define GhostLogIfError(LogLevel, GhostErrorRet)      do{ \
                                                             if(IfGhostError(GhostErrorRet)) \
-                                                                __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FileName__(), __LINE__); \
+                                                                __ghostLogFuncResultImpl__(LogLevel, GhostErrorRet, #GhostErrorRet, __FILE__, __LINE__); \
                                                         } while(0);
 
 
@@ -172,7 +159,7 @@ extern "C" {
 	/// <returns>Same as GhostErrorRet.</returns>
 #define GhostLogTerminateIfErr(LogLevel, GhostErrorRet)        do{ \
                                                                     if(IfGhostError(GhostErrorRet)) { \
-                                                                        __ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FileName__(), __LINE__); \
+                                                                        __ghostLogRetIfErrImpl__(LogLevel, GhostErrorRet, __FILE__, __LINE__); \
                                                                         return GhostErrorRet; \
                                                                     } \
                                                                  } while(0);

@@ -3,7 +3,9 @@
 #include "GhostPlatformConfigs.h"
 #include <string.h>
 #include <new>
-#include <qtimer>
+#include <QTimer>
+#include <QTableView>
+#include <QStandardItemModel>
 
 SimulatorUI::SimulatorUI(QWidget *parent) :
     QMainWindow(parent)
@@ -32,9 +34,20 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
 
     // Create screen image buffer.
 
+    // Init log table.
+    model = new QStandardItemModel();
+    model->setColumnCount(5);
+    model->setHeaderData(0, Qt::Horizontal, "Log level");
+    model->setHeaderData(1, Qt::Horizontal, "Time(us)");
+    model->setHeaderData(2, Qt::Horizontal, "File");
+    model->setHeaderData(3, Qt::Horizontal, "Line");
+    model->setHeaderData(4, Qt::Horizontal, "Content");
+    ui.logTable->setModel(model);
+    ui.logTable->horizontalHeader()->setStretchLastSection(true);
+
     // Connect signals and slots.
     connect(this, &SimulatorUI::drawScreen, this, &SimulatorUI::drawScreenMethod, Qt::BlockingQueuedConnection);
-    connect(this, &SimulatorUI::logClear, this, [this](void) { this->ui.logBrowser -> clear(); });
+    connect(this, &SimulatorUI::logClear, this, [this](void) { model->removeRows(0, model->rowCount()); });
     connect(this, &SimulatorUI::getScreenWidth, this, [this](void) -> int { return this->ui.screenView->width(); }, Qt::BlockingQueuedConnection);
     connect(this, &SimulatorUI::getScreenHeight, this, [this](void) -> int { return this->ui.screenView->height(); }, Qt::BlockingQueuedConnection);
 
@@ -45,6 +58,7 @@ SimulatorUI::~SimulatorUI()
 {
     delete screenScene;
     delete screenRawBuffer;
+    delete model;
     Q_CLEANUP_RESOURCE(Resources);
 }
 
@@ -71,9 +85,8 @@ void SimulatorUI::log(GhostQtLogLevel_t Level, double Time, const char* FileName
         newLog.contents = Contents;
 
         logBuffer.push_back(newLog);
+        logAppend(newLog, logOptions);
     }
-
-    logAppend(newLog);
 }
 
 
@@ -92,7 +105,7 @@ bool SimulatorUI::logStringGenerate(const GhostQtLog_t& log, const GhostQtLogDis
         case Debug:
             if (Options.showDebug)
             {
-                Content = QString("<font color=\"#000000\">%1").arg(QString::fromStdString("[Debug]: " + log.contents));
+                Content = QString("<font color=\"#000000\">%1").arg(QString::fromStdString("[Debug]: " + log.fileName + std::to_string(log.lineNumber) + log.contents));
                 matched = true;
             }
             break;
@@ -100,7 +113,7 @@ bool SimulatorUI::logStringGenerate(const GhostQtLog_t& log, const GhostQtLogDis
         case Info:
             if (Options.showInfo)
             {
-                Content = QString("<font color=\"#000000\">%1").arg(QString::fromStdString("[Info]: " + log.contents));
+                Content = QString("<font color=\"#000000\">%1").arg(QString::fromStdString("[Info]: " + log.fileName + std::to_string(log.lineNumber) + log.contents));
                 matched = true;
             }
             break;
@@ -108,7 +121,7 @@ bool SimulatorUI::logStringGenerate(const GhostQtLog_t& log, const GhostQtLogDis
         case Warning:
             if (Options.showWarning)
             {
-                Content = QString("<font color=\"#FF0000\">%1").arg(QString::fromStdString("[Warn]: " + log.contents));
+                Content = QString("<font color=\"#FF0000\">%1").arg(QString::fromStdString("[Warn]: " + log.fileName + std::to_string(log.lineNumber) + log.contents));
                 matched = true;
             }
             break;
@@ -116,7 +129,7 @@ bool SimulatorUI::logStringGenerate(const GhostQtLog_t& log, const GhostQtLogDis
         case Error:
             if (Options.showError)
             {
-                Content = QString("<font color=\"#ff3300\">%1").arg(QString::fromStdString("[Error]: " + log.contents));
+                Content = QString("<font color=\"#ff3300\">%1").arg(QString::fromStdString("[Error]: " + log.fileName + std::to_string(log.lineNumber) + log.contents));
                 matched = true;
             }
             break;
@@ -124,7 +137,7 @@ bool SimulatorUI::logStringGenerate(const GhostQtLog_t& log, const GhostQtLogDis
         case Fatal:
             if (Options.showFatal)
             {
-                Content = QString("<font color=\"#990000\">%1").arg(QString::fromStdString("[Fatal]: " + log.contents));
+                Content = QString("<font color=\"#990000\">%1").arg(QString::fromStdString("[Fatal]: " + log.fileName + std::to_string(log.lineNumber) + log.contents));
                 matched = true;
             }
             break;
@@ -151,12 +164,58 @@ bool SimulatorUI::logStringGenerate(const GhostQtLog_t& log, const GhostQtLogDis
 /// Add a new log after the current log area.
 /// </summary>
 /// <param name="log">New log.</param>
-void SimulatorUI::logAppend(const GhostQtLog_t& log)
+void SimulatorUI::logAppend(const GhostQtLog_t& log, const GhostQtLogDisplayOptions_t& Options)
 {
     QString content;
     if (logStringGenerate(log, logOptions, content))
     {
-        ui.logBrowser->append(content);
+        int count = model->rowCount();
+        switch (log.level)
+        {
+        case Debug:
+            if (Options.showDebug)
+            {
+                model->setItem(count, 0, new QStandardItem("Debug"));
+            }
+            break;
+
+        case Info:
+            if (Options.showInfo)
+            {
+                model->setItem(count, 0, new QStandardItem("Info"));
+            }
+            break;
+            
+        case Warning:
+            if (Options.showWarning)
+            {
+                model->setItem(count, 0, new QStandardItem("Warning"));
+            }
+            break;
+
+        case Error:
+            if (Options.showError)
+            {
+                model->setItem(count, 0, new QStandardItem("Error"));
+            }
+            break;
+
+        case Fatal:
+            if (Options.showFatal)
+            {
+                model->setItem(count, 0, new QStandardItem("Fatal"));
+            }
+            break;
+            
+        default:
+            break;
+        }
+
+        model->setItem(count, 1, new QStandardItem(QString::number(log.time)));
+        model->setItem(count, 2, new QStandardItem(QString::fromStdString(log.fileName)));
+        model->setItem(count, 3, new QStandardItem(QString::number(log.lineNumber)));
+        model->setItem(count, 4, new QStandardItem(QString::fromStdString(log.contents)));
+        ui.logTable->resizeColumnsToContents();
     }
 }
 

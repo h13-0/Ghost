@@ -562,7 +562,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 	if (mode == LV_FS_MODE_WR)
 	{
 		/*Open a file for write*/
-		if (IfGhostError(GhostFS_Open(path, filePtr, "w")))
+		if (IfGhostError(GhostFS_Open(path, filePtr, "wb")))
 		{
 			free(filePtr);
 			return NULL;
@@ -571,7 +571,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 	else if (mode == LV_FS_MODE_RD)
 	{
 		/*Open a file for read*/
-		if (IfGhostError(GhostFS_Open(path, filePtr, "r")))
+		if (IfGhostError(GhostFS_Open(path, filePtr, "rb")))
 		{
 			free(filePtr);
 			return NULL;
@@ -580,7 +580,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 	else if (mode == (LV_FS_MODE_WR | LV_FS_MODE_RD))
 	{
 		/*Open a file for read and write*/
-		if (IfGhostError(GhostFS_Open(path, filePtr, "rw")))
+		if (IfGhostError(GhostFS_Open(path, filePtr, "rb+")))
 		{
 			free(filePtr);
 			return NULL;
@@ -678,7 +678,7 @@ static lv_fs_res_t fs_tell(lv_fs_drv_t* drv, void* file_p, uint32_t* pos_p)
 	{
 		return LV_FS_RES_HW_ERR;
 	}
-	pos_p = pos;
+	*pos_p = pos;
 
 	return LV_FS_RES_OK;
 }

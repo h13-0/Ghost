@@ -60,6 +60,8 @@ extern "C" {
 	/// <param name="Hegith">Hegith.</param>
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostQtSimulatorGetScreenResolution(GhostQtSimulator_t* QtSimulator, int* Width, int* Height);
+	GhostError_t GhostQtSimulatorGetScreenWidth(GhostQtSimulator_t* QtSimulator, int* Width);
+	GhostError_t GhostQtSimulatorGetScreenHeight(GhostQtSimulator_t* QtSimulator, int* Height);
 
 	
 	/// <summary>

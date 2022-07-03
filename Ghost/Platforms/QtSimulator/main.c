@@ -2,7 +2,7 @@
 
 #include "QtSimulator.h"
 
-#include "lv_png.h"
+//#include "lv_png.h"
 
 #include "App.h"
 
@@ -116,7 +116,7 @@ static void* ghostRun(void* args)
 	/// FileSystem.
 	if (IfGhostError(GhostFS_Init(MacroFileSystemMountPoint)))
 	{
-		GhostLogF("Ghost file system init error.");
+		GhostLogF("Ghost file system init error, please check if the file system exists.");
 	}
 
 
@@ -127,7 +127,10 @@ static void* ghostRun(void* args)
 	lv_port_disp_init(&simulator);
 	// Init lvgl file system.
 	if (IfGhostError(GhostLVGL_FS_Init()))
-		exit(4);
+	{
+		GhostLogF("Ghost lvgl file system init error, please check whether the GhostFileSystem is initialized successfully.");
+	}
+
 	// Init lvgl lib png support.
 	lv_png_init();
 
@@ -179,44 +182,4 @@ int main(int argc, char* argv[])
 	pthread_join(ghostRunThread, NULL);
 
 	return 0;
-}
-
-
-/// <summary>
-/// Get the resolution of Qt Simulator.
-/// </summary>
-/// <note>
-/// This function **DOSE NOT** need to be ported under normal circumstances.
-/// Generally, you only need to define the constant `MacroDisplayHorizontalResolution` and `MacroDisplayVerticalResolution` in the `GhostPlatformConfigs.h` file.
-/// In the QtSimulator, `MacroDisplayHorizontalResolution` and `MacroDisplayVerticalResolution` is defined as the following two functions in the `GhostPlatformConfigs.h` file.
-/// </note>
-/// <returns>Resolution.</returns>
-lv_coord_t GhostQtSimulatorGetHorizontalResolution(void)
-{
-	// Wait Qt Simulator inited.
-	while (IfGhostError(GhostQtSimulatorInited(&simulator)))
-	{
-		GhostSleepMillisecond(100);
-	}
-
-	int horizontal = 0, vertical = 0;
-
-	GhostQtSimulatorGetScreenResolution(&simulator, &horizontal, &vertical);
-
-	return horizontal;
-}
-
-lv_coord_t GhostQtSimulatorGetVerticalResolution(void)
-{
-	// Wait Qt Simulator inited.
-	while (IfGhostError(GhostQtSimulatorInited(&simulator)))
-	{
-		GhostSleepMillisecond(100);
-	}
-
-	int horizontal = 0, vertical = 0;
-
-	GhostQtSimulatorGetScreenResolution(&simulator, &horizontal, &vertical);
-
-	return vertical;
 }
