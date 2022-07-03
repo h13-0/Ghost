@@ -10,8 +10,10 @@
 #include <vector>
 #include <regex>
 
+// Qt headers.
 #include <QMainWindow>
 #include <QPainter>
+#include <QStandardItemModel>
 
 class SimulatorUI : public QMainWindow
 {
@@ -86,6 +88,7 @@ private:
     // Private UI variables.
     Ui::MainWindow ui;
     QGraphicsScene* screenScene;
+    QStandardItemModel* model;
 
     /// <summary>
     /// Typedef of Ghost Qt log.
@@ -136,7 +139,7 @@ private:
     /// Add a new log after the current log area.
     /// </summary>
     /// <param name="log">New log.</param>
-    void logAppend(const GhostQtLog_t& log);
+    void logAppend(const GhostQtLog_t& log, const GhostQtLogDisplayOptions_t& Options);
 
 
     /// <summary>

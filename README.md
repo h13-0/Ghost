@@ -81,5 +81,6 @@ Such as this:
 Change the Windows settings as shown below.  
 ![Solution.jpg](./Images/QtSimulatorVagueSolution.jpg)  
 </details><br>  
+
 ## esp32s3
 Will launch soon(perhaps).  

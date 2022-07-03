@@ -1,7 +1,7 @@
 # The following are set after configuration is done:
-# GHOST_CMP_LOG_INCLUDE_DIRS
+# GHOST_LOG_INCLUDE_DIRS
 
-project(GhostCmpLog)
+project(GhostLog)
 
 # Generate libraries.
 add_library(
@@ -12,7 +12,7 @@ add_library(
 
 # Set header paths.
 set(
-	GHOST_CMP_LOG_INCLUDE_DIRS
+	GHOST_LOG_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}"
 	CACHE PATH "Ghost log header file paths list."
 )

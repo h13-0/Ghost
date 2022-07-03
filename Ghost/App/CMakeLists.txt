@@ -9,10 +9,6 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 # Include submodules.
 ## Components.
-### Ghost Log.
-add_subdirectory("${PROJECT_SOURCE_DIR}/Components/Log")
-include_directories("${GHOST_CMP_LOG_INCLUDE_DIRS}")
-
 ### SafeLVGL
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/SafeLVGL")
 include_directories("${GHOST_CMP_SAFELVGL_INCLUDE_DIRS}")
@@ -53,7 +49,6 @@ target_link_libraries(
 	${PROJECT_NAME}
 
 	# Components.
-	GhostCmpLog
 	GhostCmpSafeLVGL
 
 	# NativeApplications.

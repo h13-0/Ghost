@@ -359,7 +359,17 @@
           </layout>
          </item>
          <item>
-          <widget class="QTextBrowser" name="logBrowser"/>
+          <widget class="QTableView" name="logTable">
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
