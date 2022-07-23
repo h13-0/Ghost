@@ -10,13 +10,13 @@ extern "C" {
 	/// Init Ghost clock.
 	/// </summary>
 	/// <param name=""></param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostClockInit(void);
 
 	/// <summary>
 	/// Get current Gregorian calendar information.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostGetCurrentYear(int* Year);
 	GhostError_t GhostGetCurrentMonth(int* Month);
 	GhostError_t GhostGetCurrentDay(int* Day);
@@ -25,7 +25,7 @@ extern "C" {
 	/// <summary>
 	/// Get current time apis.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostGetCurrentHour(int* Hour);
 	GhostError_t GhostGetCurrentMinute(int* Minute);
 	GhostError_t GhostGetCurrentSecond(int* Second);
@@ -34,14 +34,14 @@ extern "C" {
 	/// <summary>
 	/// Get the time from startup to now.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostGetCurrentMilliseconds(double* Milliseconds);
 	GhostError_t GhostGetCurrentMicroseconds(double* Microseconds);
 
 	/// <summary>
 	/// Sleep functions.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostSleepMillisecond(int Milliseconds);
 	GhostError_t GhostSleepMicrosecond(int Microseconds);
 

@@ -39,6 +39,8 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lua")
 include_directories("${LUA_INCLUDE_DIRS}")
 
 ### Platforms layer.
+
+
 #### Qt.
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Qt")
 include_directories("${GHOST_QSIM_INCLUDE_DIRS}")
@@ -52,6 +54,10 @@ include_directories(${GHOST_FSP_INCLUDE_DIRS})
 #### Thread (use pthread).
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Thread/pthread")
 include_directories("${GHOST_THREAD_INCLUDE_DIRS}")
+
+#### Memory manager.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/MemoryManager")
+include_directories("${GHOST_MMGR_INCLUDE_DIRS}")
 
 #### Clock.
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Clock/StandardClock")
@@ -88,6 +94,14 @@ set(
 
 # Compile executable file.
 add_executable(QtSimulator ${SOURCE_FILES})
+
+
+set_target_properties(
+	QtSimulator
+	PROPERTIES
+	STATIC_LIBRARY_FLAGS /MANIFEST:EMBED
+)
+
 target_link_libraries(
 	QtSimulator
 	# ThirdParty.
@@ -101,9 +115,11 @@ target_link_libraries(
 
 	# Drivers.
 	GhostThread
+	GhostMemoryManager
+	GhostStandardClock
 	GhostLog
 	QtSimulatorScreen 
-	GhostStandardClock
+	
 	GhostFileSystem
 	GhostApps
 

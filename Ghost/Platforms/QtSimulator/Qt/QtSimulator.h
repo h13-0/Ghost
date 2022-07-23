@@ -63,6 +63,16 @@ extern "C" {
 	GhostError_t GhostQtSimulatorGetScreenWidth(GhostQtSimulator_t* QtSimulator, int* Width);
 	GhostError_t GhostQtSimulatorGetScreenHeight(GhostQtSimulator_t* QtSimulator, int* Height);
 
+
+	/// <summary>
+	/// Set value of performance monitor area progress bar.
+	/// </summary>
+	/// <param name="QtSimulator">Pointor to simulator.</param>
+	/// <param name="Value">Value of progress bar, range [0, 100].</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostQtSimulatorSetCPU_UsageProgressBarValue(GhostQtSimulator_t* QtSimulator, int Value);
+	GhostError_t GhostQtSimulatorSetMemoryUsageProgressBarValue(GhostQtSimulator_t* QtSimulator, int Value);
+
 	
 	/// <summary>
 	/// Get screen fillet radius.

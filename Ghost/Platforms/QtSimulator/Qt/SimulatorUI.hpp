@@ -84,6 +84,13 @@ signals:
     int getScreenWidth(void);
     int getScreenHeight(void);
 
+    /// <summary>
+    /// Set value of performance monitor area progress bar.
+    /// </summary>
+    /// <param name="value">Value of progress bar, range [0, 100].</param>
+    void setCPU_UsageProgressBarValue(int value);
+    void setMemoryUsageProgressBarValue(int value);
+
 private:
     // Private UI variables.
     Ui::MainWindow ui;

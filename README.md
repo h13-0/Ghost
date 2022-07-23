@@ -43,13 +43,12 @@ This project is recommended to be used in MCU or SOC of 32-bit or above.
 - [ ] esp32s3.
 - [ ] Linux frame buffer.
 
-# Build
 ## Windows/Linux Simulator  
 [Development documentation](./Ghost/Platforms/QtSimulator/Readme.md)  
-![WindowsSimulator.jpg](./Images/QtSimulator.jpg)
+![WindowsSimulator.jpg](./Images/QtSimulator.jpg)  
+### Build
 ```Powershell
-git clone https://github.com/h13-0/Ghost.git
-git submodule update --init
+git clone --recursive https://github.com/h13-0/Ghost.git
 ```
 Open in visual studio in folder [Ghost](./Ghost/) and build.  
 **Note that QT needs to be deployed before running.**  
@@ -73,14 +72,7 @@ New-Item -ItemType SymbolicLink -Path .\Ghost -Target ..\..\..\Mount\
 ```  
 Now you can run the Qt Simulator.
 
-<details>  
-<summary>If there is jagged effect when displaying</summary><br>  
-
-Such as this:  
-![Vague.jpg](./Images/QtSimulatorVague.jpg)  
-Change the Windows settings as shown below.  
-![Solution.jpg](./Images/QtSimulatorVagueSolution.jpg)  
-</details><br>  
+### [FAQ](https://github.com/h13-0/Ghost/tree/master/Ghost/Platforms/QtSimulator#FAQ)  
 
 ## esp32s3
 Will launch soon(perhaps).  

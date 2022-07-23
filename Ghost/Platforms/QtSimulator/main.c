@@ -7,6 +7,7 @@
 #include "App.h"
 
 #include "GhostThread.h"
+#include "GhostMemoryManager.h"
 #include "GhostLog.h"
 #include "GhostClock.h"
 #include "GhostFileSystem.h"
@@ -83,6 +84,17 @@ static void* ghostTimer(void* args)
 	}
 }
 
+static void* ghostQtPerformanceMonitorRun(void* args)
+{
+	while (1)
+	{
+		size_t usage = GhostMemMgrGetTotalMemUsage();
+		GhostQtSimulatorSetMemoryUsageProgressBarValue(&simulator, usage * 100 / MacroMaximumMemoryUsageLimit);
+		GhostSleepMillisecond(500);
+	}
+}
+
+
 static void* ghostRun(void* args)
 {
 	// Wait Qt Simulator inited.
@@ -91,32 +103,53 @@ static void* ghostRun(void* args)
 		GhostSleepMillisecond(100);
 	}
 
-	// Init Ghost thread(To enable GhostLog).
+	// Init Drivers.
+	/// GhostThread.
 	if (IfGhostError(GhostThreadInit()))
-		exit(1);
+	{
+		logToQtSimulator(Fatal, 0, __FILE__, __LINE__, "Ghost thread init failed.");
+		return NULL;
+	}
+	
+	/// GhostMemMgr.
+	if (IfGhostError(GhostMemMgrInit(MacroMaximumMemoryUsageLimit)))
+	{
+		logToQtSimulator(Fatal, 0, __FILE__, __LINE__, "Ghost memory manager init failed.");
+		return NULL;
+	}
 
-	// Init Ghost log.
+	/// GhostClock.
+	if (IfGhostError(GhostClockInit()))
+	{
+		logToQtSimulator(Fatal, 0, __FILE__, __LINE__, "Ghost clock init failed.");
+		return NULL;
+	}
+
+	/// GhostLog
 	if (IfGhostError(GhostLogInit(MacroGhostLogMinimumLogLevel)))
-		exit(2);
+	{
+		logToQtSimulator(Fatal, 0, __FILE__, __LINE__, "Ghost log init failed.");
+		return NULL;
+	}
+
+	// Enable GhostMemoryManager log output.
+	GhostMemMgrSetLogEnableStatus(true);
 
 	// Register log output function.
 	if (IfGhostError(GhostLogOutputFuncRegister(logToQtSimulator)))
-		exit(3);
+	{
+		logToQtSimulator(Fatal, 0, __FILE__, __LINE__, "Ghost log function register failed.");
+		return NULL;
+	}
 
 	// Regeister log output file.
-
-
-	// Init Drivers.
-	/// Clock.
-	if (IfGhostError(GhostClockInit()))
-	{
-		GhostLogF("Ghost clock init error.");
-	}
 
 	/// FileSystem.
 	if (IfGhostError(GhostFS_Init(MacroFileSystemMountPoint)))
 	{
+
 		GhostLogF("Ghost file system init error, please check if the file system exists.");
+		return NULL;
 	}
 
 
@@ -129,14 +162,14 @@ static void* ghostRun(void* args)
 	if (IfGhostError(GhostLVGL_FS_Init()))
 	{
 		GhostLogF("Ghost lvgl file system init error, please check whether the GhostFileSystem is initialized successfully.");
+		return NULL;
 	}
 
-	// Init lvgl lib png support.
-	lv_png_init();
-
+	// Init Ghost app.
 	if(IfGhostError(GhostAppInit()))
 	{
-		exit(5);
+		GhostLogF("Ghost app init failed.");
+		return NULL;
 	}
 	else {
 		pthread_t ghostTimerThread;
@@ -150,8 +183,20 @@ static void* ghostRun(void* args)
 
 		}
 
-		pthread_join(ghostTimerThread, NULL);
+		pthread_t ghostPerformancMonitorThread;
+		// Run performance monitor.
+		pret = pthread_create(&ghostPerformancMonitorThread, NULL, ghostQtPerformanceMonitorRun, NULL);
+		if (pret != 0)
+		{
+			//
+		}
+		else {
+
+		}
+
 		GhostAppRun();
+
+		pthread_join(ghostTimerThread, NULL);
 	}
 }
 
@@ -177,6 +222,8 @@ int main(int argc, char* argv[])
 
 	// Run simulator.
 	GhostQtSimulatorRun(&simulator);
+
+	exit(0);
 
 	// Wait for the child thread to end.
 	pthread_join(ghostRunThread, NULL);

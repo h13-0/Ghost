@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.0)
 # Project informations.
 project(Ghost VERSION 0.0.1)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+
 # Specify parameters on the command line.
 set(Platform_Config "AutoSelect" CACHE STRING "Path of CMakeLists.txt used by the target platform." FORCE)
 

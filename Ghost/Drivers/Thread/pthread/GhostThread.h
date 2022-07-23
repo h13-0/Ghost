@@ -84,6 +84,8 @@ extern "C" {
 	GhostError_t GhostMutexLock(GhostMutex_t* Mutex);
 
 
+	GhostError_t GhostMutexTryLock();
+
 	/// <summary>
 	/// Unlock mutex.
 	/// </summary>

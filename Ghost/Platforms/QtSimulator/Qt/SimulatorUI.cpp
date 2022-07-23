@@ -37,8 +37,8 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     // Init log table.
     model = new QStandardItemModel();
     model->setColumnCount(5);
-    model->setHeaderData(0, Qt::Horizontal, "Log level");
-    model->setHeaderData(1, Qt::Horizontal, "Time(us)");
+    model->setHeaderData(0, Qt::Horizontal, "Time(ms)");
+    model->setHeaderData(1, Qt::Horizontal, "Log level");
     model->setHeaderData(2, Qt::Horizontal, "File");
     model->setHeaderData(3, Qt::Horizontal, "Line");
     model->setHeaderData(4, Qt::Horizontal, "Content");
@@ -50,6 +50,8 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     connect(this, &SimulatorUI::logClear, this, [this](void) { model->removeRows(0, model->rowCount()); });
     connect(this, &SimulatorUI::getScreenWidth, this, [this](void) -> int { return this->ui.screenView->width(); }, Qt::BlockingQueuedConnection);
     connect(this, &SimulatorUI::getScreenHeight, this, [this](void) -> int { return this->ui.screenView->height(); }, Qt::BlockingQueuedConnection);
+    connect(this, &SimulatorUI::setCPU_UsageProgressBarValue, this, [this](int value) -> void { this->ui.cpuUsageProgressBar->setValue(value); }, Qt::BlockingQueuedConnection);
+    connect(this, &SimulatorUI::setMemoryUsageProgressBarValue, this, [this](int value) -> void { this->ui.memoryUsageProgressBar->setValue(value); }, Qt::BlockingQueuedConnection);
 
     QTimer::singleShot(0, this, [this] { std::unique_lock<std::mutex> lck(loadFinishedFlagMutex); loadFinishedFlag = true; });
 }
@@ -175,35 +177,35 @@ void SimulatorUI::logAppend(const GhostQtLog_t& log, const GhostQtLogDisplayOpti
         case Debug:
             if (Options.showDebug)
             {
-                model->setItem(count, 0, new QStandardItem("Debug"));
+                model->setItem(count, 1, new QStandardItem("Debug"));
             }
             break;
 
         case Info:
             if (Options.showInfo)
             {
-                model->setItem(count, 0, new QStandardItem("Info"));
+                model->setItem(count, 1, new QStandardItem("Info"));
             }
             break;
             
         case Warning:
             if (Options.showWarning)
             {
-                model->setItem(count, 0, new QStandardItem("Warning"));
+                model->setItem(count, 1, new QStandardItem("Warning"));
             }
             break;
 
         case Error:
             if (Options.showError)
             {
-                model->setItem(count, 0, new QStandardItem("Error"));
+                model->setItem(count, 1, new QStandardItem("Error"));
             }
             break;
 
         case Fatal:
             if (Options.showFatal)
             {
-                model->setItem(count, 0, new QStandardItem("Fatal"));
+                model->setItem(count, 1, new QStandardItem("Fatal"));
             }
             break;
             
@@ -211,7 +213,7 @@ void SimulatorUI::logAppend(const GhostQtLog_t& log, const GhostQtLogDisplayOpti
             break;
         }
 
-        model->setItem(count, 1, new QStandardItem(QString::number(log.time)));
+        model->setItem(count, 0, new QStandardItem(QString::number(log.time / 1000.0, 'f', 4)));
         model->setItem(count, 2, new QStandardItem(QString::fromStdString(log.fileName)));
         model->setItem(count, 3, new QStandardItem(QString::number(log.lineNumber)));
         model->setItem(count, 4, new QStandardItem(QString::fromStdString(log.contents)));

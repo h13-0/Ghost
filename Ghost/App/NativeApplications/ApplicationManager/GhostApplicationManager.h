@@ -52,7 +52,7 @@ extern "C" {
 	/// Init Ghost application manager.
 	/// </summary>
 	/// <param name=""></param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrInit(void);
 
 
@@ -60,7 +60,7 @@ extern "C" {
 	/// Register an app to the app list.
 	/// </summary>
 	/// <param name="Application">Application info.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const Application);
 	
 
@@ -69,7 +69,7 @@ extern "C" {
 	/// </summary>
 	/// <param name="PackageName">Package name.</param>
 	/// <param name="ApplicationInfo">Pointor of Application info.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* const ApplicationInfo);
 
 
@@ -79,7 +79,7 @@ extern "C" {
 	/// <param name="PackageName">Package name.</param>
 	/// <param name="Argc">Number of args.</param>
 	/// <param name="Args">Pointers of args.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrRunForeground(const char* const PackageName, int Argc, void** Args);
 	
 
@@ -89,7 +89,7 @@ extern "C" {
 	/// <param name="PackageName">Package name.</param>
 	/// <param name="Argc">Number of args.</param>
 	/// <param name="Args">Pointers of args.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, void** Args);
 
 
@@ -97,7 +97,7 @@ extern "C" {
 	/// Stop app by appliaction info.
 	/// </summary>
 	/// <param name="ApplicationInfo"></param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t* ApplicationInfo);
 
 
@@ -105,7 +105,7 @@ extern "C" {
 	/// Stop app by package name.
 	/// </summary>
 	/// <param name="PackageName">Package name.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrStopAppByPackageName(char* PackageName);
 
 
@@ -113,7 +113,7 @@ extern "C" {
 	/// Uninstall an app.
 	/// </summary>
 	/// <param name="PackageName">Package name.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrUninstall(const char* PackageName);
 
 
@@ -135,7 +135,7 @@ extern "C" {
 	///		**The `ApplicationListPtr` should be released after use!**
 	/// </summary>
 	/// <param name="ApplicationListPtr">Pointer of application linked list.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* const ApplicationListPtr);
 	
 
@@ -143,7 +143,7 @@ extern "C" {
 	/// Release application list.
 	/// </summary>
 	/// <param name="ApplicationListPtr">Pointer of application linked list.</param>
-	/// <returns></returns>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPtr);
 
 
