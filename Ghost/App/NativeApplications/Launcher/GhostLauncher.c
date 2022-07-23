@@ -65,6 +65,11 @@ static GhostError_t standbyPageCreate(lv_obj_t* standbyPage);
 /// <returns></returns>
 static GhostError_t standbyPageRefresh(lv_obj_t* standbyPage);
 
+static void set_zoom(void* img, int32_t v)
+{
+	lv_img_set_zoom(img, v);
+}
+
 
 
 static lv_obj_t* createPage(lv_obj_t* Screen, lv_color_t BackgroundColor)
