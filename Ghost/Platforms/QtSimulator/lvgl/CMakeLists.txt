@@ -3,3 +3,4 @@
 
 add_definitions(-DLV_CONF_INCLUDE_SIMPLE)
 include_directories("${CMAKE_CURRENT_LIST_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/Drivers/MemoryManager")

@@ -30,6 +30,9 @@
 #endif
 
 /******************************************************** Ghost driver configs ********************************************************/
+//> Memory manager.
+#define MacroMaximumMemoryUsageLimit                                  (4096 * 1024) //4096 * 1024Bytes.
+
 //> File system configs.
 #define MacroFileSystemMountPoint                                     ("./Ghost")   //**Paths should be separated by '/'**
 #define MacroMaximumPathLength                                        (256)
@@ -73,7 +76,7 @@
 #define MacroGhostLogOutputLineNumber                                 (1)
 
 #else // #if defined(_DEBUG)
-#warning "TODO"
+#warn "TODO"
 #if(MacroGhostSystemSizeOptimizeLevel == MacroGhostSizeOptExperience)
 
 #elif(MacroGhostSystemSizeOptimizeLevel == MacroGhostMemOptNormal)

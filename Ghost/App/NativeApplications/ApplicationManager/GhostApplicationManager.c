@@ -100,7 +100,7 @@ static int luaApplicationNumbers = 0;
 /// Init Ghost application manager.
 /// </summary>
 /// <param name=""></param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrInit(void)
 {
 	// TODO: Normalize the following operations.
@@ -126,7 +126,7 @@ GhostError_t GhostAppMgrInit(void)
 /// Register an app to the app list.
 /// </summary>
 /// <param name="ApplicationInfo">Application info.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const ApplicationInfo)
 {
 	// TODO: Check icons.
@@ -199,7 +199,7 @@ GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const ApplicationInfo)
 /// </summary>
 /// <param name="PackageName">Package name.</param>
 /// <param name="ApplicationInfo">Pointor of Application info.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* const ApplicationInfo)
 {
 	const GhostAppHandleList_t* ptr = applicationList;
@@ -222,7 +222,7 @@ GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* 
 /// </summary>
 /// <param name="PackageName">Package name.</param>
 /// <param name="ApplicationInfo">Pointor of Application handle node.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 static GhostError_t ghostAppMgrGetHandleNodeByPackageName(const char* PackageName, GhostAppHandleList_t** ApplicationNode)
 {
 	const GhostAppHandleList_t* ptr = applicationList;
@@ -245,7 +245,7 @@ static GhostError_t ghostAppMgrGetHandleNodeByPackageName(const char* PackageNam
 /// </summary>
 /// <param name="PackageName">Package name.</param>
 /// <param name="ApplicationInfo">Pointor of Application handle node.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 static GhostError_t ghostAppMgrGetHandleNodeByAppInfo(const GhostAppInfo_t* AppInfo, GhostAppHandleList_t** ApplicationNode)
 {
 
@@ -257,7 +257,7 @@ static GhostError_t ghostAppMgrGetHandleNodeByAppInfo(const GhostAppInfo_t* AppI
 /// <param name="PackageName">Package name.</param>
 /// <param name="Argc">Number of args.</param>
 /// <param name="Args">Pointers of args.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrRunForeground(const char* const PackageName, int Argc, void** Args)
 {
 	GhostAppHandleList_t* nodePtr;
@@ -291,7 +291,7 @@ GhostError_t GhostAppMgrRunForeground(const char* const PackageName, int Argc, v
 /// <param name="PackageName">Package name.</param>
 /// <param name="Argc">Number of args.</param>
 /// <param name="Args">Pointers of args.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, void** Args)
 {
 	return GhostOK;
@@ -302,7 +302,7 @@ GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, v
 /// Stop app by appliaction info.
 /// </summary>
 /// <param name="ApplicationInfo"></param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t* ApplicationInfo)
 {
 	GhostError_t ret = GhostOK;
@@ -320,7 +320,7 @@ GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t* ApplicationInfo)
 /// Uninstall an app.
 /// </summary>
 /// <param name="PackageName">Package name.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrUninstall(const char* PackageName)
 {
 	GhostAppInfo_t info;
@@ -338,7 +338,7 @@ GhostError_t GhostAppMgrUninstall(const char* PackageName)
 ///		**The `ApplicationListPtr` should be released after use!**
 /// </summary>
 /// <param name="ApplicationListPtr">Pointer of application linked list.</param>
-/// <returns></returns>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* const ApplicationListPtr)
 {
 	return GhostOK;

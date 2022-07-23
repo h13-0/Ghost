@@ -3,10 +3,12 @@
 
 typedef enum
 {
-	DriverModuleNoError          = 0,
-	DriverModuleClockError       = 1,
-	DriverModuleFileSystemError  = 2,
-	DriverModuleThreadError      = 3,
-	DriverModuleScreenError      = 4,
-	DriverModuleTouchScreenError = 5,
+	DriverModuleNoError            = 0,
+	DriverModuleMemoryManagerError = 1,
+	DriverModuleThreadError        = 2,
+	DriverModuleLogError           = 3,
+	DriverModuleClockError         = 4,
+	DriverModuleFileSystemError    = 5,
+	DriverModuleScreenError        = 6,
+	DriverModuleTouchScreenError   = 7,
 } DriverModuleErrorCode;

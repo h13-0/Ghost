@@ -9,6 +9,7 @@
 
 // Drivers layer.
 /// FileSystem.
+#include "GhostMemoryManager.h"
 #include "GhostFileSystem.h"
 #include "GhostThread.h"
 #include "GhostClock.h"

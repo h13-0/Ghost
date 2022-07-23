@@ -280,8 +280,69 @@
              </size>
             </property>
             <property name="title">
-             <string>GroupBox</string>
+             <string>Performance Monitor</string>
             </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>CPU:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="threadsLabel">
+                 <property name="text">
+                  <string>0 Threads</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QProgressBar" name="cpuUsageProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+               <property name="textVisible">
+                <bool>true</bool>
+               </property>
+               <property name="invertedAppearance">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Memory:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="memoryUsageLabel">
+                 <property name="text">
+                  <string>0 KB / 0 KB</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QProgressBar" name="memoryUsageProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -293,7 +354,7 @@
         <property name="title">
          <string>Ghost log</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
+        <layout class="QVBoxLayout" name="verticalLayout_6">
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>

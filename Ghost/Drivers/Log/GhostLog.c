@@ -13,6 +13,7 @@
 #include "GhostLog.h"
 #include "GhostClock.h"
 #include "GhostThread.h"
+#include "GhostMemoryManager.h"
 
 // Cache current log level.
 #ifdef _DEBUG
@@ -100,12 +101,12 @@ GhostError_t GhostLogOutputFuncRegister(GhostLogFunc_t Func)
 	// Try lock?
 	GhostMutexLock(&logMutex);
 
-	GhostLogFunc_t* newList = calloc(outputFuncNum + 1, sizeof(GhostLogFunc_t));
+	GhostLogFunc_t* newList = GhostMemMgrCalloc(outputFuncNum + 1, sizeof(GhostLogFunc_t));
 
 	if (newList != NULL)
 	{
 		memcpy_s(newList, (outputFuncNum + 1) * sizeof(GhostLogFunc_t), outputFuncList, outputFuncNum * sizeof(GhostLogFunc_t));
-		free(outputFuncList);
+		GhostMemMgrFree(outputFuncList);
 		outputFuncList = newList;
 		*(outputFuncList + outputFuncNum) = Func;
 		outputFuncNum++;

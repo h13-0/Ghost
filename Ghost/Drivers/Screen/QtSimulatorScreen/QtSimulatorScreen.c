@@ -1,7 +1,7 @@
-#include "GhostPlatformConfigs.h"
 /*********************
  *      INCLUDES
  *********************/
+#include "GhostPlatformConfigs.h"
 #include "QtSimulator.h"
 #include "lvgl.h"
 #include "GhostPlatformConfigs.h"

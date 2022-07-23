@@ -11,6 +11,12 @@
 /// <returns>Function execution result.</returns>
 GhostError_t GhostQtSimulatorInit(GhostQtSimulator_t* QtSimulator, int argc, char** argv)
 {
+	for (int i = 0; i < argc - 1; i += 2)
+	{
+		qputenv(*(argv + i), *(argv + i + 1));
+	}
+	
+
 	try {
 		QtSimulator -> QApplicationPtr = new QApplication(argc, argv);
 		QtSimulator -> SimulatorUI_Ptr = new SimulatorUI();
@@ -107,6 +113,38 @@ GhostError_t GhostQtSimulatorGetScreenHeight(GhostQtSimulator_t* QtSimulator, in
 	}
 
 	*Height = ((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenHeight();
+
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Set value of performance monitor area progress bar.
+/// </summary>
+/// <param name="QtSimulator">Pointor to simulator.</param>
+/// <param name="Value">Value of progress bar, range [0, 100].</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostQtSimulatorSetCPU_UsageProgressBarValue(GhostQtSimulator_t* QtSimulator, int Value)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->setCPU_UsageProgressBarValue(Value);
+
+	return GhostOK;
+}
+
+
+GhostError_t GhostQtSimulatorSetMemoryUsageProgressBarValue(GhostQtSimulator_t* QtSimulator, int Value)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->setMemoryUsageProgressBarValue(Value);
 
 	return GhostOK;
 }
