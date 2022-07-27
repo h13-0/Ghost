@@ -1,0 +1,24 @@
+name: Todo
+description: Todo task for developers.
+title: "[Todo]: "
+body:
+- type: checkboxes
+  id: Todo-task-type
+  attributes:
+    label: Type of Todo-task.
+    options:
+      - label: Potential problems check.
+      - label: Bugs fix.
+      - label: New features.
+- type: textarea
+  id: Todo-task-description
+  attributes:
+    label: Description or reproduction method of potential problems and bugs, or description of new features(Please try one issue per question).
+  validations:
+    required: true
+- type: textarea
+  id: Todo-task-solution
+  attributes:
+    label: Suggested solution.
+  validations:
+    required: false
