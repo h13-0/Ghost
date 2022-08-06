@@ -52,6 +52,9 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     connect(this, &SimulatorUI::getScreenHeight, this, [this](void) -> int { return this->ui.screenView->height(); }, Qt::BlockingQueuedConnection);
     connect(this, &SimulatorUI::setCPU_UsageProgressBarValue, this, [this](int value) -> void { this->ui.cpuUsageProgressBar->setValue(value); }, Qt::BlockingQueuedConnection);
     connect(this, &SimulatorUI::setMemoryUsageProgressBarValue, this, [this](int value) -> void { this->ui.memoryUsageProgressBar->setValue(value); }, Qt::BlockingQueuedConnection);
+    connect(this, &SimulatorUI::setThreadsNumLabelText, this, [this](const char* Contents) -> void { this->ui.threadsNumLabel->setText(QString(Contents)); });
+    connect(this, &SimulatorUI::setMemoryUsageLabelText, this, [this](const char* Contents) -> void { this->ui.memoryUsageLabel->setText(QString(Contents)); });
+    connect(this, &SimulatorUI::setPeakMemoryUsageLabelText, this, [this](const char* Contents) -> void { this->ui.peakMemoryUsageLabel->setText(QString(Contents)); });
 
     QTimer::singleShot(0, this, [this] { std::unique_lock<std::mutex> lck(loadFinishedFlagMutex); loadFinishedFlag = true; });
 }

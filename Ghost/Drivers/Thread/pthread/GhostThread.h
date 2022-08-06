@@ -55,6 +55,14 @@ extern "C" {
 
 
 	/// <summary>
+	/// Get the number of threads created by GhostThread.
+	/// </summary>
+	/// <param name="void"></param>
+	/// <returns>Number of threads created by GhostThread.</returns>
+	int GhostThreadGetNumberOfThreads(void);
+
+	
+	/// <summary>
 	/// Typedef of Ghost
 	/// </summary>
 	typedef pthread_mutex_t GhostMutex_t;

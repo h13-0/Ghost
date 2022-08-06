@@ -91,6 +91,14 @@ signals:
     void setCPU_UsageProgressBarValue(int value);
     void setMemoryUsageProgressBarValue(int value);
 
+    /// <summary>
+    /// Set content of performance monitor area label.
+    /// </summary>
+    /// <param name="Contents">Content.</param>
+    void setThreadsNumLabelText(const char* Contents);
+    void setMemoryUsageLabelText(const char* Contents);
+    void setPeakMemoryUsageLabelText(const char* Contents);
+
 private:
     // Private UI variables.
     Ui::MainWindow ui;

@@ -13,4 +13,5 @@ typedef enum
 	SoftwareModuleGhostLogError   = 4,
 	SoftwareModuleSafeLV_Error    = 5,
 	SoftwareModuleThemeMgrError   = 6,
+	SoftwareModuleThemeError      = 7,
 } SoftwareModuleErrorCode;

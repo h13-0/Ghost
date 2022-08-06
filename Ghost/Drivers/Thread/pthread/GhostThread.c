@@ -49,6 +49,18 @@ GhostError_t GhostThreadDelete(GhostThread_t* Thread)
 	return GhostOK;
 }
 
+
+/// <summary>
+/// Get the number of threads created by GhostThread.
+/// </summary>
+/// <param name="void"></param>
+/// <returns>Number of threads created by GhostThread.</returns>
+int GhostThreadGetNumberOfThreads(void)
+{
+	
+}
+
+
 /// <summary>
 /// Init mutex.
 /// </summary>
@@ -80,6 +92,7 @@ GhostError_t GhostMutexDestroy(GhostMutex_t* Mutex)
 
 	return GhostOK;
 }
+
 
 /// <summary>
 /// Lock mutex.

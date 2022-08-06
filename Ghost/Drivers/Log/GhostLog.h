@@ -127,7 +127,7 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 #define GhostLogD(Format, ...)              GhostLog(Debug, Format, ##__VA_ARGS__)
 #define GhostLogI(Format, ...)              GhostLog(Info, Format, ##__VA_ARGS__)
-#define GhostLogW(Format, ...)              GhostLog(Warrning, Format, ##__VA_ARGS__)
+#define GhostLogW(Format, ...)              GhostLog(Warning, Format, ##__VA_ARGS__)
 #define GhostLogE(Format, ...)              GhostLog(Error, Format, ##__VA_ARGS__)
 #define GhostLogF(Format, ...)              GhostLog(Fatal, Format, ##__VA_ARGS__)
 
@@ -163,8 +163,6 @@ extern "C" {
                                                                         return GhostErrorRet; \
                                                                     } \
                                                                  } while(0);
-
-
 
 #ifdef __cplusplus
 }

@@ -16,7 +16,6 @@ GhostError_t GhostQtSimulatorInit(GhostQtSimulator_t* QtSimulator, int argc, cha
 		qputenv(*(argv + i), *(argv + i + 1));
 	}
 	
-
 	try {
 		QtSimulator -> QApplicationPtr = new QApplication(argc, argv);
 		QtSimulator -> SimulatorUI_Ptr = new SimulatorUI();
@@ -149,6 +148,50 @@ GhostError_t GhostQtSimulatorSetMemoryUsageProgressBarValue(GhostQtSimulator_t* 
 	return GhostOK;
 }
 
+
+/// <summary>
+/// Set content of performance monitor area label.
+/// </summary>
+/// <param name="QtSimulator">Pointor to simulator.</param>
+/// <param name="Contents">Content.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostQtSimulatorSetThreadsNumLabelText(GhostQtSimulator_t* QtSimulator, const char* Contents)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->setThreadsNumLabelText(Contents);
+
+	return GhostOK;
+}
+
+
+GhostError_t GhostQtSimulatorSetMemoryUsageLabelText(GhostQtSimulator_t* QtSimulator, const char* Contents)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->setMemoryUsageLabelText(Contents);
+
+	return GhostOK;
+}
+
+
+GhostError_t GhostQtSimulatorSetPeakMemoryUsageLabelText(GhostQtSimulator_t* QtSimulator, const char* Contents)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->setPeakMemoryUsageLabelText(Contents);
+
+	return GhostOK;
+}
 
 /// <summary>
 /// Output log to Qt simulator ui.

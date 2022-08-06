@@ -5,48 +5,55 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-//#include <malloc.h>
 
 #include "GhostThread.h"
 #include "../Log/GhostLog.h"
 
 #if(MacroMaximumMemoryUsageLimit <= 255)
-typedef uint8_t __ghostSize_t;
+typedef uint8_t __ghostMemSize_t;
 #elif(MacroMaximumMemoryUsageLimit <= 65535)
-typedef uint16_t __ghostSize_t;
+typedef uint16_t __ghostMemSize_t;
 #elif(MacroMaximumMemoryUsageLimit <= 4294967296)
-typedef uint32_t __ghostSize_t;
+typedef uint32_t __ghostMemSize_t;
 #else
-typedef uint64_t __ghostSize_t;
+typedef uint64_t __ghostMemSize_t;
 #endif
+
 
 /// <summary>
 /// Typedef of GhostMemMgrStatus_t.
 /// </summary>
 typedef struct
 {
+	// 
 	GhostMutex_t Mutex;
 	bool LogEnabled;
 
-	__ghostSize_t TotalMemoryUsage;
-	__ghostSize_t MaximumMemoryUsageLimit;
+	// 
+	__ghostMemSize_t TotalMemoryUsage;
+	__ghostMemSize_t MaximumTotalMemortUsage;
+	__ghostMemSize_t MaximumMemoryUsageLimit;
 
+	// The size of the header of the record size that needs additional allocation.
 	size_t SizeOfHeader;
 
+	// Number of all memory blocks allocated.
 	uint32_t MemoryBlocksNums;
-	void** MemoryBlocks;
-
+	
+	// TODO: Record all block addresses.
+	//void** MemoryBlocks;
 } GhostMemMgrStatus_t;
 
 
 static GhostMemMgrStatus_t* status = NULL;
+
 
 /// <summary>
 /// Init Ghost memory manager.
 ///		Dependent modules:
 ///			GhostThread
 ///		Thread safe:
-///			NOT.
+///			NO.
 /// </summary>
 /// <param name="MaximumMemoryUsageLimit">Maximum memory usage.</param>
 /// <returns>Function execution result.</returns>
@@ -73,7 +80,8 @@ GhostError_t GhostMemMgrInit(size_t MaximumMemoryUsageLimit)
 	GhostMutexLock(&status->Mutex);
 	status->MaximumMemoryUsageLimit = MaximumMemoryUsageLimit;
 	status->TotalMemoryUsage = sizeof(GhostMemMgrStatus_t);
-	status->SizeOfHeader = sizeof(__ghostSize_t);
+	status->MaximumTotalMemortUsage = status->TotalMemoryUsage;
+	status->SizeOfHeader = sizeof(__ghostMemSize_t);
 	status->MemoryBlocksNums = 0;
 	status->LogEnabled = false;
 	GhostMutexUnlock(&status->Mutex);
@@ -104,12 +112,13 @@ GhostError_t GhostMemMgrSetLogEnableStatus(bool Status)
 	}
 }
 
+
 /// <summary>
 /// Get the total memory size allocated through GhostMemoryManager.
 /// </summary>
 /// <param name="void"></param>
 /// <returns>Total memory usage.</returns>
-size_t GhostMemMgrGetTotalMemUsage(void)
+size_t GhostMemMgrGetMemUsage(void)
 {
 	size_t usage = 0;
 	GhostMutexLock(&status->Mutex);
@@ -117,6 +126,22 @@ size_t GhostMemMgrGetTotalMemUsage(void)
 	GhostMutexUnlock(&status->Mutex);
 	return usage;
 }
+
+
+/// <summary>
+/// Get the peak total memory size allocated through GhostMemoryManager.
+/// </summary>
+/// <param name=""></param>
+/// <returns></returns>
+size_t GhostMemMgrGetPeakMemUsage(void)
+{
+	size_t usage = 0;
+	GhostMutexLock(&status->Mutex);
+	usage = status->MaximumTotalMemortUsage;
+	GhostMutexUnlock(&status->Mutex);
+	return usage;
+}
+
 
 /// <summary>
 /// Rewrite or encapsulate memory management functions in C standard library.
@@ -136,7 +161,12 @@ void* GhostMemMgrMalloc(size_t Size)
 		if (ptr)
 		{
 			status->TotalMemoryUsage += Size;
-			memcpy(ptr, &(__ghostSize_t)(Size), status->SizeOfHeader);
+			if (status->TotalMemoryUsage > status->MaximumTotalMemortUsage)
+			{
+				status->MaximumTotalMemortUsage = status->TotalMemoryUsage;
+			}
+			status->MemoryBlocksNums++;
+			memcpy(ptr, &(__ghostMemSize_t)(Size), status->SizeOfHeader);
 			ptr = (size_t)ptr + status->SizeOfHeader;
 		}
 	}
@@ -161,7 +191,12 @@ void* GhostMemMgrCalloc(size_t Count, size_t Size)
 		if (ptr)
 		{
 			status->TotalMemoryUsage += Size;
-			memcpy(ptr, &(__ghostSize_t)(Size), status->SizeOfHeader);
+			if (status->TotalMemoryUsage > status->MaximumTotalMemortUsage)
+			{
+				status->MaximumTotalMemortUsage = status->TotalMemoryUsage;
+			}
+			status->MemoryBlocksNums++;
+			memcpy(ptr, &(__ghostMemSize_t)(Size), status->SizeOfHeader);
 			ptr = (size_t)ptr + status->SizeOfHeader;
 		}
 	}
@@ -208,7 +243,7 @@ void* GhostMenMgrRealloc(void* Ptr, size_t NewSize)
 		// Get basic information of pointer.
 		void* newPtr = NULL;
 		void* realPtr = (void*)((size_t)(Ptr) - status->SizeOfHeader);
-		__ghostSize_t originalSize = 0;
+		__ghostMemSize_t originalSize = 0;
 		NewSize += status->SizeOfHeader;
 		memcpy(&originalSize, realPtr, status->SizeOfHeader);
 
@@ -228,7 +263,11 @@ void* GhostMenMgrRealloc(void* Ptr, size_t NewSize)
 		{
 			// realloc successful.
 			status->TotalMemoryUsage = status->TotalMemoryUsage + NewSize - originalSize;
-			memcpy(newPtr, &(__ghostSize_t)(NewSize), status->SizeOfHeader);
+			if (status->TotalMemoryUsage > status->MaximumTotalMemortUsage)
+			{
+				status->MaximumTotalMemortUsage = status->TotalMemoryUsage;
+			}
+			memcpy(newPtr, &(__ghostMemSize_t)(NewSize), status->SizeOfHeader);
 			newPtr = (void*)((size_t)newPtr + status->SizeOfHeader);
 		}
 		else {
@@ -275,21 +314,53 @@ void GhostMemMgrFree(void* Ptr)
 
 	// Get basic information of pointer.
 	void* realPtr = (void*)((size_t)(Ptr)-status->SizeOfHeader);
-	__ghostSize_t originalSize = 0;
+	__ghostMemSize_t originalSize = 0;
 	memcpy(&originalSize, realPtr, status->SizeOfHeader);
 
 	// Execute free.
 	GhostMutexLock(&status->Mutex);
 	free(realPtr);
 	status->TotalMemoryUsage = status->TotalMemoryUsage - originalSize;
+	status->MemoryBlocksNums--;
 	GhostMutexUnlock(&status->Mutex);
 }
 
 
+/// <summary>
+/// Gets the size allocated by GhostMemoryManager.
+/// </summary>
+/// <param name="Ptr">
+/// Pointer to the memory to deallocate.
+/// </param>
+/// <returns>
+/// Size of allocated memory.
+/// </returns>
+size_t GhostMemMgrGetPointorSize(void* Ptr)
+{
+	__ghostMemSize_t originalSize = 0;
+	memcpy(&originalSize, (void*)((size_t)Ptr - sizeof(__ghostMemSize_t)), status->SizeOfHeader);
+	originalSize -= sizeof(__ghostMemSize_t);
+	return originalSize;
+}
+
+
+/// <summary>
+/// Destory GhostMemoryManager.
+/// </summary>
+/// <param name="void"></param>
+/// <returns>Function execution result.</returns>
 GhostError_t GhostMenMgrDestory(void)
 {
 	if (status)
 	{
+		if (status->LogEnabled)
+		{
+			if (status->MemoryBlocksNums)
+			{
+				GhostLogW("There are still %ld blocks that have not been released, and there may be a memory leak!", status->MemoryBlocksNums);
+			}
+		}
+
 		free(status);
 		return GhostOK;
 	}

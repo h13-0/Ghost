@@ -11,14 +11,15 @@
 #define GhostErrorFS_MountPointNotExist     DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 3)
 #define GhostErrorFS_FileNotFound           DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 4)
 #define GhostErrorFS_PathTooLong            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 5)
-#define GhostErrorFS_PathIllegal            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 6)
-#define GhostErrorFS_FileOpenFailed         DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 7)
-#define GhostErrorFS_OutOfMemory            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 8)
-#define GhostErrorFS_CloseFailed            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 9)
-#define GhostErrorFS_HandleInvalid          DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 10)
-#define GhostErrorFS_FileUninitialized      DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 11)
-#define GhostErrorFS_FileFlushFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 12)
-#define GhostErrorFS_SeekFailed             DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 13)
+#define GhostErrorFS_PathBufferTooSmall     DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 6)
+#define GhostErrorFS_PathIllegal            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 7)
+#define GhostErrorFS_FileOpenFailed         DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 8)
+#define GhostErrorFS_OutOfMemory            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 9)
+#define GhostErrorFS_CloseFailed            DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 10)
+#define GhostErrorFS_HandleInvalid          DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 11)
+#define GhostErrorFS_FileUninitialized      DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 12)
+#define GhostErrorFS_FileFlushFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 13)
+#define GhostErrorFS_SeekFailed             DeclareGhostError(GhostDriverLayerError, DriverModuleFileSystemError, 14)
 
 #ifdef __cplusplus
 extern "C" {
@@ -155,13 +156,13 @@ extern "C" {
   
 	/// <summary>
 	/// Splice path.
-	///		You need to manually use the `free` function to free memory after the path is used.
 	/// </summary>
 	/// <param name="ParentPath">Parent path in char*.</param>
 	/// <param name="Subpath">Subpath in char*.</param>
-	/// <returns>Pointor to result.</returns>
-	/// TODO: Change function result parameter transfer method.
-	char* GhostFS_Join(const char* ParentPath, const char* Subpath);
+	/// <param name="ResultPathBuffer">Buffer of result path.</param>
+	/// <param name="Size">Buffer size.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostFS_Join(const char* ParentPath, const char* Subpath, char* ResultPathBuffer, size_t Size);
 
 
 	/// <summary>

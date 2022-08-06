@@ -73,6 +73,17 @@ extern "C" {
 	GhostError_t GhostQtSimulatorSetCPU_UsageProgressBarValue(GhostQtSimulator_t* QtSimulator, int Value);
 	GhostError_t GhostQtSimulatorSetMemoryUsageProgressBarValue(GhostQtSimulator_t* QtSimulator, int Value);
 
+
+	/// <summary>
+	/// Set content of performance monitor area label.
+	/// </summary>
+	/// <param name="QtSimulator">Pointor to simulator.</param>
+	/// <param name="Contents">Content.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostQtSimulatorSetThreadsNumLabelText(GhostQtSimulator_t* QtSimulator, const char* Contents);
+	GhostError_t GhostQtSimulatorSetMemoryUsageLabelText(GhostQtSimulator_t* QtSimulator, const char* Contents);
+	GhostError_t GhostQtSimulatorSetPeakMemoryUsageLabelText(GhostQtSimulator_t* QtSimulator, const char* Contents);
+
 	
 	/// <summary>
 	/// Get screen fillet radius.
