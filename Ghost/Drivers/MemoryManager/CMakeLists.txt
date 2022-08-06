@@ -7,13 +7,6 @@ project(GhostMemoryManager)
 add_library(
 	${PROJECT_NAME}
 	STATIC
-<<<<<<<< HEAD:Ghost/Drivers/MemoryManager/CMakeLists.txt
-	"${PROJECT_SOURCE_DIR}/GhostMemoryManager.c"
-========
-	# GhostAppleInfograph
-	"${PROJECT_SOURCE_DIR}/GhostAppleInfograph.c"
-
->>>>>>>> master:Ghost/App/NativeApplications/ThemeManager/Themes/CMakeLists.txt
 )
 
 # Set header paths.

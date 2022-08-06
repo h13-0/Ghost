@@ -49,8 +49,6 @@ set(
 include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/list/src/")
 
 ### Platforms layer.
-
-
 #### Qt.
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Qt")
 include_directories("${GHOST_QSIM_INCLUDE_DIRS}")
