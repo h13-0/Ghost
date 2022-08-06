@@ -86,10 +86,21 @@ static void* ghostTimer(void* args)
 
 static void* ghostQtPerformanceMonitorRun(void* args)
 {
+	char memUsageLabelTextBuffer[64] = { "\0" };
+	char peakMemUsageLabelTextBuffer[64] = { "\0" };
+
 	while (1)
 	{
-		size_t usage = GhostMemMgrGetTotalMemUsage();
+		size_t usage = GhostMemMgrGetMemUsage();
 		GhostQtSimulatorSetMemoryUsageProgressBarValue(&simulator, usage * 100 / MacroMaximumMemoryUsageLimit);
+		
+		sprintf(memUsageLabelTextBuffer, "%ld Bytes / %ld Bytes", usage, MacroMaximumMemoryUsageLimit);
+		GhostQtSimulatorSetMemoryUsageLabelText(&simulator, memUsageLabelTextBuffer);
+
+		usage = GhostMemMgrGetPeakMemUsage();
+		sprintf(peakMemUsageLabelTextBuffer, "%ld Bytes", usage);
+		GhostQtSimulatorSetPeakMemoryUsageLabelText(&simulator, peakMemUsageLabelTextBuffer);
+
 		GhostSleepMillisecond(500);
 	}
 }

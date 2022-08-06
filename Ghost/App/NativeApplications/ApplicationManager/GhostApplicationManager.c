@@ -8,6 +8,7 @@
 #include "GhostSafeLVGL.h"
 
 // Ghost drivers.
+#include "GhostMemoryManager.h"
 #include "GhostLog.h"
 #include "GhostThread.h"
 #include "GhostFileSystem.h"
@@ -88,6 +89,7 @@ typedef struct GhostAppHandleList
 /// <summary>
 /// Static variables of Application Manager.
 ///		TODO: Using external struct to save static variables.
+///		TODO: Mutex.
 /// </summary>
 static lv_style_t screenStyle;
 static GhostAppHandleList_t* applicationList = NULL;
@@ -99,7 +101,7 @@ static int luaApplicationNumbers = 0;
 /// <summary>
 /// Init Ghost application manager.
 /// </summary>
-/// <param name=""></param>
+/// <param name="void"></param>
 /// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrInit(void)
 {
@@ -123,11 +125,32 @@ GhostError_t GhostAppMgrInit(void)
 }
 
 /// <summary>
+/// Free memory of GhostAppInfo_t.
+/// </summary>
+/// <param name="ApplicationInfo">Pointor of GhostAppInfo_t.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostAppMgrAppInfoDestory(const GhostAppInfo_t* ApplicationInfo)
+{
+	if (ApplicationInfo->PackageName != NULL)
+	{
+		GhostMemMgrFree(ApplicationInfo->PackageName);
+	}
+
+	if (ApplicationInfo->ApplicationName != NULL)
+	{
+		GhostMemMgrFree(ApplicationInfo->ApplicationName);
+	}
+
+	return GhostOK;
+}
+
+
+/// <summary>
 /// Register an app to the app list.
 /// </summary>
 /// <param name="ApplicationInfo">Application info.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const ApplicationInfo)
+GhostError_t GhostAppMgrRegister(const GhostAppInfo_t* ApplicationInfo)
 {
 	// TODO: Check icons.
 
@@ -164,20 +187,63 @@ GhostError_t GhostAppMgrRegister(GhostAppInfo_t* const ApplicationInfo)
 	// Add application info to list.
 	if (applicationList == NULL)
 	{
-		applicationList = malloc(sizeof(GhostAppHandleList_t));
+		applicationList = GhostMemMgrMalloc(sizeof(GhostAppHandleList_t));
 		if (applicationList == NULL)
-			return GhostErrorAppCreateOutOfMemory;
+		{
+			return GhostErrorAppOutOfMemory;
+		}
 		memcpy(&(applicationList->CurrentApplicationInfo), ApplicationInfo, sizeof(GhostAppInfo_t));
+		
+		// Make a copy.
+		// Copy ApplicationName.
+		int bufferLen = strlen(ApplicationInfo->ApplicationName) + 1;
+		applicationList->CurrentApplicationInfo.ApplicationName = GhostMemMgrMalloc(bufferLen);
+		if (applicationList->CurrentApplicationInfo.ApplicationName == NULL)
+		{
+			return GhostErrorAppOutOfMemory;
+		}
+		memcpy(applicationList->CurrentApplicationInfo.ApplicationName, ApplicationInfo->ApplicationName, bufferLen);
+		// Copy PackageName.
+		bufferLen = strlen(ApplicationInfo->PackageName) + 1;
+		applicationList->CurrentApplicationInfo.PackageName = GhostMemMgrMalloc(bufferLen);
+		if (applicationList->CurrentApplicationInfo.PackageName == NULL)
+		{
+			return GhostErrorAppOutOfMemory;
+		}
+		memcpy(applicationList->CurrentApplicationInfo.PackageName, ApplicationInfo->PackageName, bufferLen);
+
 		applicationList->NextApplicatonNode = NULL;
 		nextApplicatonNode = &(applicationList->NextApplicatonNode);
 	}
 	else {
-		*nextApplicatonNode = malloc(sizeof(GhostAppHandleList_t));
-		if (*nextApplicatonNode == NULL)
-			return GhostErrorAppCreateOutOfMemory;
-		memcpy(&(*nextApplicatonNode)->CurrentApplicationInfo, ApplicationInfo, sizeof(GhostAppHandleList_t));
-		(*nextApplicatonNode)->NextApplicatonNode = NULL;
-		nextApplicatonNode = &((*nextApplicatonNode)->NextApplicatonNode);
+		GhostAppHandleList_t* tempNode = GhostMemMgrMalloc(sizeof(GhostAppHandleList_t));
+		if (tempNode == NULL)
+		{
+			return GhostErrorAppOutOfMemory;
+		}
+		memcpy(&tempNode->CurrentApplicationInfo, ApplicationInfo, sizeof(GhostAppHandleList_t));
+		
+		// Make a copy.
+		// Copy ApplicationName.
+		int bufferLen = strlen(ApplicationInfo->ApplicationName) + 1;
+		tempNode->CurrentApplicationInfo.ApplicationName = GhostMemMgrMalloc(bufferLen);
+		if (tempNode->CurrentApplicationInfo.ApplicationName == NULL)
+		{
+			return GhostErrorAppOutOfMemory;
+		}
+		memcpy(tempNode->CurrentApplicationInfo.ApplicationName, ApplicationInfo->ApplicationName, bufferLen);
+		// Copy PackageName.
+		bufferLen = strlen(ApplicationInfo->PackageName) + 1;
+		tempNode->CurrentApplicationInfo.PackageName = GhostMemMgrMalloc(bufferLen);
+		if (tempNode->CurrentApplicationInfo.PackageName == NULL)
+		{
+			return GhostErrorAppOutOfMemory;
+		}
+		memcpy(tempNode->CurrentApplicationInfo.PackageName, ApplicationInfo->PackageName, bufferLen);
+
+		tempNode->NextApplicatonNode = NULL;
+		*nextApplicatonNode = tempNode;
+		nextApplicatonNode = &(tempNode->NextApplicatonNode);
 	}
 
 	if (ApplicationInfo->ApplicationType == GhostNativeApplication)
@@ -208,6 +274,29 @@ GhostError_t GhostAppMgrGetInfoByPackageName(char* PackageName, GhostAppInfo_t* 
 		if (!strncmp(ptr->CurrentApplicationInfo.PackageName, PackageName, strlen(PackageName)))
 		{
 			*ApplicationInfo = ptr->CurrentApplicationInfo;
+			// Make a copy.
+			// Copy PackageName.
+			int bufferSize = strlen(ApplicationInfo->PackageName) + 1;
+			*ApplicationInfo->PackageName = GhostMemMgrMalloc(bufferSize);
+			if (*ApplicationInfo->PackageName != NULL)
+			{
+				memcpy(ApplicationInfo->PackageName, ptr->CurrentApplicationInfo.PackageName, bufferSize);
+			}
+			else {
+				return GhostErrorAppOutOfMemory;
+			}
+			
+			// Copy ApplicationName.
+			bufferSize = strlen(ApplicationInfo->ApplicationName) + 1;
+			*ApplicationInfo->ApplicationName = GhostMemMgrMalloc(bufferSize);
+			if (*ApplicationInfo->ApplicationName != NULL)
+			{
+				memcpy(ApplicationInfo->ApplicationName, ptr->CurrentApplicationInfo.ApplicationName, bufferSize);
+			}
+			else {
+				return GhostErrorAppOutOfMemory;
+			}
+			
 			return GhostOK;
 		}
 		else {
@@ -294,6 +383,27 @@ GhostError_t GhostAppMgrRunForeground(const char* const PackageName, int Argc, v
 /// <returns>Function execution result.</returns>
 GhostError_t GhostAppMgrRunBackground(const char* const PackageName, int Argc, void** Args)
 {
+	GhostAppHandleList_t* nodePtr;
+	GhostLogTerminateIfErr(Fatal, ghostAppMgrGetHandleNodeByPackageName(PackageName, &nodePtr));
+
+	if (nodePtr->GhostAppStatus.RunningStatus == GhostAppRunningBackground)
+	{
+		return GhostOK;
+	}
+
+	GhostLogTerminateIfErr(Fatal,
+		GhostThreadCreate(
+			&nodePtr->ThreadHandle,
+			nodePtr->CurrentApplicationInfo.ApplicationEntryFunction,
+			nodePtr->CurrentApplicationInfo.PackageName,
+			0,
+			NULL,
+			1
+		)
+	);
+
+	nodePtr->GhostAppStatus.RunningStatus = GhostAppRunningForeground;
+
 	return GhostOK;
 }
 
@@ -392,58 +502,6 @@ GhostError_t GhostAppOpenFile(const GhostAppInfo_t* const AppInfoPtr, GhostFile_
 		// Check whether the path is legal.
 	}
 
-	return GhostOK;
-}
-
-
-/// <summary>
-/// Get the default configs of the app.
-/// @note: This function should be deprecated.
-/// </summary>
-/// <param name="AppInfoPtr">Pointor of application info.</param>
-/// <param name="Configs">Configuration information in cJSON.</param>
-/// <returns></returns>
-GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t* const Application, cJSON** Configs)
-{
-	GhostFile_t configFile;
-	GhostError_t ret = GhostOK;
-	if(Application->ApplicationType == GhostNativeApplication)
-	{
-		char* appPath = GhostFS_Join("/System/Apps", Application->PackageName);
-		char* path = GhostFS_Join(appPath, MacroGhostAppDefaultConfigFileName);
-		free(appPath);
-		ret = GhostFS_Open(path, &configFile, "r");
-		free(path);
-	}
-	else
-	{
-		char* appPath = GhostFS_Join("/Apps", Application->PackageName);
-		char* path = GhostFS_Join(appPath, MacroGhostAppDefaultConfigFileName);
-		free(appPath);
-		ret = GhostFS_Open(path, &configFile, "r");
-		free(path);
-	}
-
-	// TODO: Check whether the `MacroGhostAppDefaultConfigFileName` exists.
-	GhostLogTerminateIfErr(Error, ret);
-	
-	size_t size = GhostFS_GetFileSize(&configFile);
-	if (size > MacroGhostAppDefaultConfigFileSizeLimit)
-	{
-		return GhostErrorAppConfigFileTooLarge;
-	}
-	char* buffer = calloc(1, size + 1);
-	
-	int _size = GhostFS_Read(buffer, 1, size, &configFile);
-	if (_size == 0)
-	{
-		//return;
-	}
-	
-	*Configs = cJSON_Parse(buffer);
-
-	ret = GhostFS_Close(&configFile);
-	
 	return GhostOK;
 }
 

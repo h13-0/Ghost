@@ -7,7 +7,6 @@ project(GhostMemoryManager)
 add_library(
 	${PROJECT_NAME}
 	STATIC
-	"${PROJECT_SOURCE_DIR}/GhostMemoryManager.c"
 )
 
 # Set header paths.

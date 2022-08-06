@@ -4,3 +4,6 @@
 [submodule "Ghost/ThirdParty/cJSON"]
 	path = Ghost/ThirdParty/cJSON
 	url = https://github.com/DaveGamble/cJSON.git
+[submodule ".\\Ghost\\ThirdParty\\list"]
+	path = .\\Ghost\\ThirdParty\\list
+	url = https://github.com/clibs/list.git

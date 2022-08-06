@@ -21,6 +21,7 @@
 #include "GhostSafeLVGL.h"
 
 /// Applications.
+#include "GhostThemeManager.h"
 #include "GhostLauncher.h"
 
 // Thirdparty layer.
@@ -29,6 +30,7 @@
 
 // Test libraries.
 #include "GhostFileSystemPatch.h"
+#include "list.h"
 
 // Ghost app status.
 static GhostMutex_t statusMutex;
@@ -46,6 +48,16 @@ GhostError_t GhostAppInit(void)
 
 	// Register native applications.
 	// Run Ghost System.
+	// Theme manager.
+	{
+		GhostAppInfo_t app = MacroGhostThemeManagerInfo;
+		GhostLogTerminateIfErr(Fatal, GhostAppMgrRegister(&app));
+		// Run Ghost System(But do nothing).
+		GhostLogTerminateIfErr(Fatal, GhostAppMgrRunBackground(app.PackageName, 1, "Ghost system call."));
+	}
+
+
+	// Launcher.
 	{
 		GhostAppInfo_t app = MacroGhostLauncherInfo;
 		GhostLogTerminateIfErr(Fatal, GhostAppMgrRegister(&app));
@@ -76,9 +88,6 @@ void btn_event_cb(lv_event_t* e)
 
 GhostError_t GhostAppRun(void)
 {
-	GhostAppInfo_t info = MacroGhostLauncherInfo;
-	GhostLogTerminateIfErr(Fatal, GhostAppMgrGetInfoByPackageName("tech.h13.ghost.launcher", &info));
-
 	while (1)
 	{
 		GhostSleepMillisecond(1000);

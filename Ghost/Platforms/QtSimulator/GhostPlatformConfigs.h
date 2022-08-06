@@ -38,6 +38,9 @@
 #define MacroMaximumPathLength                                        (256)
 
 
+//> Screen configs.
+#define MacroScreenRefreshRate                                        (60)
+
 /********************************************************* Ghost app configs **********************************************************/
 //> Ghost system configs.
 #if(1)
@@ -98,23 +101,32 @@
 //> Ghost theme manager.
 //>>> Built-in themes.
 
+
 // TODO: Register themes instead of declaring themes.
-//#define MacroGhostLauncherThemeBigWhite                               ("Big White")
-//#define MacroGhostLauncherThemeLiteBlack                              ("Lite Black")
-#define MacroGhostLauncherThemeAppleLike                              ("Apple Like")
+#define MacroGhostThemeSafeTheme                                      () //The theme of security mode must be very stable and lightweight.
+
+
+#define MacroGhostThemeAppleInfograph                                 ("tech.h13.ghost.theme.appleinfograph")
+#if defined(MacroGhostThemeAppleInfograph)
+
+#define MacroGhostThemeAppleInfographName                             ("Apple Infograph")
+#define MacroGhostThemeAppleInfographVersion                          (1)
+#define MacroGhostThemeAppleInfographInitFunction                     GhostThemeAppleInfographInit
+#define MacroGhostThemeAppleInfographDestoryFunction                  (NULL)
+#define MacroGhostThemeAppleInfographMainPageCreateFunction           GhostThemeAppleInfographMainPageCreate
+
+#endif //#if defined(MacroGhostLauncherThemeAppleInfograph)
+
 #define MacroGhostLauncherThemeCunstomBackground                      ()
-#if defined(MacroGhostLauncherThemeAppleLike)
 
-
-
-#endif //#if defined(MacroGhostLauncherThemeAppleLike)
 
 #define MacroGhostLauncherBuiltInThemes                               ()
 
 
 //> Ghost launcher configs.
 //>> Default theme.
-#define MacroGhostLauncherDefaultTheme                                (MacroGhostLauncherThemeAppleLike)
+//>> Select theme by package name.
+#define MacroGhostLauncherDefaultTheme                                (MacroGhostThemeAppleInfograph)
 //>> Advanced configs.
 #define MacroGhostLauncherMemOptimizeLevel                            (MacroGhostSystemMemOptimizeLevel)
 
@@ -130,13 +142,42 @@
 //> Register native applications.
 //>> Register Ghost system.
 #if(1)
-#define MacroGhostSystemInfo                                          MacroDeclareStructure(GhostAppInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", 0, NULL, NULL)
+#define MacroGhostSystemInfo									       MacroDeclareStructure(GhostAppInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", 0, NULL, NULL)
+#endif
+
+//>> Register Ghost theme manager.
+#if(1)
+#define MacroGhostThemeManagerPackageName								("tech.h13.ghost.thememanager")
+#define MacroGhostThemeManagerInfo										MacroDeclareStructure(GhostAppInfo_t, \
+																			GhostNativeApplication, \
+																			MacroGhostThemeManagerPackageName, \
+																			"Theme manager", \
+																			0, \
+																			GhostThemeMgrRun, \
+																			NULL \
+																		)
+#define MacroGhostThemeManagerConfigFileName							("")
+
+// Refresh frame rate limit.
+#define MacroGhostThemeManagerMainPageMinimumRefreshPeriod              (1000 / MacroScreenRefreshRate)
+
+
+// Default frame rate.
+#define MacroGhostThemeManagerMainPageDefaultRefreshPeriod              (1000 / 2)
+
 #endif
 
 //>> Register Ghost launcher.
 #if(1)
-#define MacroGhostLauncherPackageName                                 ("tech.h13.ghost.launcher")
-#define MacroGhostLauncherInfo                                        MacroDeclareStructure(GhostAppInfo_t, GhostNativeApplication, "tech.h13.ghost.launcher", "Ghost Launcher", 0, GhostLauncherRun, NULL)
-#define MacroGhostLauncherConfigFileName                              ("")
+#define MacroGhostLauncherPackageName									("tech.h13.ghost.launcher")
+#define MacroGhostLauncherInfo											MacroDeclareStructure(GhostAppInfo_t, \
+																			GhostNativeApplication, \
+																			MacroGhostLauncherPackageName, \
+																			"Ghost Launcher", \
+																			0, \
+																			GhostLauncherRun, \
+																			NULL \
+																		)
+#define MacroGhostLauncherConfigFileName								("")
 
 #endif //>> Ghost launcher.

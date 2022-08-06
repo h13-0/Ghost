@@ -2,62 +2,35 @@
 
 #include "GhostSoftwareErrorDefine.h"
 
-
 #include "safe_lvgl.h"
 
+#include "GhostTheme.h"
 
 #define GhostErrorThemeMgrUninitialized                     DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 1)
-#define GhostErrorThemeMgrThemeUninitialized                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 2)
-#define GhostErrorThemeMgrThemeConfigFileMissing            DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 3)
-#define GhostErrorThemeMgrThemeConfigIllegal                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 4)
-#define GhostErrorThemeMgrThemeInitializationFailed         DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 5)
+#define GhostErrorThemeMgrAlreadyInitialized                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 2)
+#define GhostErrorThemeMgrOutOfMemory                       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 3)
+
+#define GhostErrorThemeMgrThemeDuplicatePackageName         DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 4)
+#define GhostErrorThemeMgrThemeUninitialized                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 5)
+#define GhostErrorThemeMgrThemeRefreshFailed                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 6)
+#define GhostErrorThemeMgrThemeConfigFileMissing            DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 7)
+#define GhostErrorThemeMgrThemeConfigIllegal                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 8)
+#define GhostErrorThemeMgrThemeInitializationFailed         DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 9)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-	/// <summary>
-	/// Typedef of GhostTheme_t.
-	/// </summary>
-	typedef struct {
-		// Basic informations.
-		char* PackageName;
-		char* ThemeName;
-		int Version;
-
-		// Function handles.
-		/// <summary>
-		/// Theme init.
-		///		All pages **SHOULD NOT** be initialized in this function.
-		///		You need to set the screen refresh period in this function.
-		/// </summary>
-		/// <returns>If the return value is not GhostOK, it will be reset to the default theme.</returns>
-		GhostError_t(*ThemeInit)(void);
-
-
-		/// <summary>
-		/// Theme init.
-		///		All pages **SHOULD NOT** be initialized in this function.
-		///		You need to set the screen refresh period in this function.
-		/// </summary>
-		/// <returns>Function execution result.</returns>
-		GhostError_t(*ThemeDestory)(void);
-	} GhostTheme_t;
-
-
 	/// <summary>
 	/// Init Ghost theme manager.
 	/// </summary>
 	/// <returns>Function execution result.</returns>
-	GhostError_t GhostThemeMgrInit(void);
+	GhostError_t GhostThemeMgrRun(void);
 
 
 	/// <summary>
-	/// 
+	/// Register built-in theme.
 	/// </summary>
-	/// <param name="PackageName"></param>
-	/// <param name="Theme"></param>
+	/// <param name="Theme">Theme handle.</param>
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostThemeMgrRegeisterBuiltInTheme(GhostTheme_t* Theme);
 
@@ -72,47 +45,6 @@ extern "C" {
 
 
 	/// <summary>
-	/// Function handles of main page.
-	///		If the return value is not GhostOK, the theme of this page will be replaced with the default theme.
-	/// </summary>
-	typedef GhostError_t(*PageCreateHandle_t)(lv_obj_t* Page);
-	typedef GhostError_t(*PageRefreshHandle_t)(lv_obj_t* Page);
-
-
-	/// <summary>
-	/// Set main page function handle.
-	///		Period should be greater than return value of GhostThemeMgrGetMainPageMinimumRefreshPeriod();.
-	///		It will be set to the minimum value if RefreshPeriod is less than minimum value.
-	/// </summary>
-	/// <param name="MainPageCreateHandle">Pointor of main page create function in PageCreateHandle_t.</param>
-	/// <param name="MainPageRefreshHandle">Pointor of main page refresh function in PageRefreshHandle_t.</param>
-	/// <param name="RefreshPeriod">Refresh period of main page in millisecond.</param>
-	/// <returns>Function execution result.</returns>
-	GhostError_t GhostThemeMgrSetMainPageHandle(PageCreateHandle_t MainPageCreateHandle, PageRefreshHandle_t MainPageRefreshHandle, int RefreshPeriod);
-
-
-	/// <summary>
-	/// Get the minimum refresh period of main page.
-	///		The default value is 1000.
-	/// </summary>
-	/// <returns>Minimum refresh period of main page.</returns>
-	int GhostThemeMgrGetMainPageMinimumRefreshPeriod(void);
-
-
-	/// <summary>
-	/// Set refresh period of main page.
-	///		The default value of period is 1000.
-	///		Period should be greater than return value of GhostThemeMgrGetMainPageMinimumRefreshPeriod().
-	///		It will be set to the minimum value if RefreshPeriod is less than minimum value.
-	/// </summary>
-	/// <param name="Period">Refresh period of main page in second.</param>
-	/// <returns>Function execution result.</returns>
-	GhostError_t GhostThemeMgrSetMainPageRefreshPeriod(int Period);
-
-
-
-
-	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="Theme"></param>
@@ -120,10 +52,31 @@ extern "C" {
 	GhostError_t GhostThemeMgrUnistallTheme(GhostTheme_t* Theme);
 	
 
+	typedef struct
+	{
+		char* CurrentMainPage;
 
-	
+	} GhostThemeMgrCurrentTheme_t;
+
+	GhostThemeMgrCurrentTheme_t GhostThemeMgrGetCurrentTheme(void);
 
 
+	/// <summary>
+	/// Create main page.
+	///		This function should be called in GhostLaucher.
+	/// </summary>
+	/// <param name="MainPage">Main page handle.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostThemeMgrMainPageCreate(lv_obj_t* MainPage);
+
+
+	/// <summary>
+	/// Refresh main page.
+	/// 	This function should be called in GhostLaucher.
+	/// </summary>
+	/// <param name="MainPage">Main page handle.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostThemeMgrMainPageRefresh(lv_obj_t* MainPage);
 
 #ifdef __cplusplus
 }

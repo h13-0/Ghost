@@ -293,12 +293,30 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="threadsLabel">
+                <widget class="QLabel" name="threadsNumLabel">
                  <property name="text">
                   <string>0 Threads</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>CPU frequency:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_7">
+                 <property name="text">
+                  <string>0 Mhz</string>
                  </property>
                 </widget>
                </item>
@@ -329,7 +347,25 @@
                <item>
                 <widget class="QLabel" name="memoryUsageLabel">
                  <property name="text">
-                  <string>0 KB / 0 KB</string>
+                  <string>0 Bytes / 0 Bytes</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Peak memory usage:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="peakMemoryUsageLabel">
+                 <property name="text">
+                  <string>0 Bytes</string>
                  </property>
                 </widget>
                </item>

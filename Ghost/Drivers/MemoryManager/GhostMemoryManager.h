@@ -17,7 +17,7 @@ extern "C" {
 	///		Dependent modules:
 	///			GhostThread
 	///		Thread safe:
-	///			NOT.
+	///			NO.
 	/// </summary>
 	/// <param name="MaximumMemoryUsageLimit">Maximum memory usage.</param>
 	/// <returns>Function execution result.</returns>
@@ -40,7 +40,15 @@ extern "C" {
 	/// </summary>
 	/// <param name="void"></param>
 	/// <returns>Total memory usage.</returns>
-	size_t GhostMemMgrGetTotalMemUsage(void);
+	size_t GhostMemMgrGetMemUsage(void);
+	
+
+	/// <summary>
+	/// Get the peak total memory size allocated through GhostMemoryManager.
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	size_t GhostMemMgrGetPeakMemUsage(void);
 
 
 	/// <summary>
@@ -100,6 +108,22 @@ extern "C" {
 	void GhostMemMgrFree(void* Ptr);
 
 
+	/// <summary>
+	/// Gets the size allocated by GhostMemoryManager.
+	/// </summary>
+	/// <param name="Ptr">
+	/// Pointer to the memory to deallocate.
+	/// </param>
+	/// <returns>
+	/// Size of allocated memory.
+	/// </returns>
+	size_t GhostMemMgrGetPointorSize(void* Ptr);
+
+	/// <summary>
+	/// Destory GhostMemoryManager.
+	/// </summary>
+	/// <param name="void"></param>
+	/// <returns>Function execution result.</returns>
 	GhostError_t GhostMenMgrDestory(void);
 
 #ifdef __cplusplus

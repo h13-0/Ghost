@@ -12,7 +12,7 @@
 <!-- 人来来去去，离开了一个又一个，这个表还只是个Demo. -->  
 
 # Functions and tasks
-- [ ] Basic software framework.
+- [x] Basic software framework.
   - [X] Support lvgl.
   - [X] Ghost package manager.
   - [X] Ghost clock.
@@ -21,7 +21,7 @@
   - [X] Ghost safe lvgl.
   - [X] Ghost log.
   - [x] Ghost launcher.
-  - [ ] Ghost Theme manager.
+  - [x] Ghost Theme manager.
   - [ ] Ghost Power manager.
   - [ ] lua interpreter.
 - [ ] Basic function realization.

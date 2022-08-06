@@ -1,14 +1,16 @@
 #include "GhostFileSystem.h"
-
 #include "GhostPlatformConfigs.h"
-
-#include "GhostFileSystemPatch.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 #include "lvgl.h"
+
+#include "GhostMemoryManager.h"
+#include "GhostFileSystemPatch.h"
+
+
 
 // rootDirectoryPath will end with '/'.
 static char* rootDirectoryPath = NULL;
@@ -49,7 +51,7 @@ GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 	if (realPath[rootDirectoryPathLen - 1] == '/')
 	{
 		// Allocate memory.
-		rootDirectoryPath = calloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
+		rootDirectoryPath = GhostMemMgrCalloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
 		if (rootDirectoryPath == NULL)
 			return GhostErrorFS_InitFailed;
 
@@ -61,7 +63,7 @@ GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 	else if (realPath[rootDirectoryPathLen - 1] == '\\')
 	{
 		// Allocate memory.
-		rootDirectoryPath = calloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
+		rootDirectoryPath = GhostMemMgrCalloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
 		if (rootDirectoryPath == NULL)
 			return GhostErrorFS_InitFailed;
 
@@ -74,7 +76,7 @@ GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 		rootDirectoryPathLen++;
 
 		// Allocate memory.
-		rootDirectoryPath = calloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
+		rootDirectoryPath = GhostMemMgrCalloc(1, (rootDirectoryPathLen + 1) * sizeof(char));
 		if (rootDirectoryPath == NULL)
 			return GhostErrorFS_InitFailed;
 
@@ -116,7 +118,7 @@ GhostError_t GhostFS_Init(const char* RootDirectoryPath)
 /// <returns></returns>
 GhostError_t GhostFS_DeInit(void)
 {
-	free(rootDirectoryPath);
+	GhostMemMgrFree(rootDirectoryPath);
 	return GhostOK;
 }
 
@@ -194,7 +196,7 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, const ch
 {
 	// Get real path.
 	/// Allocate memory.
-	char* realPath = calloc(1, sizeof(char) * MacroMaximumPathLength + rootDirectoryPathLen);
+	char* realPath = GhostMemMgrCalloc(1, sizeof(char) * MacroMaximumPathLength + rootDirectoryPathLen);
 	if (realPath == NULL)
 		return GhostErrorFS_OutOfMemory;
 
@@ -250,7 +252,7 @@ GhostError_t GhostFS_Open(const char* FilePath, GhostFile_t* GhostFile, const ch
 	GhostFile->FileStream = fopen(realPath, Mode);
 
 	/// Free memory.
-	free(realPath);
+	GhostMemMgrFree(realPath);
 
 	// Unlock mutex.
 	ret = GhostMutexUnlock(&GhostFile->Mutex);
@@ -479,19 +481,22 @@ size_t GhostFS_GetFileSize(const GhostFile_t* GhostFile)
 	return size;
 }
 
+
 /// <summary>
 /// Splice path.
-///		You need to manually use the `free` function to free memory after the path is used.
 /// </summary>
 /// <param name="ParentPath">Parent path in char*.</param>
 /// <param name="Subpath">Subpath in char*.</param>
-char* GhostFS_Join(const char* ParentPath, const char* Subpath)
+/// <param name="ResultPathBuffer">Buffer of result path.</param>
+/// <param name="Size">Buffer size.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostFS_Join(const char* ParentPath, const char* Subpath, char* ResultPathBuffer, size_t Size)
 {
 	GhostError_t ret = GhostOK;
 	
 	int length = 0;
 	int subpathLength = 0;
-	char* temp = NULL;
+	memset(ResultPathBuffer, '\0', Size);
 	
 	// Splice string.
 	length = strlen(ParentPath);
@@ -500,46 +505,95 @@ char* GhostFS_Join(const char* ParentPath, const char* Subpath)
 	{
 		if (*(Subpath) != '/')
 		{
-			temp = calloc(1, sizeof(char) * (length + subpathLength + 2));
-			memcpy(temp, ParentPath, length);
-			*(temp + length) = '/';
-			memcpy(temp + length + 1, Subpath, subpathLength);
+			int pathLen = length + subpathLength + 2;
+			if (pathLen > MacroMaximumPathLength)
+			{
+				return GhostErrorFS_PathTooLong;
+			}
+
+			if (Size < sizeof(char) * pathLen)
+			{
+				return GhostErrorFS_PathBufferTooSmall;
+			}
+
+			memcpy(ResultPathBuffer, ParentPath, length);
+			*(ResultPathBuffer + length) = '/';
+			memcpy(ResultPathBuffer + length + 1, Subpath, subpathLength);
 			length = length + subpathLength + 1;
 		}
 		else {
-			temp = calloc(1, sizeof(char) * (length + subpathLength + 1));
-			memcpy(temp, ParentPath, length);
-			memcpy(temp + length, Subpath, subpathLength);
+			int pathLen = length + subpathLength + 1;
+			if (pathLen > MacroMaximumPathLength)
+			{
+				return GhostErrorFS_PathTooLong;
+			}
+
+			if (Size < sizeof(char) * pathLen)
+			{
+				return GhostErrorFS_PathBufferTooSmall;
+			}
+
+			memcpy(ResultPathBuffer, ParentPath, length);
+			memcpy(ResultPathBuffer + length, Subpath, subpathLength);
 			length = length + subpathLength;
 		}
 	}
 	else {
 		if (*(Subpath) != '/')
 		{
-			temp = calloc(1, sizeof(char) * (length + subpathLength + 1));
-			memcpy(temp, ParentPath, length);
-			memcpy(temp + length, Subpath, subpathLength);
+			int pathLen = length + subpathLength + 1;
+			if (pathLen > MacroMaximumPathLength)
+			{
+				return GhostErrorFS_PathTooLong;
+			}
+
+			if (Size < sizeof(char) * pathLen)
+			{
+				return GhostErrorFS_PathBufferTooSmall;
+			}
+
+			memcpy(ResultPathBuffer, ParentPath, length);
+			memcpy(ResultPathBuffer + length, Subpath, subpathLength);
 			length = length + subpathLength;
 		}
 		else {
-			temp = calloc(1, sizeof(char) * (length + subpathLength));
-			memcpy(temp, ParentPath, length);
-			memcpy(temp + length, Subpath + 1, subpathLength - 1);
+			int pathLen = length + subpathLength;
+			if (pathLen > MacroMaximumPathLength)
+			{
+				return GhostErrorFS_PathTooLong;
+			}
+
+			if (Size < sizeof(char) * pathLen)
+			{
+				return GhostErrorFS_PathBufferTooSmall;
+			}
+
+			memcpy(ResultPathBuffer, ParentPath, length);
+			memcpy(ResultPathBuffer + length, Subpath + 1, subpathLength - 1);
 			length = length + subpathLength - 1;
 		}
 	}
 
 	// Calculate real path.
-	char* result = calloc(1, sizeof(char)*MacroMaximumPathLength);
-	return temp;
+	char* result = GhostMemMgrCalloc(1, sizeof(char)*MacroMaximumPathLength);
 	
-	ret = GhostFS_GetRealPath(temp, result, MacroMaximumPathLength);
-	if(ret.LayerErrorCode != GhostNoError)
+	if (IfGhostError(GhostFS_GetRealPath(ResultPathBuffer, result, MacroMaximumPathLength)))
 	{
-		free(result);
-		return NULL;
+		GhostMemMgrFree(result);
+		return GhostErrorFS_PathTooLong;
 	}
-	return result;
+	else {
+		int pathLen = strlen(result);
+		if (pathLen > Size - 1)
+		{
+			return GhostErrorFS_PathBufferTooSmall;
+		}
+		else {
+			strncpy(ResultPathBuffer, result, min(MacroMaximumPathLength - 1, pathLen));
+		}
+	}
+
+	return GhostOK;
 }
 
 
@@ -553,7 +607,7 @@ char* GhostFS_Join(const char* ParentPath, const char* Subpath)
  */
 static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 {
-	GhostFile_t* filePtr = calloc(1, sizeof(GhostFile_t));
+	GhostFile_t* filePtr = GhostMemMgrCalloc(1, sizeof(GhostFile_t));
 	if (!filePtr)
 	{
 		return NULL;
@@ -564,7 +618,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 		/*Open a file for write*/
 		if (IfGhostError(GhostFS_Open(path, filePtr, "wb")))
 		{
-			free(filePtr);
+			GhostMemMgrFree(filePtr);
 			return NULL;
 		}
 	}
@@ -573,7 +627,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 		/*Open a file for read*/
 		if (IfGhostError(GhostFS_Open(path, filePtr, "rb")))
 		{
-			free(filePtr);
+			GhostMemMgrFree(filePtr);
 			return NULL;
 		}
 	}
@@ -582,7 +636,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode)
 		/*Open a file for read and write*/
 		if (IfGhostError(GhostFS_Open(path, filePtr, "rb+")))
 		{
-			free(filePtr);
+			GhostMemMgrFree(filePtr);
 			return NULL;
 		}
 	}

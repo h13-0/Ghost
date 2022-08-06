@@ -19,11 +19,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/lvgl/CMakeLists.txt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lvgl")
 
-#### lv_lib_png
-add_definitions(-DLV_PNG_USE_LV_FILESYSTEM=1 -DLV_LVGL_H_INCLUDE_SIMPLE)
-#add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
-#include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/lv_lib_png")
-
 #### cJSON
 #add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/cJSON")
 set(
@@ -38,9 +33,22 @@ include("${CMAKE_CURRENT_LIST_DIR}/lua/CMakeLists.txt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/ThirdParty/lua")
 include_directories("${LUA_INCLUDE_DIRS}")
 
+#### list
+add_definitions(
+	"-DLIST_CONFIG_H=GhostMemoryManager.h"
+	"-DLIST_MALLOC=GhostMemMgrMalloc"
+	"-DLIST_FREE=GhostMemMgrFree"
+)
+set(
+	SOURCE_FILES
+	${SOURCE_FILES}
+	"${PROJECT_SOURCE_DIR}/ThirdParty/list/src/list.c"
+	"${PROJECT_SOURCE_DIR}/ThirdParty/list/src/list_iterator.c"
+	"${PROJECT_SOURCE_DIR}/ThirdParty/list/src/list_node.c"
+)
+include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/list/src/")
+
 ### Platforms layer.
-
-
 #### Qt.
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Qt")
 include_directories("${GHOST_QSIM_INCLUDE_DIRS}")
