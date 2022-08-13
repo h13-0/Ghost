@@ -76,6 +76,12 @@
              <height>240</height>
             </size>
            </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+           <property name="contextMenuPolicy">
+            <enum>Qt::NoContextMenu</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(0, 0, 0);</string>
            </property>
@@ -87,6 +93,9 @@
            </property>
           </widget>
           <widget class="QWidget" name="watchWidget" native="true">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>0</x>
@@ -94,6 +103,9 @@
              <width>326</width>
              <height>460</height>
             </rect>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
            </property>
            <property name="styleSheet">
             <string notr="true">#watchWidget {border-image: url(:/images/Resources/apple-watch-series-5-44mm-alaskan-blue.png)}</string>

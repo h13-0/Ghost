@@ -169,6 +169,7 @@ static void* ghostRun(void* args)
 	lv_init();
 	// Init lvgl display devices.
 	lv_port_disp_init(&simulator);
+	lv_port_touchpad_init(&simulator);
 	// Init lvgl file system.
 	if (IfGhostError(GhostLVGL_FS_Init()))
 	{
@@ -208,6 +209,7 @@ static void* ghostRun(void* args)
 		GhostAppRun();
 
 		pthread_join(ghostTimerThread, NULL);
+		return NULL;
 	}
 }
 

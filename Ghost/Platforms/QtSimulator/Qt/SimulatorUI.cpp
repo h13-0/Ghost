@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QMouseEvent>
+
 
 SimulatorUI::SimulatorUI(QWidget *parent) :
     QMainWindow(parent)
@@ -31,6 +33,9 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     // AW7 424-56*654-206 368*448
     screenScene = new QGraphicsScene();
     ui.screenView->setScene(screenScene);
+    ui.screenView->viewport()->installEventFilter(this);
+
+    ui.watchWidget->setAttribute(Qt::WA_TransparentForMouseEvents, true);
 
     // Create screen image buffer.
 
@@ -45,6 +50,7 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     ui.logTable->setModel(model);
     ui.logTable->horizontalHeader()->setStretchLastSection(true);
 
+
     // Connect signals and slots.
     connect(this, &SimulatorUI::drawScreen, this, &SimulatorUI::drawScreenMethod, Qt::BlockingQueuedConnection);
     connect(this, &SimulatorUI::logClear, this, [this](void) { model->removeRows(0, model->rowCount()); });
@@ -55,6 +61,7 @@ SimulatorUI::SimulatorUI(QWidget *parent) :
     connect(this, &SimulatorUI::setThreadsNumLabelText, this, [this](const char* Contents) -> void { this->ui.threadsNumLabel->setText(QString(Contents)); });
     connect(this, &SimulatorUI::setMemoryUsageLabelText, this, [this](const char* Contents) -> void { this->ui.memoryUsageLabel->setText(QString(Contents)); });
     connect(this, &SimulatorUI::setPeakMemoryUsageLabelText, this, [this](const char* Contents) -> void { this->ui.peakMemoryUsageLabel->setText(QString(Contents)); });
+
 
     QTimer::singleShot(0, this, [this] { std::unique_lock<std::mutex> lck(loadFinishedFlagMutex); loadFinishedFlag = true; });
 }
@@ -252,4 +259,75 @@ void SimulatorUI::drawScreenMethod(int X, int Y, int Width, int Height, const un
         screenScene->clear();
         screenScene->addPixmap(QPixmap::fromImage(image));
     }
+}
+
+
+bool SimulatorUI::eventFilter(QObject* watched, QEvent* event)
+{
+    using namespace std;
+    if (watched == ui.screenView->viewport())
+    {
+        unique_lock<mutex> lock(touchScreenMutex);
+        int maximumX = ui.screenView->width() - 1;
+        int maximumY = ui.screenView->height() - 1;
+        switch (event->type())
+        {
+        case QEvent::MouseButtonPress:
+            isTouched = true;
+            touchPosX = ((QMouseEvent*)(event))->x();
+            touchPosY = ((QMouseEvent*)(event))->y();
+
+            if (touchPosX < 0)
+            {
+                touchPosX = 0;
+            }
+            else if (touchPosX > maximumX)
+            {
+                touchPosX = maximumX;
+            }
+
+            if (touchPosY < 0)
+            {
+                touchPosY = 0;
+            }
+            else if (touchPosY > maximumY)
+            {
+                touchPosY = maximumY;
+            }
+            break;
+            
+        case QEvent::MouseMove:
+            touchPosX = ((QMouseEvent*)(event))->x();
+            touchPosY = ((QMouseEvent*)(event))->y();
+
+            if (touchPosX < 0)
+            {
+                touchPosX = 0;
+            }
+            else if (touchPosX > maximumX)
+            {
+                touchPosX = maximumX;
+            }
+
+            if (touchPosY < 0)
+            {
+                touchPosY = 0;
+            }
+            else if (touchPosY > maximumY)
+            {
+                touchPosY = maximumY;
+            }
+            break;
+
+        case QEvent::MouseButtonRelease:
+            isTouched = false;
+            break;
+            
+        default:
+            break;
+        }
+    }
+
+
+    return false;
 }

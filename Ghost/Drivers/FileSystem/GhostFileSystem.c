@@ -659,6 +659,8 @@ static lv_fs_res_t fs_close(lv_fs_drv_t* drv, void* file_p)
 		return LV_FS_RES_HW_ERR;
 	}
 
+	GhostMemMgrFree(file_p);
+
 	return LV_FS_RES_OK;
 }
 

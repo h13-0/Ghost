@@ -23,67 +23,30 @@
 
 DeclareNativeAppInfo();
 
-
-static lv_obj_t* mainPage;
-static lv_style_t pageStyle;
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <returns></returns>
-static GhostError_t themeInit();
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="mainPage"></param>
-/// <returns></returns>
-static GhostError_t mainPageCreate(lv_obj_t* mainPage);
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="mainPage"></param>
-/// <returns></returns>
-static GhostError_t mainPageRefresh(lv_obj_t* mainPage);
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="standbyPage"></param>
-/// <returns></returns>
-static GhostError_t standbyPageCreate(lv_obj_t* standbyPage);
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="standbyPage"></param>
-/// <returns></returns>
-static GhostError_t standbyPageRefresh(lv_obj_t* standbyPage);
-
-static void set_zoom(void* img, int32_t v)
+typedef struct
 {
-	lv_img_set_zoom(img, v);
-}
+	lv_style_t PageStyle;
+	lv_obj_t* TileView;
+	lv_obj_t* MainPage;
+	lv_obj_t* AppListPage;
 
+} GhostLauncher_t;
 
-static lv_obj_t* createPage(lv_obj_t* Screen, lv_color_t BackgroundColor)
+static GhostLauncher_t* launcher = NULL;
+
+static lv_obj_t* createPage(lv_color_t BackgroundColor, uint8_t ColID, uint8_t RowID, lv_dir_t Dir)
 {
 	// Create page.
-	lv_obj_t* page = lv_obj_create(Screen);
+	lv_obj_t* page = lv_tileview_add_tile(launcher->TileView, ColID, RowID, Dir);
 
 	// Init page style.
-	lv_obj_set_pos(page, 0, 0);
+	//lv_obj_set_pos(page, 0, 0);
 	lv_obj_set_size(page, GhostScreenGetWidth(), GhostScreenGetHeight());
-	lv_obj_add_style(page, &pageStyle, 0);
-	lv_obj_set_style_bg_color(page, BackgroundColor, 0);
+	lv_obj_add_style(page, &launcher->PageStyle, 0);
+	//lv_obj_set_style_bg_color(page, BackgroundColor, 0);
 	return page;
 }
+
 
 /// <summary>
 /// Entry function of Ghost Launcher.
@@ -99,6 +62,21 @@ GhostError_t GhostLauncherRun(void* Args)
 	
 #endif
 
+	// Check whether the initialization is repeated.
+	if (launcher != NULL)
+	{
+		GhostLogF("Ghost Launcher already initialized.");
+		return GhostErrorLauncherMgrAlreadyInitialized;
+	}
+
+	// Allocate memory.
+	launcher = GhostMemMgrCalloc(1, sizeof(GhostLauncher_t));
+	if (launcher == NULL)
+	{
+		GhostLogF("Out Of Memory!");
+		return GhostErrorLauncherMgrOutOfMemory;
+	}
+
 	// TODO: Check whether the theme is used.
 	// Get application config.
 	cJSON* configs = NULL;
@@ -113,20 +91,34 @@ GhostError_t GhostLauncherRun(void* Args)
 	GhostLogTerminateIfErr(Fatal, GhostScreenGetRadius(&radius));
 
 	// Init page style.
-	lv_style_init(&pageStyle);
-	lv_style_set_border_width(&pageStyle, 0);
-	lv_style_set_radius(&pageStyle, radius);
+	GhostLV_Lock();
+	lv_style_init(&launcher->PageStyle);
+	lv_style_set_border_width(&launcher->PageStyle, 0);
+	lv_style_set_radius(&launcher->PageStyle, radius);
+
+	launcher->TileView = lv_tileview_create(screen);
+	lv_obj_set_style_bg_color(launcher->TileView, lv_color_black(), 0);
+	
+
+	launcher->MainPage = createPage(lv_color_black(), 0, 0, LV_DIR_BOTTOM);
+	launcher->AppListPage = createPage(lv_color_black(), 0, 1, LV_DIR_TOP | LV_DIR_RIGHT);
+
+	//while (1);
 
 	// Create main page.
-	mainPage = createPage(screen, lv_color_black());
+	//mainPage = createPage(screen, lv_color_black());
 
 	// Tile view?
 	// Custom page style.
-	lv_obj_clear_flag(mainPage, LV_OBJ_FLAG_SCROLLABLE);
-	lv_obj_set_style_pad_all(mainPage, 0, 0);
+	lv_obj_clear_flag(launcher->MainPage, LV_OBJ_FLAG_SCROLLABLE);
+	lv_obj_set_style_pad_all(launcher->MainPage, 0, 0);
+	GhostLV_Unlock();
 
 	// Create main page.
-	GhostThemeMgrMainPageCreate(mainPage);
+	GhostThemeMgrMainPageCreate(launcher->MainPage);
+	
+
+
 
 	// TODO: Built in themes.
 	// Default theme.
@@ -134,46 +126,12 @@ GhostError_t GhostLauncherRun(void* Args)
 	
 	while (1)
 	{
-		mainPageRefresh(mainPage);
-		GhostSleepMillisecond(10);
+
+
+		GhostThemeMgrMainPageRefresh(launcher->MainPage);
+		GhostSleepMillisecond(GhostThemeMgrGetMainPageMinimumRefreshPeriod());
 	}
 	
 	return GhostOK;
 }
-
-
-static GhostError_t themeInit()
-{
-
-	return GhostOK;
-}
-
-static GhostError_t mainPageCreate(lv_obj_t* mainPage)
-{
-
-
-	return GhostOK;
-}
-
-
-static GhostError_t mainPageRefresh(lv_obj_t* mainPage)
-{
-
-	return GhostOK;
-}
-
-
-static GhostError_t standbyPageCreate(lv_obj_t* standbyPage)
-{
-
-	return GhostOK;
-}
-
-
-static GhostError_t standbyPageRefresh(lv_obj_t* standbyPage)
-{
-
-	return GhostOK;
-}
-
 

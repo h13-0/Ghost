@@ -114,6 +114,7 @@
 #define MacroGhostThemeAppleInfographInitFunction                     GhostThemeAppleInfographInit
 #define MacroGhostThemeAppleInfographDestoryFunction                  (NULL)
 #define MacroGhostThemeAppleInfographMainPageCreateFunction           GhostThemeAppleInfographMainPageCreate
+#define MacroGhostThemeAppleInfographMainPageRefreshFunction          GhostThemeAppleInfographMainPageRefresh
 
 #endif //#if defined(MacroGhostLauncherThemeAppleInfograph)
 

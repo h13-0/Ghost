@@ -130,6 +130,9 @@ extern "C" {
 	GhostError_t GhostQtSimulatorSetTouchEventsCallback(GhostQtSimulator_t* QtSimulator, void (*CallbackPtr)(int X, int Y));
 
 	
+	GhostError_t GhostQtSimulatorIsTouched(GhostQtSimulator_t* QtSimulator, bool* IsTouched);
+	GhostError_t GhostQtSimulatorGetTouchPoint(GhostQtSimulator_t* QtSimulator, int* X, int* Y);
+
 	/// <summary>
 	/// 
 	/// </summary>

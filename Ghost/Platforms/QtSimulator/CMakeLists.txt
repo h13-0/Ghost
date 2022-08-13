@@ -82,8 +82,8 @@ include_directories(${GHOST_FILESYSTEM_INCLUDE_DIRS})
 add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/Screen/QtSimulatorScreen")
 include_directories("${GHOST_SCREEN_INCLUDE_DIRS}")
 #### Touch Screen.
-add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/TouchScreen")
-
+add_subdirectory("${PROJECT_SOURCE_DIR}/Drivers/TouchScreen/QtSimulatorTouchScreen")
+include_directories("${GHOST_TOUCH_SCREEN_INCLUDE_DIRS}")
 ### Application layer.
 add_subdirectory("${PROJECT_SOURCE_DIR}/App")
 include_directories("${GHOST_APP_INCLUDE_DIRS}")
@@ -126,7 +126,8 @@ target_link_libraries(
 	GhostMemoryManager
 	GhostStandardClock
 	GhostLog
-	QtSimulatorScreen 
+	QtSimulatorScreen
+	QtSimulatorTouchScreen
 	
 	GhostFileSystem
 	GhostApps

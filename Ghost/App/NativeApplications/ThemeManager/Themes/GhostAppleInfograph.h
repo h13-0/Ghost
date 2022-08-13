@@ -24,6 +24,17 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostThemeAppleInfographMainPageCreate(lv_obj_t* MainPage, void* ResourcePtr);
 
+
+	/// <summary>
+	/// Main page refresh handle of the theme.
+	///		Refresh frequency: 1hz.
+	/// </summary>
+	/// <param name="MainPage"></param>
+	/// <param name="ResourcePtr"></param>
+	/// <returns></returns>
+	GhostError_t GhostThemeAppleInfographMainPageRefresh(lv_obj_t* MainPage, void* ResourcePtr);
+
+
 #ifdef __cplusplus
 }
 #endif

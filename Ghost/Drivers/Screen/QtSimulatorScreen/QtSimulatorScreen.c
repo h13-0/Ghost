@@ -4,8 +4,8 @@
 #include "GhostPlatformConfigs.h"
 #include "QtSimulator.h"
 #include "lvgl.h"
-#include "GhostPlatformConfigs.h"
 #include "GhostScreen.h"
+#include "GhostMemoryManager.h"
 #include <stdlib.h>
 #include <stddef.h>
 
@@ -56,12 +56,12 @@ void lv_port_disp_init(GhostQtSimulator_t* QtSimulatorPtr)
     static lv_color_t* buf_3_2 = NULL;
     if (buf_3_1 == NULL)
     {
-        buf_3_1 = calloc(1, GhostScreenGetWidth() * GhostScreenGetHeight() * sizeof(lv_color_t));
+        buf_3_1 = GhostMemMgrCalloc(1, GhostScreenGetWidth() * GhostScreenGetHeight() * sizeof(lv_color_t));
     }
     
     if (buf_3_2 == NULL)
     {
-        buf_3_2 = calloc(1, GhostScreenGetWidth() * GhostScreenGetHeight() * sizeof(lv_color_t));
+        buf_3_2 = GhostMemMgrCalloc(1, GhostScreenGetWidth() * GhostScreenGetHeight() * sizeof(lv_color_t));
     }
 
     lv_disp_draw_buf_init(&draw_buf_dsc, buf_3_1, buf_3_2, GhostScreenGetWidth() * GhostScreenGetHeight());   /*Initialize the display buffer*/

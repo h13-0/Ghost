@@ -18,7 +18,8 @@ DeclareNativeThemeInfo(MacroGhostThemeAppleInfograph);
 typedef struct
 {
 	// Essential resources.
-	
+	int ScreenWidth;
+	int ScreenHeight;
 
 	// Resources of main page.
 	lv_meter_scale_t* Scale;
@@ -27,6 +28,9 @@ typedef struct
 	lv_obj_t* SecondHand;
 	lv_obj_t* SecondHandCircle;
 	lv_point_t* SecondHandPoints;
+	float SecondHandFontLength;
+	float SecondHandBackLength;
+	unsigned short MainPageRefreshPeriod;
 
 	lv_style_t BubbleStyle;
 
@@ -40,13 +44,19 @@ typedef struct
 /// <returns>Function execution result.</returns>
 GhostError_t GhostThemeAppleInfographInit(void)
 {
-	void* resourcePtr = GhostNativeThemeMemCalloc(1, sizeof(AppleInfoGraphResource_t));
+	AppleInfoGraphResource_t* resourcePtr = GhostNativeThemeMemCalloc(1, sizeof(AppleInfoGraphResource_t));
 	if (resourcePtr == NULL)
 	{
 		return GhostErrorThemeOutOfMemory;
 	}
 	GhostNativeThemeSetResourcePointor(resourcePtr);
 
+	// Get screen info.
+	GhostLogTerminateIfErr(Fatal, GhostNativeThemeGetResolution(&resourcePtr->ScreenWidth, &resourcePtr->ScreenHeight));
+
+	resourcePtr->MainPageRefreshPeriod = 1000;
+
+	return GhostOK;
 }
 
 
@@ -58,6 +68,9 @@ GhostError_t GhostThemeAppleInfographInit(void)
 GhostError_t GhostThemeAppleInfographMainPageCreate(lv_obj_t* MainPage, void* ResourcePtr)
 {
 	AppleInfoGraphResource_t* Resource = ResourcePtr;
+
+	// Configure.
+	GhostNativeThemeSetMainPageRefreshPeriod(Resource->MainPageRefreshPeriod);
 
 	// Init main page.
 	GhostLV_Lock();
@@ -132,15 +145,15 @@ GhostError_t GhostThemeAppleInfographMainPageCreate(lv_obj_t* MainPage, void* Re
 
 	// second hand.
 	//float secondHandLength = 0.6 * scaleSize;
-	float secondHandFontLength = 0.81 * 0.6 * scaleSize;
-	float secondHandBackLength = 0.19 * 0.6 * scaleSize;
+	Resource->SecondHandFontLength = 0.81 * 0.6 * scaleSize;
+	Resource->SecondHandBackLength = 0.19 * 0.6 * scaleSize;
 	float secondDegree = 60;
 	secondDegree = secondDegree / 180 * M_PI;
 
 	Resource->SecondHandPoints = GhostNativeThemeMemMalloc(sizeof(lv_point_t) * 3);
-	*(Resource->SecondHandPoints) = (lv_point_t){ width / 2 + sin(secondDegree) * secondHandFontLength, height / 2 - cos(secondDegree) * secondHandFontLength };
+	*(Resource->SecondHandPoints) = (lv_point_t){ width / 2 + sin(secondDegree) * Resource->SecondHandFontLength, height / 2 - cos(secondDegree) * Resource->SecondHandFontLength };
 	*(Resource->SecondHandPoints + 1) = (lv_point_t){ width / 2, height / 2 };
-	*(Resource->SecondHandPoints + 2) = (lv_point_t){ width / 2 - sin(secondDegree) * secondHandBackLength, height / 2 + cos(secondDegree) * secondHandBackLength };
+	*(Resource->SecondHandPoints + 2) = (lv_point_t){ width / 2 - sin(secondDegree) * Resource->SecondHandBackLength, height / 2 + cos(secondDegree) * Resource->SecondHandBackLength };
 
 	Resource->SecondHand = lv_line_create(MainPage);
 	lv_obj_set_style_line_color(Resource->SecondHand, lv_color_make(255, 0, 0), 0);
@@ -218,6 +231,45 @@ GhostError_t GhostThemeAppleInfographMainPageCreate(lv_obj_t* MainPage, void* Re
 	//lv_obj_set_style_bg_img_src(earthImg, "C:./System/Apps/tech.h13.ghost.launcher/Themes/AppleInfograph/Resources/earth.png", 0);
 
 	GhostLV_Unlock();
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Main page refresh handle of the theme.
+///		Refresh frequency: 1hz.
+/// </summary>
+/// <param name="MainPage"></param>
+/// <param name="ResourcePtr"></param>
+/// <returns></returns>
+GhostError_t GhostThemeAppleInfographMainPageRefresh(lv_obj_t* MainPage, void* ResourcePtr)
+{
+	AppleInfoGraphResource_t* Resource = ResourcePtr;
+
+	int hour = 0, minute = 0, second = 0;
+	double milliseconds = 0;
+	GhostTerminateIfErr(GhostNativeThemeGetCurrentTime(&hour, &minute, &second));
+	GhostTerminateIfErr(GhostNativeThemeGetCurrentMilliseconds(&milliseconds));
+
+	int hourAngle = ((hour * 60 + minute) * 3600.0 / (12 * 60)) - 900;
+	int minuteAngle = ((minute * 60 + second) * 3600.0 / (60 * 60)) - 900;
+	float secondDegree = (second) / 60.0 * 2 * M_PI;
+	
+	GhostLV_Lock();
+
+	lv_img_set_angle(Resource->HourHand, hourAngle);
+	lv_img_set_angle(Resource->MinuteHand, minuteAngle);
+	
+	int width = Resource->ScreenWidth;
+	int height = Resource->ScreenHeight;
+	
+	*(Resource->SecondHandPoints) = (lv_point_t){ width / 2 + sin(secondDegree) * Resource->SecondHandFontLength, height / 2 - cos(secondDegree) * Resource->SecondHandFontLength };
+	*(Resource->SecondHandPoints + 1) = (lv_point_t){ width / 2, height / 2 };
+	*(Resource->SecondHandPoints + 2) = (lv_point_t){ width / 2 - sin(secondDegree) * Resource->SecondHandBackLength, height / 2 + cos(secondDegree) * Resource->SecondHandBackLength };
+	lv_line_set_points(Resource->SecondHand, Resource->SecondHandPoints, 3);
+	
+	GhostLV_Unlock();
+	return GhostOK;
 }
 
 

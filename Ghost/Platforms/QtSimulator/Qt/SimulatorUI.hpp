@@ -61,6 +61,20 @@ public:
     void log(GhostQtLogLevel_t Level, double Time, const char* FileName, int LineNumber, const char* Contents);
 
 
+    void setScreenTouchedCallbackHandle();
+    bool isScreenTouched(void)
+    {
+        std::unique_lock<std::mutex> lock(touchScreenMutex);
+        return isTouched;
+    }
+    void getScreenTouchedPosition(int* x, int* y)
+    {
+        std::unique_lock<std::mutex> lock(touchScreenMutex);
+        *x = touchPosX;
+        *y = touchPosY;
+    }
+
+
 signals:
     /// <summary>
     /// Draw pixels in Screen View.
@@ -104,6 +118,12 @@ private:
     Ui::MainWindow ui;
     QGraphicsScene* screenScene;
     QStandardItemModel* model;
+
+    // Touch screen.
+    std::mutex touchScreenMutex;
+    bool isTouched = false;
+    int touchPosX = 0;
+    int touchPosY = 0;
 
     /// <summary>
     /// Typedef of Ghost Qt log.
@@ -196,6 +216,15 @@ private slots:
     /// <param name="LineNumber">Line number with errors.</param>
     /// <param name="Contents">Log contents.</param>
     //void logAppendImpl(GhostQtLogLevel_t Level, std::string FileName, int LineNumber, std::string Contents);
+
+
+    /// <summary>
+    /// eventFilter of SimulatorUI
+    /// </summary>
+    /// <param name="watched"></param>
+    /// <param name="event"></param>
+    /// <returns></returns>
+    bool eventFilter(QObject* watched, QEvent* event);
 };
 
 #endif // SIMULATORUI_H

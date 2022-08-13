@@ -49,10 +49,10 @@ typedef struct
 
 
 	// Theme status.
-	ThemeStatus_t ThemeStatus : 1;
+	unsigned int ThemeStatus : 1;
 	
 	// Page status.
-	ThemeStatus_t MainPageStatus : 1 ;
+	unsigned int MainPageStatus : 1 ;
 
 
 
@@ -95,13 +95,14 @@ static GhostError_t ghostBuiltInThemeRegister(void)
 {
 	// Apple info graph(tech.h13.ghost.theme.appleinfograph)
 #if defined(MacroGhostThemeAppleInfograph)
-	GhostTheme_t appleInfograph;
+	GhostTheme_t appleInfograph = { 0 };
 	appleInfograph.ThemeName = MacroGhostThemeAppleInfographName;
 	appleInfograph.PackageName = MacroGhostThemeAppleInfograph;
 	appleInfograph.Version = MacroGhostThemeAppleInfographVersion;
 	appleInfograph.ThemeInit = MacroGhostThemeAppleInfographInitFunction;
 	appleInfograph.ThemeDestory = MacroGhostThemeAppleInfographDestoryFunction;
 	appleInfograph.MainPageCreate = MacroGhostThemeAppleInfographMainPageCreateFunction;
+	appleInfograph.MainPageRefresh = MacroGhostThemeAppleInfographMainPageRefreshFunction;
 	GhostLogTerminateIfErr(Fatal, GhostThemeMgrRegeisterBuiltInTheme(&appleInfograph));
 #endif
 
@@ -261,6 +262,8 @@ GhostError_t GhostThemeMgrRun(void)
 		return ret;
 	}
 
+	GhostLogI("Successfully loaded %d native themes and %d third-party themes.", 0, 0);
+
 	// Select default theme.
 #if defined(MacroGhostLauncherDefaultTheme)
 	ret = setDefaultTheme(MacroGhostLauncherDefaultTheme);
@@ -362,7 +365,7 @@ GhostError_t GhostThemeMgrRegeisterBuiltInTheme(GhostTheme_t* ThemeInfo)
 	}
 	else {
 		GhostLogE("Duplicate PackageName.");
-		return GhostErrorThemeMgrThemeDuplicatePackageName;
+		return GhostErrorThemeMgrDuplicatePackageName;
 	}
 	return GhostOK;
 }
@@ -422,7 +425,7 @@ GhostError_t GhostThemeSetResourcePointor(const char* PackageName, const void* R
 ///			The default value is 500.
 /// </summary>
 /// <returns>Minimum refresh period of main page.</returns>
-int GhostThemeGetMainPageMinimumRefreshPeriod(void)
+int GhostThemeMgrGetMainPageMinimumRefreshPeriod(void)
 {
 	int period = MacroGhostThemeManagerMainPageDefaultRefreshPeriod;
 	GhostMutexLock(&manager->Mutex);
@@ -440,7 +443,7 @@ int GhostThemeGetMainPageMinimumRefreshPeriod(void)
 /// </summary>
 /// <param name="Milliseconds">Refresh period of main page in milliseconds.</param>
 /// <returns>Actually set refresh cycle.</returns>
-int GhostThemeSetMainPageRefreshPeriod(int Milliseconds)
+int GhostThemeMgrSetMainPageRefreshPeriod(int Milliseconds)
 {
 	if (Milliseconds < MacroGhostThemeManagerMainPageMinimumRefreshPeriod)
 	{
@@ -450,6 +453,28 @@ int GhostThemeSetMainPageRefreshPeriod(int Milliseconds)
 	GhostMutexLock(&manager->Mutex);
 	manager->MainPageRefreshPeriod = Milliseconds;
 	GhostMutexUnlock(&manager->Mutex);
+	return Milliseconds;
+}
+
+
+/// <summary>
+/// Set refresh period of main page.
+///		**This function should only be called in theme.**
+/// 
+///		The default value of period is 500.
+///		Period should be greater than return value of GhostThemeMgrGetMainPageMinimumRefreshPeriod().
+///		It will be set to the minimum value if RefreshPeriod is less than minimum value.
+/// </summary>
+/// <param name="Milliseconds">Refresh period of main page in milliseconds.</param>
+/// <returns>Actually set refresh cycle.</returns>
+int GhostThemeSetMainPageRefreshPeriod(const char* PackageName, int Milliseconds)
+{
+	if (Milliseconds < MacroGhostThemeManagerMainPageMinimumRefreshPeriod)
+	{
+		Milliseconds = MacroGhostThemeManagerMainPageMinimumRefreshPeriod;
+	}
+
+	manager->MainPageRefreshPeriod = Milliseconds;
 	return Milliseconds;
 }
 
@@ -467,7 +492,16 @@ GhostError_t GhostThemeMgrMainPageCreate(lv_obj_t* MainPage)
 	GhostError_t ret = GhostOK;
 	if (MainPageThemeHandle->MainPageStatus != Loaded)
 	{
-		ret = MainPageThemeHandle->ThemeInfo->MainPageCreate(MainPage, MainPageThemeHandle->Resources);
+		if (MainPageThemeHandle->ThemeInfo->MainPageCreate != NULL)
+		{
+			ret = MainPageThemeHandle->ThemeInfo->MainPageCreate(MainPage, MainPageThemeHandle->Resources);
+		}
+		else {
+			ret = GhostErrorThemeMgrNoThemeSelected;
+		}
+	}
+	else {
+		// TODO: Destory original theme.
 	}
 
 	if (IfGhostError(ret))
@@ -493,24 +527,63 @@ GhostError_t GhostThemeMgrMainPageRefresh(lv_obj_t* MainPage)
 {
 	GhostMutexLock(&manager->Mutex);
 	GhostThemeHandle_t* MainPageThemeHandle = manager->MainPageThemeHandle;
+
+	// Calculate run time.
+	GhostError_t ret = GhostOK;
+
 	if (MainPageThemeHandle->MainPageStatus != Loaded)
 	{
 		GhostMutexUnlock(&manager->Mutex);
 		GhostLogE("Main page not loaded.");
 		return GhostErrorThemeMgrThemeUninitialized;
 	}
-	
-	// Calculate run time.
-	GhostError_t ret = GhostOK;
-	ret = MainPageThemeHandle->ThemeInfo->MainPageRefresh(MainPage, MainPageThemeHandle->Resources);
+	else {
+		if (MainPageThemeHandle->ThemeInfo->MainPageRefresh != NULL)
+		{
+			ret = MainPageThemeHandle->ThemeInfo->MainPageRefresh(MainPage, MainPageThemeHandle->Resources);
+		}
+		else {
+			ret = GhostErrorThemeMgrNoThemeSelected;
+		}
+	}
+
+
 	if (IfGhostError(ret))
 	{
 		GhostMutexUnlock(&manager->Mutex);
 		// TODO: Switch to default theme.
 		GhostLogE("Main page of theme: %s refresh failed, using deafult theme.", MainPageThemeHandle->ThemeInfo->ThemeName);
-		return GhostErrorThemeMgrThemeRefreshFailed;
+		return GhostErrorThemeMgrRefreshFailed;
 
 	}
 	GhostMutexUnlock(&manager->Mutex);
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Create AppList page.
+///		This function should be called in GhostLaucher.
+/// </summary>
+/// <param name="AppListPage">AppList page handle.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostThemeMgrAppListPageCreate(lv_obj_t* AppListPage)
+{
+
+
+
+
+	return GhostOK;
+}
+
+
+/// <summary>
+/// Refresh AppList page.
+/// 	This function should be called in GhostLaucher.
+/// </summary>
+/// <param name="MainPage">Main page handle.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostThemeMgrAppListPageRefresh(lv_obj_t* AppListPage)
+{
 	return GhostOK;
 }

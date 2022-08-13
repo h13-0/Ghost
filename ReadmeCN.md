@@ -2,11 +2,15 @@
 <div align = "center">
   <img src = "Images/Logo.jpg">
   <h1 align = "center">An amazing watch.</h1>
-</div>
+</div>  
 
 <p align="center">
   <a href="https://github.com/h13-0/Ghost/releases"><img src="https://img.shields.io/github/release/h13-0/Ghost" alt="Release version"></a>
   <a href="https://github.com/h13-0/Ghost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/h13-0/Ghost" alt="License"></a>
+</p>  
+
+<p align="center">
+  <a href="https://github.com/h13-0/Ghost/blob/master/ReadmeCN.md" target="opentype">[中文文档]</a>
 </p>  
 
 <!-- 人来来去去，离开了一个又一个，这个表还只是个Demo. -->  
@@ -14,7 +18,6 @@
 # Functions and tasks
 - [x] Basic software framework.
   - [X] Support lvgl.
-  - [x] Support lvgl touchpad.
   - [X] Ghost package manager.
   - [X] Ghost clock.
   - [X] Ghost thread.
@@ -22,10 +25,10 @@
   - [X] Ghost safe lvgl.
   - [X] Ghost log.
   - [x] Ghost launcher.
-  - [x] Ghost theme manager.
+  - [x] Ghost Theme manager.
   - [ ] Ghost Power manager.
   - [ ] lua interpreter.
-- [x] Basic function realization.
+- [ ] Basic function realization.
   - [X] Basic clock function.
   - [ ] Built in applications.
     - [ ] Calculator.

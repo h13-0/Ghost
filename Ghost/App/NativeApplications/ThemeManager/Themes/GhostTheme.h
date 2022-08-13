@@ -6,6 +6,7 @@
 #include "GhostLog.h"
 #include "GhostScreen.h"
 #include "GhostMemoryManager.h"
+#include "GhostClock.h"
 
 #include "GhostSoftwareErrorDefine.h"
 
@@ -130,15 +131,19 @@ extern "C" {
 #define GhostNativeThemeSetMainPageRefreshPeriod(Milliseconds)          GhostThemeSetMainPageRefreshPeriod(__packageName__, Milliseconds)
 
 
+	// Drivers api.
+	/// Screen.
 #define GhostNativeThemeGetResolution(Width, Height)                    GhostScreenGetResolution(Width, Height)
-
 #define GhostNativeThemeGetRadius(Radius)                               GhostScreenGetRadius(Radius)
 
-
+	/// Memory manager.
 #define GhostNativeThemeMemMalloc(Size)                                 GhostMemMgrMalloc(Size)
 #define GhostNativeThemeMemCalloc(Count, Size)                          GhostMemMgrCalloc(Count, Size)
 #define GhostNativeThemeMemFree(Size)                                   GhostMemMgrFree(Size)
 
+	/// Clock.
+#define GhostNativeThemeGetCurrentTime(Hour, Minute, Second)            GhostGetCurrentTime(Hour, Minute, Second)
+#define GhostNativeThemeGetCurrentMilliseconds(Milliseconds)            GhostGetCurrentMilliseconds(Milliseconds)    
 
 #ifdef __cplusplus
 }

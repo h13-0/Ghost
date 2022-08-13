@@ -238,7 +238,30 @@ GhostError_t GhostQtSimulatorLog(GhostQtSimulator_t* QtSimulator, GhostQtSimLogL
 
 GhostError_t GhostQtSimulatorSetTouchEventsCallback(GhostQtSimulator_t* QtSimulator, void(*CallbackPtr)(int X, int Y))
 {
-	return GhostError_t();
+	return GhostOK;
+}
+
+
+GhostError_t GhostQtSimulatorIsTouched(GhostQtSimulator_t* QtSimulator, bool* IsTouched)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	*IsTouched = ((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->isScreenTouched();
+	return GhostOK;
+}
+
+GhostError_t GhostQtSimulatorGetTouchPoint(GhostQtSimulator_t* QtSimulator, int* X, int* Y)
+{
+	if (!QtSimulator->QApplicationPtr || !QtSimulator->SimulatorUI_Ptr)
+	{
+		return GhostError_QtSimulatorUninitialized;
+	}
+
+	((SimulatorUI*)(QtSimulator->SimulatorUI_Ptr))->getScreenTouchedPosition(X, Y);
+	return GhostOK;
 }
 
 GhostError_t GhostQtSimulatorInited(GhostQtSimulator_t* QtSimulator)
