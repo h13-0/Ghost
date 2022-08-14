@@ -17,8 +17,8 @@
 #include "GhostPlatformConfigs.h"
 
 // Built-in themes.
-#include "./Themes/GhostTheme.h"
-#include "./Themes/GhostAppleInfograph.h"
+#include "GhostTheme.h"
+#include "GhostAppleInfograph.h"
 
 
 DeclareNativeAppInfo();

@@ -12,7 +12,7 @@ include_directories(
 
 # Set header paths.
 set(
-	GHOST_TOUCH_SCREEN_INCLUDE_DIRS
+	GHOST_TOUCH_SCREEN_SCREEN_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}/.."
 	CACHE PATH "Ghost screen interface header file paths list."
 )
