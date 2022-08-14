@@ -4,7 +4,7 @@
 
 #include "safe_lvgl.h"
 
-#include "GhostTheme.h"
+#include "./Themes/GhostTheme.h"
 
 #define GhostErrorThemeMgrUninitialized                     DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 1)
 #define GhostErrorThemeMgrAlreadyInitialized                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 2)

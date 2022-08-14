@@ -4,20 +4,22 @@
 project(GhostAppThemeMgr)
 
 # Include submodules.
-## Built in themes.
-aux_source_directory("${PROJECT_SOURCE_DIR}/Themes" THEME_MGR_SOURCES)
-
 # Set header paths.
 set(
 	GHOST_APP_THEME_MGR_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}"
-	"${PROJECT_SOURCE_DIR}/Themes"
+	
 	CACHE PATH "Ghost theme manager header file paths list."
 )
 
+
 include_directories(
 	"${GHOST_APP_THEME_MGR_INCLUDE_DIRS}"
+	"${PROJECT_SOURCE_DIR}/Themes"
 )
+
+# Built in themes.
+aux_source_directory("${PROJECT_SOURCE_DIR}/Themes" THEME_MGR_SOURCES)
 
 # Generate libraries.
 add_library(
