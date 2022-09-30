@@ -14,6 +14,11 @@ set(Platform_Config "AutoSelect" CACHE STRING "Path of CMakeLists.txt used by th
 # Set header paths.
 include_directories("${PROJECT_SOURCE_DIR}")
 
+# Include compiler profile.
+if(MSVC)
+include(${PROJECT_SOURCE_DIR}/Tools/CMake/msvc.cmake)
+endif()
+
 # Select platform profile.
 if(${Platform_Config} STREQUAL "AutoSelect")
 	if(WIN32 OR UNIX)

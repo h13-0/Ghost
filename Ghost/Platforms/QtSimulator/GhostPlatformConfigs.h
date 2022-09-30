@@ -1,7 +1,13 @@
 #pragma once
 #include "DeclareStructure.h"
 
-/****************************************************** Ghost common declarations ******************************************************/
+/******************************************************* Ghost compiler configs *******************************************************/
+#define MacroStatic                                                   static
+#define MacroInline                                                   inline
+#define MacroStaticInline                                             static inline
+
+
+/****************************************************** Ghost common declarations *****************************************************/
 #define MacroGhostMemOptStrict                                        (1)
 #define MacroGhostMemOptNormal                                        (2)
 #define MacroGhostMemOptExperience                                    (3)
@@ -9,6 +15,13 @@
 #define MacroGhostSizeOptStrict                                       (1)
 #define MacroGhostSizeOptNormal                                       (2)
 #define MacroGhostSizeOptExperience                                   (3)
+
+// Debug Ghost.
+#ifdef DEBUG
+#define MacroGhostDebug                                               (1)
+#else // DEBUG
+#define MacroGhostDebug                                               (1)
+#endif // DEBUG
 
 
 /******************************************************* Ghost platform configs *******************************************************/
@@ -31,7 +44,32 @@
 
 /******************************************************** Ghost driver configs ********************************************************/
 //> Memory manager.
-#define MacroMaximumMemoryUsageLimit                                  (4096 * 1024) //4096 * 1024Bytes.
+#define MacroMaximumMemoryUsageLimit                                  (4096 * 1024) // 4096 * 1024Bytes.
+#define GhostPointor_t                                                ()
+#if defined(_WIN32)
+//> It's windows.
+#if defined(_WIN64)
+//>> Windows x64
+#define MacroEffectiveLengthOfPointer                                 (64)          // Reasonable pointer effective length can reduce memory consumption.
+#else
+//>> Windows x86
+#define MacroEffectiveLengthOfPointer                                 (32)          // Reasonable pointer effective length can reduce memory consumption.
+#endif
+
+#elif defined(__linux__)  // Is unix
+//> It's unix.
+#if defined(__x86_64__)
+//>> Linux x64.
+#define MacroEffectiveLengthOfPointer                                 (64)          // Reasonable pointer effective length can reduce memory consumption.
+#else
+//>> Linux x86.
+#define MacroEffectiveLengthOfPointer                                 (32)          // Reasonable pointer effective length can reduce memory consumption.
+#endif
+#else
+//> Unknown system.
+//>> Manually set pointer effective length.
+#define MacroEffectiveLengthOfPointer                                 (16)          // Reasonable pointer effective length can reduce memory consumption.
+#endif
 
 //> File system configs.
 #define MacroFileSystemMountPoint                                     ("./Ghost")   //**Paths should be separated by '/'**
@@ -53,6 +91,14 @@
 
 #endif // Ghost system configs.
 
+//> Ghost component configs
+#if(1)
+//>> GhostAppFramework
+#define MacroMaximumAppPackageNameLength                              (64)
+#define MacroMaximumAppNameLength                                     (16)
+
+
+#endif
 
 //> Ghost user configs.
 #if(1)
@@ -115,6 +161,7 @@
 #define MacroGhostThemeAppleInfographDestoryFunction                  (NULL)
 #define MacroGhostThemeAppleInfographMainPageCreateFunction           GhostThemeAppleInfographMainPageCreate
 #define MacroGhostThemeAppleInfographMainPageRefreshFunction          GhostThemeAppleInfographMainPageRefresh
+#define MacroGhostThemeAppleInfographAppDrawerPageCreateFunction      GhostThemeAppleInfographAppDrawerPageCreate
 
 #endif //#if defined(MacroGhostLauncherThemeAppleInfograph)
 
@@ -149,10 +196,11 @@
 //>> Register Ghost theme manager.
 #if(1)
 #define MacroGhostThemeManagerPackageName								("tech.h13.ghost.thememanager")
-#define MacroGhostThemeManagerInfo										MacroDeclareStructure(GhostAppInfo_t, \
-																			GhostNativeApplication, \
+#define MacroGhostThemeManagerInfo										GhostAppFrmAppInfoNew( \
+                                                                            GhostAppTypeNative, \
 																			MacroGhostThemeManagerPackageName, \
 																			"Theme manager", \
+																			NULL, \
 																			0, \
 																			GhostThemeMgrRun, \
 																			NULL \
@@ -171,10 +219,11 @@
 //>> Register Ghost launcher.
 #if(1)
 #define MacroGhostLauncherPackageName									("tech.h13.ghost.launcher")
-#define MacroGhostLauncherInfo											MacroDeclareStructure(GhostAppInfo_t, \
-																			GhostNativeApplication, \
+#define MacroGhostLauncherInfo											GhostAppFrmAppInfoNew( \
+                                                                            GhostAppTypeNative, \
 																			MacroGhostLauncherPackageName, \
 																			"Ghost Launcher", \
+                                                                            NULL, \
 																			0, \
 																			GhostLauncherRun, \
 																			NULL \
@@ -182,3 +231,13 @@
 #define MacroGhostLauncherConfigFileName								("")
 
 #endif //>> Ghost launcher.
+
+
+// Let Visual studio not indent extren "C"
+#ifdef __cplusplus
+#define EXTREN_C_START extern "C" {
+#define EXTREN_C_END   }
+#else
+#define EXTREN_C_START
+#define EXTREN_C_END
+#endif

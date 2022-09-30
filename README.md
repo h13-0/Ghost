@@ -9,6 +9,10 @@
   <a href="https://github.com/h13-0/Ghost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/h13-0/Ghost" alt="License"></a>
 </p>  
 
+<p align="center">
+  <a href="https://github.com/h13-0/Ghost/blob/master/ReadmeCN.md" target="opentype">[中文文档]</a>
+</p>  
+
 <!-- 人来来去去，离开了一个又一个，这个表还只是个Demo. -->  
 
 # Functions and tasks

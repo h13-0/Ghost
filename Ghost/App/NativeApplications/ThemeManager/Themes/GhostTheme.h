@@ -26,6 +26,28 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+	typedef struct {
+		/// <summary>
+		/// Page create handle.
+		/// </summary>
+		/// <param name="MainPage">Pointor of page.</param>
+		/// <returns>If the return value is not GhostOK, **this page** will be reset to the default theme.</returns>
+		GhostError_t(*Create)(lv_obj_t* Page, void* ResourcePtr);
+
+
+		/// <summary>
+		/// Page refresh handle.
+		/// </summary>
+		/// <param name="MainPage">Pointor of page.</param>
+		/// <returns>If the return value is not GhostOK, **this page** will be reset to the default theme.</returns>
+		GhostError_t(*Refresh)(lv_obj_t* Page, void* ResourcePtr);
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		GhostError_t(*Destory)(lv_obj_t* Page, void* ResourcePtr);
+	} GhostThemePage_t;
 
 	/// <summary>
 	/// Typedef of GhostTheme_t.
@@ -48,38 +70,6 @@ extern "C" {
 
 
 		/// <summary>
-		/// Main page (home page) theme initialization.
-		/// </summary>
-		/// <param name="MainPage">Pointor of main page.</param>
-		/// <returns>If the return value is not GhostOK, **this page** will be reset to the default theme.</returns>
-		GhostError_t(*MainPageCreate)(lv_obj_t* MainPage, void* ResourcePtr);
-
-
-		/// <summary>
-		/// Main page (home page) refresh handle.
-		/// </summary>
-		/// <param name="MainPage">Pointor of main page.</param>
-		/// <returns>If the return value is not GhostOK, **this page** will be reset to the default theme.</returns>
-		GhostError_t(*MainPageRefresh)(lv_obj_t* MainPage, void* ResourcePtr);
-
-
-		/// <summary>
-		/// Standby page (always-on page) theme initialization.
-		/// </summary>
-		/// <param name="standbyPage"></param>
-		/// <returns>If the return value is not GhostOK, **this page** will be reset to the default theme.</returns>
-		GhostError_t(*StandbyPageCreate)(lv_obj_t* StandbyPage, void* ResourcePtr);
-
-
-		/// <summary>
-		/// Standby page (always-on page) refresh handle.
-		/// </summary>
-		/// <param name="standbyPage"></param>
-		/// <returns>If the return value is not GhostOK, **this page** will be reset to the default theme.</returns>
-		GhostError_t(*StandbyPageRefresh)(lv_obj_t* StandbyPage, void* ResourcePtr);
-
-
-		/// <summary>
 		/// Theme init.
 		///		All pages **SHOULD NOT** be initialized in this function.
 		///		You need to set the screen refresh period in this function.
@@ -87,7 +77,10 @@ extern "C" {
 		/// <returns>Function execution result.</returns>
 		GhostError_t(*ThemeDestory)(void);
 
-		// 
+		GhostThemePage_t MainPage;
+		GhostThemePage_t AppDrawerPage;
+		GhostThemePage_t StandByPage;
+
 	} GhostTheme_t;
 
 #define DeclareNativeThemeInfo(PackageName)                             static const char* __packageName__ = PackageName

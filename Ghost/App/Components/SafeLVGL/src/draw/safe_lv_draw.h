@@ -5,3 +5,6 @@
 //The original function is: lv_draw_init.
 void safe_lv_draw_init(void);
 
+//The original function is: lv_draw_wait_for_finish.
+void safe_lv_draw_wait_for_finish(lv_draw_ctx_t * draw_ctx);
+

@@ -123,6 +123,22 @@ void safe_lv_obj_set_style_transform_angle(struct _lv_obj_t * obj, lv_coord_t va
     GhostLV_Unlock();
 }
 
+//The original function is: lv_obj_set_style_transform_pivot_x.
+void safe_lv_obj_set_style_transform_pivot_x(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector)
+{
+    GhostLV_Lock();
+    lv_obj_set_style_transform_pivot_x(obj, value, selector);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_obj_set_style_transform_pivot_y.
+void safe_lv_obj_set_style_transform_pivot_y(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector)
+{
+    GhostLV_Lock();
+    lv_obj_set_style_transform_pivot_y(obj, value, selector);
+    GhostLV_Unlock();
+}
+
 //The original function is: lv_obj_set_style_pad_top.
 void safe_lv_obj_set_style_pad_top(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector)
 {
@@ -179,14 +195,6 @@ void safe_lv_obj_set_style_bg_color(struct _lv_obj_t * obj, lv_color_t value, lv
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_style_bg_color_filtered.
-void safe_lv_obj_set_style_bg_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_bg_color_filtered(obj, value, selector);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_style_bg_opa.
 void safe_lv_obj_set_style_bg_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
@@ -200,14 +208,6 @@ void safe_lv_obj_set_style_bg_grad_color(struct _lv_obj_t * obj, lv_color_t valu
 {
     GhostLV_Lock();
     lv_obj_set_style_bg_grad_color(obj, value, selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_bg_grad_color_filtered.
-void safe_lv_obj_set_style_bg_grad_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_bg_grad_color_filtered(obj, value, selector);
     GhostLV_Unlock();
 }
 
@@ -275,14 +275,6 @@ void safe_lv_obj_set_style_bg_img_recolor(struct _lv_obj_t * obj, lv_color_t val
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_style_bg_img_recolor_filtered.
-void safe_lv_obj_set_style_bg_img_recolor_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_bg_img_recolor_filtered(obj, value, selector);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_style_bg_img_recolor_opa.
 void safe_lv_obj_set_style_bg_img_recolor_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
@@ -304,14 +296,6 @@ void safe_lv_obj_set_style_border_color(struct _lv_obj_t * obj, lv_color_t value
 {
     GhostLV_Lock();
     lv_obj_set_style_border_color(obj, value, selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_border_color_filtered.
-void safe_lv_obj_set_style_border_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_border_color_filtered(obj, value, selector);
     GhostLV_Unlock();
 }
 
@@ -360,14 +344,6 @@ void safe_lv_obj_set_style_outline_color(struct _lv_obj_t * obj, lv_color_t valu
 {
     GhostLV_Lock();
     lv_obj_set_style_outline_color(obj, value, selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_outline_color_filtered.
-void safe_lv_obj_set_style_outline_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_outline_color_filtered(obj, value, selector);
     GhostLV_Unlock();
 }
 
@@ -427,14 +403,6 @@ void safe_lv_obj_set_style_shadow_color(struct _lv_obj_t * obj, lv_color_t value
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_style_shadow_color_filtered.
-void safe_lv_obj_set_style_shadow_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_shadow_color_filtered(obj, value, selector);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_style_shadow_opa.
 void safe_lv_obj_set_style_shadow_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
@@ -456,14 +424,6 @@ void safe_lv_obj_set_style_img_recolor(struct _lv_obj_t * obj, lv_color_t value,
 {
     GhostLV_Lock();
     lv_obj_set_style_img_recolor(obj, value, selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_img_recolor_filtered.
-void safe_lv_obj_set_style_img_recolor_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_img_recolor_filtered(obj, value, selector);
     GhostLV_Unlock();
 }
 
@@ -515,14 +475,6 @@ void safe_lv_obj_set_style_line_color(struct _lv_obj_t * obj, lv_color_t value, 
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_style_line_color_filtered.
-void safe_lv_obj_set_style_line_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_line_color_filtered(obj, value, selector);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_style_line_opa.
 void safe_lv_obj_set_style_line_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
@@ -555,14 +507,6 @@ void safe_lv_obj_set_style_arc_color(struct _lv_obj_t * obj, lv_color_t value, l
     GhostLV_Unlock();
 }
 
-//The original function is: lv_obj_set_style_arc_color_filtered.
-void safe_lv_obj_set_style_arc_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_arc_color_filtered(obj, value, selector);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_obj_set_style_arc_opa.
 void safe_lv_obj_set_style_arc_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
@@ -584,14 +528,6 @@ void safe_lv_obj_set_style_text_color(struct _lv_obj_t * obj, lv_color_t value, 
 {
     GhostLV_Lock();
     lv_obj_set_style_text_color(obj, value, selector);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_obj_set_style_text_color_filtered.
-void safe_lv_obj_set_style_text_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector)
-{
-    GhostLV_Lock();
-    lv_obj_set_style_text_color_filtered(obj, value, selector);
     GhostLV_Unlock();
 }
 
@@ -667,11 +603,35 @@ void safe_lv_obj_set_style_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_
     GhostLV_Unlock();
 }
 
+//The original function is: lv_obj_set_style_color_filter_dsc.
+void safe_lv_obj_set_style_color_filter_dsc(struct _lv_obj_t * obj, const lv_color_filter_dsc_t * value, lv_style_selector_t selector)
+{
+    GhostLV_Lock();
+    lv_obj_set_style_color_filter_dsc(obj, value, selector);
+    GhostLV_Unlock();
+}
+
 //The original function is: lv_obj_set_style_color_filter_opa.
 void safe_lv_obj_set_style_color_filter_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
     GhostLV_Lock();
     lv_obj_set_style_color_filter_opa(obj, value, selector);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_obj_set_style_anim.
+void safe_lv_obj_set_style_anim(struct _lv_obj_t * obj, const lv_anim_t * value, lv_style_selector_t selector)
+{
+    GhostLV_Lock();
+    lv_obj_set_style_anim(obj, value, selector);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_obj_set_style_transition.
+void safe_lv_obj_set_style_transition(struct _lv_obj_t * obj, const lv_style_transition_dsc_t * value, lv_style_selector_t selector)
+{
+    GhostLV_Lock();
+    lv_obj_set_style_transition(obj, value, selector);
     GhostLV_Unlock();
 }
 

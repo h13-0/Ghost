@@ -57,7 +57,7 @@ GhostError_t GhostThreadDelete(GhostThread_t* Thread)
 /// <returns>Number of threads created by GhostThread.</returns>
 int GhostThreadGetNumberOfThreads(void)
 {
-	
+	return 0;
 }
 
 

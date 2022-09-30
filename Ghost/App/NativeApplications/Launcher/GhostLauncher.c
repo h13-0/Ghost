@@ -9,7 +9,7 @@
 
 #include "GhostLog.h"
 #include "GhostSafeLVGL.h"
-#include "GhostApplicationManager.h"
+//#include "GhostAppManager.h"
 #include "GhostThemeManager.h"
 
 // Drivers
@@ -17,6 +17,7 @@
 #include "GhostScreen.h"
 #include "safe_lvgl.h"
 
+#include "cJSON.h"
 //#include "lv_png.h"
 
 //#include "lodepng.h"
@@ -83,7 +84,7 @@ GhostError_t GhostLauncherRun(void* Args)
 	//GhostLogTerminateIfErr(Fatal, GhostNativeAppGetAppConfigJSON(&configs));
 
 	lv_obj_t* screen;
-	GhostLogTerminateIfErr(Fatal, GhostNativeAppGetVirtualScreen(&screen));
+	//GhostLogTerminateIfErr(Fatal, GhostNativeAppGetVirtualScreen(&screen));
 
 	// Init pages.
 	// Get screen info.
@@ -98,10 +99,11 @@ GhostError_t GhostLauncherRun(void* Args)
 
 	launcher->TileView = lv_tileview_create(screen);
 	lv_obj_set_style_bg_color(launcher->TileView, lv_color_black(), 0);
-	
 
-	launcher->MainPage = createPage(lv_color_black(), 0, 0, LV_DIR_BOTTOM);
-	launcher->AppListPage = createPage(lv_color_black(), 0, 1, LV_DIR_TOP | LV_DIR_RIGHT);
+	launcher->MainPage = createPage(lv_color_black(), 0, 0, LV_DIR_TOP | LV_DIR_BOTTOM);
+	launcher->AppListPage = createPage(lv_color_black(), 0, 1, LV_DIR_TOP | LV_DIR_BOTTOM);
+	
+	lv_obj_add_flag(launcher->TileView, LV_OBJ_FLAG_SCROLL_ELASTIC);
 
 	//while (1);
 
@@ -112,14 +114,16 @@ GhostError_t GhostLauncherRun(void* Args)
 	// Custom page style.
 	lv_obj_clear_flag(launcher->MainPage, LV_OBJ_FLAG_SCROLLABLE);
 	lv_obj_set_style_pad_all(launcher->MainPage, 0, 0);
+
+
 	GhostLV_Unlock();
 
 	// Create main page.
 	GhostThemeMgrMainPageCreate(launcher->MainPage);
+	GhostThemeMgrAppDrawerPageCreate(launcher->AppListPage);
+
+
 	
-
-
-
 	// TODO: Built in themes.
 	// Default theme.
 	

@@ -47,6 +47,12 @@ void safe_lv_obj_set_style_transform_zoom(struct _lv_obj_t * obj, lv_coord_t val
 //The original function is: lv_obj_set_style_transform_angle.
 void safe_lv_obj_set_style_transform_angle(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
 
+//The original function is: lv_obj_set_style_transform_pivot_x.
+void safe_lv_obj_set_style_transform_pivot_x(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
+
+//The original function is: lv_obj_set_style_transform_pivot_y.
+void safe_lv_obj_set_style_transform_pivot_y(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
+
 //The original function is: lv_obj_set_style_pad_top.
 void safe_lv_obj_set_style_pad_top(struct _lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
 
@@ -68,17 +74,11 @@ void safe_lv_obj_set_style_pad_column(struct _lv_obj_t * obj, lv_coord_t value, 
 //The original function is: lv_obj_set_style_bg_color.
 void safe_lv_obj_set_style_bg_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
-//The original function is: lv_obj_set_style_bg_color_filtered.
-void safe_lv_obj_set_style_bg_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
 //The original function is: lv_obj_set_style_bg_opa.
 void safe_lv_obj_set_style_bg_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_bg_grad_color.
 void safe_lv_obj_set_style_bg_grad_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
-//The original function is: lv_obj_set_style_bg_grad_color_filtered.
-void safe_lv_obj_set_style_bg_grad_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_bg_grad_dir.
 void safe_lv_obj_set_style_bg_grad_dir(struct _lv_obj_t * obj, lv_grad_dir_t value, lv_style_selector_t selector);
@@ -104,9 +104,6 @@ void safe_lv_obj_set_style_bg_img_opa(struct _lv_obj_t * obj, lv_opa_t value, lv
 //The original function is: lv_obj_set_style_bg_img_recolor.
 void safe_lv_obj_set_style_bg_img_recolor(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
-//The original function is: lv_obj_set_style_bg_img_recolor_filtered.
-void safe_lv_obj_set_style_bg_img_recolor_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
 //The original function is: lv_obj_set_style_bg_img_recolor_opa.
 void safe_lv_obj_set_style_bg_img_recolor_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
 
@@ -115,9 +112,6 @@ void safe_lv_obj_set_style_bg_img_tiled(struct _lv_obj_t * obj, bool value, lv_s
 
 //The original function is: lv_obj_set_style_border_color.
 void safe_lv_obj_set_style_border_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
-//The original function is: lv_obj_set_style_border_color_filtered.
-void safe_lv_obj_set_style_border_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_border_opa.
 void safe_lv_obj_set_style_border_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
@@ -136,9 +130,6 @@ void safe_lv_obj_set_style_outline_width(struct _lv_obj_t * obj, lv_coord_t valu
 
 //The original function is: lv_obj_set_style_outline_color.
 void safe_lv_obj_set_style_outline_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
-//The original function is: lv_obj_set_style_outline_color_filtered.
-void safe_lv_obj_set_style_outline_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_outline_opa.
 void safe_lv_obj_set_style_outline_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
@@ -161,9 +152,6 @@ void safe_lv_obj_set_style_shadow_spread(struct _lv_obj_t * obj, lv_coord_t valu
 //The original function is: lv_obj_set_style_shadow_color.
 void safe_lv_obj_set_style_shadow_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
-//The original function is: lv_obj_set_style_shadow_color_filtered.
-void safe_lv_obj_set_style_shadow_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
 //The original function is: lv_obj_set_style_shadow_opa.
 void safe_lv_obj_set_style_shadow_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
 
@@ -172,9 +160,6 @@ void safe_lv_obj_set_style_img_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_st
 
 //The original function is: lv_obj_set_style_img_recolor.
 void safe_lv_obj_set_style_img_recolor(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
-//The original function is: lv_obj_set_style_img_recolor_filtered.
-void safe_lv_obj_set_style_img_recolor_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_img_recolor_opa.
 void safe_lv_obj_set_style_img_recolor_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
@@ -194,9 +179,6 @@ void safe_lv_obj_set_style_line_rounded(struct _lv_obj_t * obj, bool value, lv_s
 //The original function is: lv_obj_set_style_line_color.
 void safe_lv_obj_set_style_line_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
-//The original function is: lv_obj_set_style_line_color_filtered.
-void safe_lv_obj_set_style_line_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
 //The original function is: lv_obj_set_style_line_opa.
 void safe_lv_obj_set_style_line_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
 
@@ -209,9 +191,6 @@ void safe_lv_obj_set_style_arc_rounded(struct _lv_obj_t * obj, bool value, lv_st
 //The original function is: lv_obj_set_style_arc_color.
 void safe_lv_obj_set_style_arc_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
-//The original function is: lv_obj_set_style_arc_color_filtered.
-void safe_lv_obj_set_style_arc_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
 //The original function is: lv_obj_set_style_arc_opa.
 void safe_lv_obj_set_style_arc_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
 
@@ -220,9 +199,6 @@ void safe_lv_obj_set_style_arc_img_src(struct _lv_obj_t * obj, const void * valu
 
 //The original function is: lv_obj_set_style_text_color.
 void safe_lv_obj_set_style_text_color(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
-
-//The original function is: lv_obj_set_style_text_color_filtered.
-void safe_lv_obj_set_style_text_color_filtered(struct _lv_obj_t * obj, lv_color_t value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_text_opa.
 void safe_lv_obj_set_style_text_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
@@ -251,8 +227,17 @@ void safe_lv_obj_set_style_clip_corner(struct _lv_obj_t * obj, bool value, lv_st
 //The original function is: lv_obj_set_style_opa.
 void safe_lv_obj_set_style_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
 
+//The original function is: lv_obj_set_style_color_filter_dsc.
+void safe_lv_obj_set_style_color_filter_dsc(struct _lv_obj_t * obj, const lv_color_filter_dsc_t * value, lv_style_selector_t selector);
+
 //The original function is: lv_obj_set_style_color_filter_opa.
 void safe_lv_obj_set_style_color_filter_opa(struct _lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector);
+
+//The original function is: lv_obj_set_style_anim.
+void safe_lv_obj_set_style_anim(struct _lv_obj_t * obj, const lv_anim_t * value, lv_style_selector_t selector);
+
+//The original function is: lv_obj_set_style_transition.
+void safe_lv_obj_set_style_transition(struct _lv_obj_t * obj, const lv_style_transition_dsc_t * value, lv_style_selector_t selector);
 
 //The original function is: lv_obj_set_style_blend_mode.
 void safe_lv_obj_set_style_blend_mode(struct _lv_obj_t * obj, lv_blend_mode_t value, lv_style_selector_t selector);

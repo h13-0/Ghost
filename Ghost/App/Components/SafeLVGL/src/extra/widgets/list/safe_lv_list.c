@@ -22,7 +22,7 @@ lv_obj_t * safe_lv_list_add_text(lv_obj_t * list, const char * txt)
 }
 
 //The original function is: lv_list_add_btn.
-lv_obj_t * safe_lv_list_add_btn(lv_obj_t * list, const char * icon, const char * txt)
+lv_obj_t * safe_lv_list_add_btn(lv_obj_t * list, const void * icon, const char * txt)
 {
     GhostLV_Lock();
     lv_obj_t * ret = lv_list_add_btn(list, icon, txt);

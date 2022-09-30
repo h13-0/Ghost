@@ -14,7 +14,7 @@
 #define GhostErrorThemeMgrDuplicatePackageName              DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 6)
 #define GhostErrorThemeMgrThemeUninitialized                DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 7)
 #define GhostErrorThemeMgrRefreshFailed                     DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 8)
-
+#define GhostErrorThemeMgrPackageNotFound                   DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleThemeMgrError, 9)
 /*
 
 
@@ -57,6 +57,15 @@ extern "C" {
 	/// <returns>Function execution result.</returns>
 	GhostError_t GhostThemeMgrUnistallTheme(GhostTheme_t* Theme);
 	
+
+	/// <summary>
+	/// Set main page theme.
+	///		Thread safe:
+	///			Yes.
+	/// </summary>
+	/// <param name="PackageName">Package name.</param>
+	/// <returns>Function execution result.</returns>
+	GhostError_t GhostThemeMgrSetMainPageTheme(char* PackageName);
 
 	typedef struct
 	{
@@ -117,7 +126,7 @@ extern "C" {
 	/// </summary>
 	/// <param name="AppListPage">AppList page handle.</param>
 	/// <returns>Function execution result.</returns>
-	GhostError_t GhostThemeMgrAppListPageCreate(lv_obj_t* AppListPage);
+	GhostError_t GhostThemeMgrAppDrawerPageCreate(lv_obj_t* AppListPage);
 
 
 	/// <summary>

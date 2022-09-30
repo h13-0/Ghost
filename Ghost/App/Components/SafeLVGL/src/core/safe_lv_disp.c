@@ -113,3 +113,20 @@ void safe_lv_disp_clean_dcache(lv_disp_t * disp)
     GhostLV_Unlock();
 }
 
+//The original function is: lv_disp_enable_invalidation.
+void safe_lv_disp_enable_invalidation(lv_disp_t * disp, bool en)
+{
+    GhostLV_Lock();
+    lv_disp_enable_invalidation(disp, en);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_disp_is_invalidation_enabled.
+bool safe_lv_disp_is_invalidation_enabled(lv_disp_t * disp)
+{
+    GhostLV_Lock();
+    bool ret = lv_disp_is_invalidation_enabled(disp);
+    GhostLV_Unlock();
+    return ret;
+}
+

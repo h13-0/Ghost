@@ -17,12 +17,12 @@
 // App layer.
 /// Components.
 #include "GhostLog.h"
-#include "GhostApplicationManager.h"
+#include "GhostAppFramework.h"
 #include "GhostSafeLVGL.h"
 
 /// Applications.
-#include "GhostThemeManager.h"
-#include "GhostLauncher.h"
+//#include "GhostThemeManager.h"
+//#include "GhostLauncher.h"
 
 // Thirdparty layer.
 #include "lvgl.h"
@@ -43,27 +43,34 @@ GhostError_t GhostAppInit(void)
 	// Init Ghost safe lvgl.
 	GhostLogTerminateIfErr(Fatal, GhostSafeLV_Init());
 
-	// Init Ghost application manager.
-	GhostLogTerminateIfErr(Fatal, GhostAppMgrInit());
+	// Init Ghost application framework.
+	GhostLogTerminateIfErr(Fatal, GhostAppFrmInit());
+
+	// Test App framework.
+
+
 
 	// Register native applications.
 	// Run Ghost System.
+	
+	/*
 	// Theme manager.
 	{
-		GhostAppInfo_t app = MacroGhostThemeManagerInfo;
-		GhostLogTerminateIfErr(Fatal, GhostAppMgrRegister(&app));
+		GhostAppInfo_t appInfo = MacroGhostThemeManagerInfo;
+		GhostLogTerminateIfErr(Fatal, GhostAppFrmRegisterApp(appInfo));
 		// Run Ghost System(But do nothing).
-		GhostLogTerminateIfErr(Fatal, GhostAppMgrRunBackground(app.PackageName, 1, "Ghost system call."));
+		GhostLogTerminateIfErr(Fatal, GhostAppFrmRunBackground(appInfo->PackageName, 1, "Ghost system call."));
 	}
 
 
 	// Launcher.
 	{
-		GhostAppInfo_t app = MacroGhostLauncherInfo;
-		GhostLogTerminateIfErr(Fatal, GhostAppMgrRegister(&app));
+		GhostAppInfo_t appInfo = MacroGhostLauncherInfo;
+		GhostLogTerminateIfErr(Fatal, GhostAppFrmRegisterApp(appInfo));
 		// Run Ghost System(But do nothing).
-		GhostLogTerminateIfErr(Fatal, GhostAppMgrRunForeground(app.PackageName, 1, "Ghost system call."));
+		GhostLogTerminateIfErr(Fatal, GhostAppFrmRunForeground(appInfo->PackageName, 1, "Ghost system call."));
 	}
+	*/
 
 	GhostLogI("Ghost init successfully.");
 

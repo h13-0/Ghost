@@ -41,3 +41,9 @@ void safe_lv_disp_trig_activity(lv_disp_t * disp);
 //The original function is: lv_disp_clean_dcache.
 void safe_lv_disp_clean_dcache(lv_disp_t * disp);
 
+//The original function is: lv_disp_enable_invalidation.
+void safe_lv_disp_enable_invalidation(lv_disp_t * disp, bool en);
+
+//The original function is: lv_disp_is_invalidation_enabled.
+bool safe_lv_disp_is_invalidation_enabled(lv_disp_t * disp);
+

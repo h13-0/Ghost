@@ -123,6 +123,22 @@ void safe_lv_style_set_transform_angle(lv_style_t * style, lv_coord_t value)
     GhostLV_Unlock();
 }
 
+//The original function is: lv_style_set_transform_pivot_x.
+void safe_lv_style_set_transform_pivot_x(lv_style_t * style, lv_coord_t value)
+{
+    GhostLV_Lock();
+    lv_style_set_transform_pivot_x(style, value);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_style_set_transform_pivot_y.
+void safe_lv_style_set_transform_pivot_y(lv_style_t * style, lv_coord_t value)
+{
+    GhostLV_Lock();
+    lv_style_set_transform_pivot_y(style, value);
+    GhostLV_Unlock();
+}
+
 //The original function is: lv_style_set_pad_top.
 void safe_lv_style_set_pad_top(lv_style_t * style, lv_coord_t value)
 {
@@ -179,14 +195,6 @@ void safe_lv_style_set_bg_color(lv_style_t * style, lv_color_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_style_set_bg_color_filtered.
-void safe_lv_style_set_bg_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_bg_color_filtered(style, value);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_bg_opa.
 void safe_lv_style_set_bg_opa(lv_style_t * style, lv_opa_t value)
 {
@@ -200,14 +208,6 @@ void safe_lv_style_set_bg_grad_color(lv_style_t * style, lv_color_t value)
 {
     GhostLV_Lock();
     lv_style_set_bg_grad_color(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_bg_grad_color_filtered.
-void safe_lv_style_set_bg_grad_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_bg_grad_color_filtered(style, value);
     GhostLV_Unlock();
 }
 
@@ -275,14 +275,6 @@ void safe_lv_style_set_bg_img_recolor(lv_style_t * style, lv_color_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_style_set_bg_img_recolor_filtered.
-void safe_lv_style_set_bg_img_recolor_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_bg_img_recolor_filtered(style, value);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_bg_img_recolor_opa.
 void safe_lv_style_set_bg_img_recolor_opa(lv_style_t * style, lv_opa_t value)
 {
@@ -304,14 +296,6 @@ void safe_lv_style_set_border_color(lv_style_t * style, lv_color_t value)
 {
     GhostLV_Lock();
     lv_style_set_border_color(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_border_color_filtered.
-void safe_lv_style_set_border_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_border_color_filtered(style, value);
     GhostLV_Unlock();
 }
 
@@ -360,14 +344,6 @@ void safe_lv_style_set_outline_color(lv_style_t * style, lv_color_t value)
 {
     GhostLV_Lock();
     lv_style_set_outline_color(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_outline_color_filtered.
-void safe_lv_style_set_outline_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_outline_color_filtered(style, value);
     GhostLV_Unlock();
 }
 
@@ -427,14 +403,6 @@ void safe_lv_style_set_shadow_color(lv_style_t * style, lv_color_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_style_set_shadow_color_filtered.
-void safe_lv_style_set_shadow_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_shadow_color_filtered(style, value);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_shadow_opa.
 void safe_lv_style_set_shadow_opa(lv_style_t * style, lv_opa_t value)
 {
@@ -456,14 +424,6 @@ void safe_lv_style_set_img_recolor(lv_style_t * style, lv_color_t value)
 {
     GhostLV_Lock();
     lv_style_set_img_recolor(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_img_recolor_filtered.
-void safe_lv_style_set_img_recolor_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_img_recolor_filtered(style, value);
     GhostLV_Unlock();
 }
 
@@ -515,14 +475,6 @@ void safe_lv_style_set_line_color(lv_style_t * style, lv_color_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_style_set_line_color_filtered.
-void safe_lv_style_set_line_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_line_color_filtered(style, value);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_line_opa.
 void safe_lv_style_set_line_opa(lv_style_t * style, lv_opa_t value)
 {
@@ -555,14 +507,6 @@ void safe_lv_style_set_arc_color(lv_style_t * style, lv_color_t value)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_style_set_arc_color_filtered.
-void safe_lv_style_set_arc_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_arc_color_filtered(style, value);
-    GhostLV_Unlock();
-}
-
 //The original function is: lv_style_set_arc_opa.
 void safe_lv_style_set_arc_opa(lv_style_t * style, lv_opa_t value)
 {
@@ -584,14 +528,6 @@ void safe_lv_style_set_text_color(lv_style_t * style, lv_color_t value)
 {
     GhostLV_Lock();
     lv_style_set_text_color(style, value);
-    GhostLV_Unlock();
-}
-
-//The original function is: lv_style_set_text_color_filtered.
-void safe_lv_style_set_text_color_filtered(lv_style_t * style, lv_color_t value)
-{
-    GhostLV_Lock();
-    lv_style_set_text_color_filtered(style, value);
     GhostLV_Unlock();
 }
 
@@ -680,6 +616,14 @@ void safe_lv_style_set_color_filter_opa(lv_style_t * style, lv_opa_t value)
 {
     GhostLV_Lock();
     lv_style_set_color_filter_opa(style, value);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_style_set_anim.
+void safe_lv_style_set_anim(lv_style_t * style, const lv_anim_t * value)
+{
+    GhostLV_Lock();
+    lv_style_set_anim(style, value);
     GhostLV_Unlock();
 }
 

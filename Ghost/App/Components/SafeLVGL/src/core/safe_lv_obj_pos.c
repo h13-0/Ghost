@@ -283,6 +283,22 @@ void safe_lv_obj_move_children_by(struct _lv_obj_t * obj, lv_coord_t x_diff, lv_
     GhostLV_Unlock();
 }
 
+//The original function is: lv_obj_transform_point.
+void safe_lv_obj_transform_point(const struct _lv_obj_t * obj, lv_point_t * p, bool recursive, bool inv)
+{
+    GhostLV_Lock();
+    lv_obj_transform_point(obj, p, recursive, inv);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_obj_get_transformed_area.
+void safe_lv_obj_get_transformed_area(const struct _lv_obj_t * obj, lv_area_t * area, bool recursive, bool inv)
+{
+    GhostLV_Lock();
+    lv_obj_get_transformed_area(obj, area, recursive, inv);
+    GhostLV_Unlock();
+}
+
 //The original function is: lv_obj_invalidate_area.
 void safe_lv_obj_invalidate_area(const struct _lv_obj_t * obj, const lv_area_t * area)
 {

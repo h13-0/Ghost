@@ -6,7 +6,7 @@
 lv_obj_t * safe_lv_arc_create(lv_obj_t * parent);
 
 //The original function is: lv_arc_set_mode.
-void safe_lv_arc_set_mode(lv_obj_t * arc, lv_arc_mode_t type);
+void safe_lv_arc_set_mode(lv_obj_t * obj, lv_arc_mode_t type);
 
 //The original function is: lv_arc_get_angle_start.
 uint16_t safe_lv_arc_get_angle_start(lv_obj_t * obj);
@@ -31,4 +31,10 @@ int16_t safe_lv_arc_get_max_value(const lv_obj_t * obj);
 
 //The original function is: lv_arc_get_mode.
 lv_arc_mode_t safe_lv_arc_get_mode(const lv_obj_t * obj);
+
+//The original function is: lv_arc_align_obj_to_angle.
+void safe_lv_arc_align_obj_to_angle(const lv_obj_t * obj, lv_obj_t * obj_to_align, lv_coord_t r_offset);
+
+//The original function is: lv_arc_rotate_obj_to_angle.
+void safe_lv_arc_rotate_obj_to_angle(const lv_obj_t * obj, lv_obj_t * obj_to_rotate, lv_coord_t r_offset);
 

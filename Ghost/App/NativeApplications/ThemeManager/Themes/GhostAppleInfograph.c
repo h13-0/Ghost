@@ -273,4 +273,9 @@ GhostError_t GhostThemeAppleInfographMainPageRefresh(lv_obj_t* MainPage, void* R
 }
 
 
+GhostError_t GhostThemeAppleInfographAppDrawerPageCreate(lv_obj_t* AppDrawerPage, void* ResourcePtr)
+{
+	lv_obj_create(AppDrawerPage);
+}
+
 #endif //#if defined(MacroGhostThemeAppleInfograph)

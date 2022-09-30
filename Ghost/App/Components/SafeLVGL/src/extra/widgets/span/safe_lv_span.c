@@ -114,6 +114,15 @@ lv_span_mode_t safe_lv_spangroup_get_mode(lv_obj_t * obj)
     return ret;
 }
 
+//The original function is: lv_spangroup_get_lines.
+int32_t safe_lv_spangroup_get_lines(lv_obj_t * obj)
+{
+    GhostLV_Lock();
+    int32_t ret = lv_spangroup_get_lines(obj);
+    GhostLV_Unlock();
+    return ret;
+}
+
 //The original function is: lv_spangroup_get_max_line_h.
 lv_coord_t safe_lv_spangroup_get_max_line_h(lv_obj_t * obj)
 {

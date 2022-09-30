@@ -35,6 +35,8 @@ extern "C" {
 	GhostError_t GhostThemeAppleInfographMainPageRefresh(lv_obj_t* MainPage, void* ResourcePtr);
 
 
+	GhostError_t GhostThemeAppleInfographAppDrawerPageCreate(lv_obj_t* AppDrawerPage, void* ResourcePtr);
+
 #ifdef __cplusplus
 }
 #endif

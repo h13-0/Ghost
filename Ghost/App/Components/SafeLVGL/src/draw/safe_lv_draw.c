@@ -11,3 +11,11 @@ void safe_lv_draw_init(void)
     GhostLV_Unlock();
 }
 
+//The original function is: lv_draw_wait_for_finish.
+void safe_lv_draw_wait_for_finish(lv_draw_ctx_t * draw_ctx)
+{
+    GhostLV_Lock();
+    lv_draw_wait_for_finish(draw_ctx);
+    GhostLV_Unlock();
+}
+

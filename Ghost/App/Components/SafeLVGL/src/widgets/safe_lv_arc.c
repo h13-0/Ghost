@@ -13,10 +13,10 @@ lv_obj_t * safe_lv_arc_create(lv_obj_t * parent)
 }
 
 //The original function is: lv_arc_set_mode.
-void safe_lv_arc_set_mode(lv_obj_t * arc, lv_arc_mode_t type)
+void safe_lv_arc_set_mode(lv_obj_t * obj, lv_arc_mode_t type)
 {
     GhostLV_Lock();
-    lv_arc_set_mode(arc, type);
+    lv_arc_set_mode(obj, type);
     GhostLV_Unlock();
 }
 
@@ -90,5 +90,21 @@ lv_arc_mode_t safe_lv_arc_get_mode(const lv_obj_t * obj)
     lv_arc_mode_t ret = lv_arc_get_mode(obj);
     GhostLV_Unlock();
     return ret;
+}
+
+//The original function is: lv_arc_align_obj_to_angle.
+void safe_lv_arc_align_obj_to_angle(const lv_obj_t * obj, lv_obj_t * obj_to_align, lv_coord_t r_offset)
+{
+    GhostLV_Lock();
+    lv_arc_align_obj_to_angle(obj, obj_to_align, r_offset);
+    GhostLV_Unlock();
+}
+
+//The original function is: lv_arc_rotate_obj_to_angle.
+void safe_lv_arc_rotate_obj_to_angle(const lv_obj_t * obj, lv_obj_t * obj_to_rotate, lv_coord_t r_offset)
+{
+    GhostLV_Lock();
+    lv_arc_rotate_obj_to_angle(obj, obj_to_rotate, r_offset);
+    GhostLV_Unlock();
 }
 

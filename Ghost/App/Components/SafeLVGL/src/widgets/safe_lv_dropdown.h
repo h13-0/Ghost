@@ -38,6 +38,9 @@ uint16_t safe_lv_dropdown_get_selected(const lv_obj_t * obj);
 //The original function is: lv_dropdown_get_option_cnt.
 uint16_t safe_lv_dropdown_get_option_cnt(const lv_obj_t * obj);
 
+//The original function is: lv_dropdown_get_option_index.
+int32_t safe_lv_dropdown_get_option_index(lv_obj_t * obj, const char * option);
+
 //The original function is: lv_dropdown_get_symbol.
 const char * safe_lv_dropdown_get_symbol(lv_obj_t * obj);
 

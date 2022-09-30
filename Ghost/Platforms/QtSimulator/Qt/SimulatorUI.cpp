@@ -270,52 +270,36 @@ bool SimulatorUI::eventFilter(QObject* watched, QEvent* event)
         unique_lock<mutex> lock(touchScreenMutex);
         int maximumX = ui.screenView->width() - 1;
         int maximumY = ui.screenView->height() - 1;
+        int posX = 0, posY = 0;
         switch (event->type())
         {
         case QEvent::MouseButtonPress:
-            isTouched = true;
-            touchPosX = ((QMouseEvent*)(event))->x();
-            touchPosY = ((QMouseEvent*)(event))->y();
+            posX = ((QMouseEvent*)(event))->x();
+            posY = ((QMouseEvent*)(event))->y();
 
-            if (touchPosX < 0)
+            if (posX < 0 || posX > maximumX || posY < 0 || posY > maximumY)
             {
-                touchPosX = 0;
+                isTouched = false;
             }
-            else if (touchPosX > maximumX)
-            {
-                touchPosX = maximumX;
-            }
-
-            if (touchPosY < 0)
-            {
-                touchPosY = 0;
-            }
-            else if (touchPosY > maximumY)
-            {
-                touchPosY = maximumY;
+            else {
+                isTouched = true;
+                touchPosX = posX;
+                touchPosY = posY;
             }
             break;
             
         case QEvent::MouseMove:
-            touchPosX = ((QMouseEvent*)(event))->x();
-            touchPosY = ((QMouseEvent*)(event))->y();
+            posX = ((QMouseEvent*)(event))->x();
+            posY = ((QMouseEvent*)(event))->y();
 
-            if (touchPosX < 0)
+            if (posX < 0 || posX > maximumX || posY < 0 || posY > maximumY)
             {
-                touchPosX = 0;
+                isTouched = false;
             }
-            else if (touchPosX > maximumX)
-            {
-                touchPosX = maximumX;
-            }
-
-            if (touchPosY < 0)
-            {
-                touchPosY = 0;
-            }
-            else if (touchPosY > maximumY)
-            {
-                touchPosY = maximumY;
+            else {
+                isTouched = true;
+                touchPosX = posX;
+                touchPosY = posY;
             }
             break;
 

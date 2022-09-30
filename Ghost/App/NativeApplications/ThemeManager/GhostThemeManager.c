@@ -3,6 +3,7 @@
 
 // Standard libs.
 #include <stddef.h>
+#include <stdbool.h>
 
 // ThirdPartys.
 #include "list.h"
@@ -13,50 +14,14 @@
 #include "GhostThread.h"
 
 // Application manager.
-#include "GhostApplicationManager.h"
+//#include "GhostApplicationManager.h"
 #include "GhostPlatformConfigs.h"
+
+#include "GhostThemeHandle.h"
 
 // Built-in themes.
 #include "GhostTheme.h"
 #include "GhostAppleInfograph.h"
-
-
-DeclareNativeAppInfo();
-
-
-/// <summary>
-/// Theme loaded flag enum.
-/// </summary>
-typedef enum
-{
-	NotLoaded = 0,
-	Loaded    = 1,
-} ThemeStatus_t;
-
-
-/// <summary>
-/// Typedef struct of GhostThemeHandle.
-/// </summary>
-typedef struct
-{
-	// Basic theme info.
-	GhostTheme_t* ThemeInfo;
-
-	// Resources.
-	void* Resources;
-	void** Blocks;
-
-
-
-	// Theme status.
-	unsigned int ThemeStatus : 1;
-	
-	// Page status.
-	unsigned int MainPageStatus : 1 ;
-
-
-
-} GhostThemeHandle_t;
 
 
 /// <summary>
@@ -69,21 +34,27 @@ typedef struct {
 	// Basic configs.
 	unsigned int MainPageRefreshPeriod;
 
-
 	// Linked list.
 	list_t* Themes;
 
 	// Current theme.
 	GhostThemeHandle_t* MainPageThemeHandle;
+	GhostThemeHandle_t* AppDrawerPageThemeHandle;
 
 	// Theme manager status.
-	ThemeStatus_t ThemeManagerStatus : 1;
+	bool ThemeManagerLoaded : 1;
+
 } GhostThemeManager_t;
 
 
 // Pointor of GhostThemeManager_t.
 static GhostThemeManager_t* manager = NULL;
 
+// Static functions.
+MacroStatic GhostError_t ghostBuiltInThemeRegister(void);
+MacroStatic GhostThemeHandle_t* ghostThemeFindHandleByPackageName(const char* PackageName);
+MacroStatic GhostError_t ghostThemeMgrPageCreate(lv_obj_t* TargetPage, GhostThemePage_t* PageHandle);
+MacroStatic GhostError_t setDefaultTheme(const char* PackageName);
 
 /// <summary>
 /// Register built-in themes.
@@ -91,7 +62,7 @@ static GhostThemeManager_t* manager = NULL;
 /// </summary>
 /// <param name="void"></param>
 /// <returns>Function execution result.</returns>
-static GhostError_t ghostBuiltInThemeRegister(void)
+MacroStaticInline GhostError_t ghostBuiltInThemeRegister(void)
 {
 	// Apple info graph(tech.h13.ghost.theme.appleinfograph)
 #if defined(MacroGhostThemeAppleInfograph)
@@ -101,106 +72,19 @@ static GhostError_t ghostBuiltInThemeRegister(void)
 	appleInfograph.Version = MacroGhostThemeAppleInfographVersion;
 	appleInfograph.ThemeInit = MacroGhostThemeAppleInfographInitFunction;
 	appleInfograph.ThemeDestory = MacroGhostThemeAppleInfographDestoryFunction;
-	appleInfograph.MainPageCreate = MacroGhostThemeAppleInfographMainPageCreateFunction;
-	appleInfograph.MainPageRefresh = MacroGhostThemeAppleInfographMainPageRefreshFunction;
+
+	// Main page:
+	appleInfograph.MainPage.Create = MacroGhostThemeAppleInfographMainPageCreateFunction;
+	appleInfograph.MainPage.Refresh = MacroGhostThemeAppleInfographMainPageRefreshFunction;
+
+	// AppDrawer page:
+	appleInfograph.AppDrawerPage.Create = MacroGhostThemeAppleInfographAppDrawerPageCreateFunction;
 	GhostLogTerminateIfErr(Fatal, GhostThemeMgrRegeisterBuiltInTheme(&appleInfograph));
 #endif
 
 	// Other themes...
 
 
-}
-
-
-/// <summary>
-/// Free memory of GhostThemeHandle_t.
-/// 	Thread safe:
-///			Yes.
-/// </summary>
-/// <param name="ThemeHandle">Theme handle.</param>
-static void ghostThemeHandleDestory(GhostThemeHandle_t* ThemeHandle)
-{
-	GhostMemMgrFree(ThemeHandle->ThemeInfo->PackageName);
-	GhostMemMgrFree(ThemeHandle->ThemeInfo->ThemeName);
-}
-
-
-/// <summary>
-/// Compare whether the theme handle are the same by package name.
-/// </summary>
-/// <param name="ThemeHandleA">Theme handle.</param>
-/// <param name="ThemeHandleB">Theme handle.</param>
-/// <returns>Return 1 when the package name is the same.</returns>
-static int ghostThemeHandleMatch(GhostThemeHandle_t* ThemeHandleA, GhostThemeHandle_t* ThemeHandleB)
-{
-	// Easy check.
-	if (ThemeHandleA == ThemeHandleB)
-	{
-		return 1;
-	}
-
-	if ((ThemeHandleA == NULL) || (ThemeHandleB == NULL))
-	{
-		return 0;
-	}
-
-	// Check strlen.
-	int packageNameLenOfA = strlen(ThemeHandleA->ThemeInfo->PackageName);
-	int packageNameLenOfB = strlen(ThemeHandleB->ThemeInfo->PackageName);
-
-	if (packageNameLenOfA != packageNameLenOfB)
-	{
-		return 0;
-	}
-
-	if (!memcmp(ThemeHandleA->ThemeInfo->PackageName, ThemeHandleB->ThemeInfo->PackageName, packageNameLenOfA))
-	{
-		return 1;
-	}
-	else {
-		return 0;
-	}
-}
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="PackageName"></param>
-/// <returns></returns>
-static GhostThemeHandle_t* ghostThemeFindHandleByPackageName(const char* PackageName)
-{
-	GhostThemeHandle_t tempHandle;
-	GhostTheme_t themeInfo;
-	themeInfo.PackageName = PackageName;
-	tempHandle.ThemeInfo = &themeInfo;
-	list_node_t* handle = list_find(manager->Themes, &tempHandle);
-	return ((GhostThemeHandle_t*)handle->val);
-}
-
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="PackageName"></param>
-/// <returns></returns>
-static GhostError_t setDefaultTheme(const char* PackageName)
-{
-	GhostThemeHandle_t* mainPageHandle = ghostThemeFindHandleByPackageName(PackageName);
-
-	if (mainPageHandle == NULL)
-	{
-		return GhostErrorThemeOutOfMemory;
-	}
-
-	// Lock mutex.
-	if (mainPageHandle->ThemeStatus != Loaded)
-	{
-		mainPageHandle->ThemeInfo->ThemeInit();
-		mainPageHandle->ThemeStatus = Loaded;
-	}
-	manager->MainPageThemeHandle = mainPageHandle;
-	return GhostOK;
 }
 
 
@@ -237,8 +121,8 @@ GhostError_t GhostThemeMgrRun(void)
 
 	// Init theme linked list.
 	manager->Themes = list_new();
-	manager->Themes->match = ghostThemeHandleMatch;
-	manager->Themes->free = ghostThemeHandleDestory;
+	manager->Themes->match = GhostThemeHandleMatch;
+	manager->Themes->free = GhostThemeHandleDestory;
 
 	// Check whether initialization is successful.
 	if (manager->Themes == NULL)
@@ -284,63 +168,6 @@ GhostError_t GhostThemeMgrRun(void)
 
 
 /// <summary>
-/// Generate GhostThemeHandle_t using theme info(GhostTheme_t).
-/// 	Thread safe:
-///			Yes.
-/// </summary>
-/// <param name="ThemeInfo">Theme info in pointor of GhostTheme_t.</param>
-/// <returns>
-/// Pointor of theme handle.
-///		Make fails when the return value is null.
-/// </returns>
-static GhostThemeHandle_t* ghostThemeMgrMakeThemeHandle(GhostTheme_t* ThemeInfo)
-{
-	GhostThemeHandle_t* handle = GhostMemMgrCalloc(1, sizeof(GhostThemeHandle_t));
-	if (handle == NULL)
-	{
-		GhostLogE("Make theme handle failed, out of memory!");
-		return NULL;
-	}
-
-	handle->ThemeInfo = GhostMemMgrMalloc(sizeof(GhostTheme_t));
-	if (handle->ThemeInfo == NULL)
-	{
-		GhostLogE("Make theme handle failed, out of memory!");
-		return NULL;
-	}
-
-	memcpy(handle->ThemeInfo, ThemeInfo, sizeof(GhostTheme_t));
-
-	// Make a copy.
-	/// Copy PackageName.
-	int bufferSize = strlen(ThemeInfo->PackageName) + 1;
-	handle->ThemeInfo->PackageName = GhostMemMgrMalloc(bufferSize);
-	if (handle->ThemeInfo->PackageName == NULL)
-	{
-		GhostMemMgrFree(handle);
-		GhostLogE("Make theme handle failed, out of memory!");
-		return NULL;
-	}
-	
-	memcpy(handle->ThemeInfo->PackageName, ThemeInfo->PackageName, bufferSize);
-
-	/// Copy ThemeName.
-	bufferSize = strlen(ThemeInfo->ThemeName) + 1;
-	handle->ThemeInfo->ThemeName = GhostMemMgrMalloc(bufferSize);
-	if (handle->ThemeInfo->ThemeName == NULL)
-	{
-		GhostMemMgrFree(handle->ThemeInfo->PackageName);
-		GhostMemMgrFree(handle);
-		GhostLogE("Make theme handle failed, out of memory!");
-		return NULL;
-	}
-
-	memcpy(handle->ThemeInfo->ThemeName, ThemeInfo->ThemeName, bufferSize);
-	return handle;
-}
-
-
-/// <summary>
 /// Register built-in theme.
 /// </summary>
 /// <param name="Theme">Theme handle.</param>
@@ -348,7 +175,7 @@ static GhostThemeHandle_t* ghostThemeMgrMakeThemeHandle(GhostTheme_t* ThemeInfo)
 GhostError_t GhostThemeMgrRegeisterBuiltInTheme(GhostTheme_t* ThemeInfo)
 {
 	// Make theme handle.
-	GhostThemeHandle_t* handle = ghostThemeMgrMakeThemeHandle(ThemeInfo);
+	GhostThemeHandle_t* handle = GhostThemeMgrThemeHandleCreate(ThemeInfo);
 	if (handle == NULL)
 	{
 		GhostLogE("Regeister built-in theme failed, out of memory!");
@@ -368,6 +195,42 @@ GhostError_t GhostThemeMgrRegeisterBuiltInTheme(GhostTheme_t* ThemeInfo)
 		return GhostErrorThemeMgrDuplicatePackageName;
 	}
 	return GhostOK;
+}
+
+
+/// <summary>
+/// Set main page theme.
+///		Thread safe:
+///			Yes.
+/// </summary>
+/// <param name="PackageName">Package name.</param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostThemeMgrSetMainPageTheme(char* PackageName)
+{
+	GhostThemeHandle_t *handle = ghostThemeFindHandleByPackageName(PackageName);
+	if (handle == NULL)
+	{
+		return GhostErrorThemeMgrPackageNotFound;
+	}
+
+	// Create page.
+
+	if(false) //failed
+	{
+		if (manager->MainPageThemeHandle == NULL)
+		{
+			// Use security theme.
+		}
+		else {
+			// Use current theme.
+			// Output error information to UI.
+
+		}
+	}
+	else {
+		// Create page success.
+		manager->MainPageThemeHandle = handle;
+	}
 }
 
 
@@ -490,30 +353,18 @@ GhostError_t GhostThemeMgrMainPageCreate(lv_obj_t* MainPage)
 	GhostMutexLock(&manager->Mutex);
 	GhostThemeHandle_t* MainPageThemeHandle = manager->MainPageThemeHandle;
 	GhostError_t ret = GhostOK;
-	if (MainPageThemeHandle->MainPageStatus != Loaded)
-	{
-		if (MainPageThemeHandle->ThemeInfo->MainPageCreate != NULL)
-		{
-			ret = MainPageThemeHandle->ThemeInfo->MainPageCreate(MainPage, MainPageThemeHandle->Resources);
-		}
-		else {
-			ret = GhostErrorThemeMgrNoThemeSelected;
-		}
-	}
-	else {
-		// TODO: Destory original theme.
-	}
 
+	ret = MainPageThemeHandle->ThemeInfo.MainPage.Create(MainPage, MainPageThemeHandle->Resources);
 	if (IfGhostError(ret))
 	{
-		// TODO: Switch to default theme.
-		GhostLogE("Main page of theme: %s create failed, using deafult theme.", MainPageThemeHandle->ThemeInfo->ThemeName);
+		GhostLogE("Main page of theme: %s create failed.", MainPageThemeHandle->ThemeInfo.ThemeName);
 	}
 	else {
-		MainPageThemeHandle->MainPageStatus = Loaded;
+		MainPageThemeHandle->MainPageLoaded = true;
 	}
 
 	GhostMutexUnlock(&manager->Mutex);
+	return ret;
 }
 
 
@@ -531,34 +382,27 @@ GhostError_t GhostThemeMgrMainPageRefresh(lv_obj_t* MainPage)
 	// Calculate run time.
 	GhostError_t ret = GhostOK;
 
-	if (MainPageThemeHandle->MainPageStatus != Loaded)
+	if (MainPageThemeHandle->MainPageLoaded != true)
 	{
 		GhostMutexUnlock(&manager->Mutex);
 		GhostLogE("Main page not loaded.");
 		return GhostErrorThemeMgrThemeUninitialized;
 	}
 	else {
-		if (MainPageThemeHandle->ThemeInfo->MainPageRefresh != NULL)
-		{
-			ret = MainPageThemeHandle->ThemeInfo->MainPageRefresh(MainPage, MainPageThemeHandle->Resources);
-		}
-		else {
-			ret = GhostErrorThemeMgrNoThemeSelected;
-		}
+		ret = MainPageThemeHandle->ThemeInfo.MainPage.Refresh(MainPage, MainPageThemeHandle->Resources);
 	}
-
 
 	if (IfGhostError(ret))
 	{
 		GhostMutexUnlock(&manager->Mutex);
 		// TODO: Switch to default theme.
-		GhostLogE("Main page of theme: %s refresh failed, using deafult theme.", MainPageThemeHandle->ThemeInfo->ThemeName);
-		return GhostErrorThemeMgrRefreshFailed;
-
+		GhostLogE("Main page of theme: %s refresh failed, using deafult theme.", MainPageThemeHandle->ThemeInfo.ThemeName);
+		return ret;
 	}
 	GhostMutexUnlock(&manager->Mutex);
 	return GhostOK;
 }
+
 
 
 /// <summary>
@@ -567,13 +411,23 @@ GhostError_t GhostThemeMgrMainPageRefresh(lv_obj_t* MainPage)
 /// </summary>
 /// <param name="AppListPage">AppList page handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostThemeMgrAppListPageCreate(lv_obj_t* AppListPage)
+GhostError_t GhostThemeMgrAppDrawerPageCreate(lv_obj_t* AppDrawerPage)
 {
+	GhostMutexLock(&manager->Mutex);
+	GhostThemeHandle_t* AppDrawerPageThemeHandle = manager->AppDrawerPageThemeHandle;
+	GhostError_t ret = GhostOK;
 
+	ret = AppDrawerPageThemeHandle->ThemeInfo.AppDrawerPage.Create(AppDrawerPage, AppDrawerPageThemeHandle->Resources);
+	if (IfGhostError(ret))
+	{
+		GhostLogE("App drawer page of theme: %s create failed.", AppDrawerPageThemeHandle->ThemeInfo.ThemeName);
+	}
+	else {
+		AppDrawerPageThemeHandle->AppDrawerPageLoaded = true;
+	}
 
-
-
-	return GhostOK;
+	GhostMutexUnlock(&manager->Mutex);
+	return ret;
 }
 
 
@@ -583,7 +437,72 @@ GhostError_t GhostThemeMgrAppListPageCreate(lv_obj_t* AppListPage)
 /// </summary>
 /// <param name="MainPage">Main page handle.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostThemeMgrAppListPageRefresh(lv_obj_t* AppListPage)
+GhostError_t GhostThemeMgrAppDrawerPageRefresh(lv_obj_t* AppDrawerPage)
 {
+	GhostMutexLock(&manager->Mutex);
+	GhostThemeHandle_t* AppDrawerPageThemeHandle = manager->AppDrawerPageThemeHandle;
+
+	// Calculate run time.
+	GhostError_t ret = GhostOK;
+
+	if (AppDrawerPageThemeHandle->AppDrawerPageLoaded != true)
+	{
+		GhostMutexUnlock(&manager->Mutex);
+		GhostLogE("Main page not loaded.");
+		return GhostErrorThemeMgrThemeUninitialized;
+	}
+	else {
+		ret = AppDrawerPageThemeHandle->ThemeInfo.MainPage.Refresh(AppDrawerPage, AppDrawerPageThemeHandle->Resources);
+	}
+
+	if (IfGhostError(ret))
+	{
+		GhostMutexUnlock(&manager->Mutex);
+		// TODO: Switch to default theme.
+		GhostLogE("App drawer page of theme: %s refresh failed, using deafult theme.", AppDrawerPageThemeHandle->ThemeInfo.ThemeName);
+		return ret;
+	}
+	GhostMutexUnlock(&manager->Mutex);
 	return GhostOK;
 }
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PackageName"></param>
+/// <returns></returns>
+MacroStatic GhostThemeHandle_t* ghostThemeFindHandleByPackageName(const char* PackageName)
+{
+	GhostThemeHandle_t tempHandle;
+	tempHandle.ThemeInfo.PackageName = PackageName;
+	list_node_t* handle = list_find(manager->Themes, &tempHandle);
+	return ((GhostThemeHandle_t*)handle->val);
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PackageName"></param>
+/// <returns></returns>
+MacroStatic GhostError_t setDefaultTheme(const char* PackageName)
+{
+	GhostThemeHandle_t* mainPageHandle = ghostThemeFindHandleByPackageName(PackageName);
+
+	if (mainPageHandle == NULL)
+	{
+		return GhostErrorThemeOutOfMemory;
+	}
+
+	// Lock mutex.
+	if (!mainPageHandle->ThemeLoaded)
+	{
+		mainPageHandle->ThemeInfo.ThemeInit();
+		mainPageHandle->ThemeLoaded = true;
+	}
+	manager->MainPageThemeHandle = mainPageHandle;
+	manager->AppDrawerPageThemeHandle = mainPageHandle;
+	return GhostOK;
+}
+

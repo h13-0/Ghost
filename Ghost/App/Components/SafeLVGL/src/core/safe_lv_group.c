@@ -101,6 +101,14 @@ void safe_lv_group_set_focus_cb(lv_group_t * group, lv_group_focus_cb_t focus_cb
     GhostLV_Unlock();
 }
 
+//The original function is: lv_group_set_edge_cb.
+void safe_lv_group_set_edge_cb(lv_group_t * group, lv_group_edge_cb_t edge_cb)
+{
+    GhostLV_Lock();
+    lv_group_set_edge_cb(group, edge_cb);
+    GhostLV_Unlock();
+}
+
 //The original function is: lv_group_set_refocus_policy.
 void safe_lv_group_set_refocus_policy(lv_group_t * group, lv_group_refocus_policy_t policy)
 {
@@ -139,6 +147,15 @@ lv_group_focus_cb_t safe_lv_group_get_focus_cb(const lv_group_t * group)
 {
     GhostLV_Lock();
     lv_group_focus_cb_t ret = lv_group_get_focus_cb(group);
+    GhostLV_Unlock();
+    return ret;
+}
+
+//The original function is: lv_group_get_edge_cb.
+lv_group_edge_cb_t safe_lv_group_get_edge_cb(const lv_group_t * group)
+{
+    GhostLV_Lock();
+    lv_group_edge_cb_t ret = lv_group_get_edge_cb(group);
     GhostLV_Unlock();
     return ret;
 }

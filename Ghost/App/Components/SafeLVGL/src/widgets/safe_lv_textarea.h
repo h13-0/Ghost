@@ -26,6 +26,9 @@ void safe_lv_textarea_set_cursor_click_pos(lv_obj_t * obj, bool en);
 //The original function is: lv_textarea_set_password_mode.
 void safe_lv_textarea_set_password_mode(lv_obj_t * obj, bool en);
 
+//The original function is: lv_textarea_set_password_bullet.
+void safe_lv_textarea_set_password_bullet(lv_obj_t * obj, const char * bullet);
+
 //The original function is: lv_textarea_set_one_line.
 void safe_lv_textarea_set_one_line(lv_obj_t * obj, bool en);
 
@@ -58,6 +61,9 @@ bool safe_lv_textarea_get_cursor_click_pos(lv_obj_t * obj);
 
 //The original function is: lv_textarea_get_password_mode.
 bool safe_lv_textarea_get_password_mode(const lv_obj_t * obj);
+
+//The original function is: lv_textarea_get_password_bullet.
+const char * safe_lv_textarea_get_password_bullet(lv_obj_t * obj);
 
 //The original function is: lv_textarea_get_one_line.
 bool safe_lv_textarea_get_one_line(const lv_obj_t * obj);

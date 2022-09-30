@@ -5,8 +5,8 @@
 //The original function is: lv_refr_now.
 void safe_lv_refr_now(lv_disp_t * disp);
 
-//The original function is: lv_refr_obj.
-void safe_lv_refr_obj(lv_draw_ctx_t * draw_ctx, lv_obj_t * obj);
+//The original function is: lv_obj_redraw.
+void safe_lv_obj_redraw(lv_draw_ctx_t * draw_ctx, lv_obj_t * obj);
 
 //The original function is: lv_refr_reset_fps_counter.
 void safe_lv_refr_reset_fps_counter(void);

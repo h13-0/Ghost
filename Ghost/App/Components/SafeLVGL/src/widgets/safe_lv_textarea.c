@@ -68,6 +68,14 @@ void safe_lv_textarea_set_password_mode(lv_obj_t * obj, bool en)
     GhostLV_Unlock();
 }
 
+//The original function is: lv_textarea_set_password_bullet.
+void safe_lv_textarea_set_password_bullet(lv_obj_t * obj, const char * bullet)
+{
+    GhostLV_Lock();
+    lv_textarea_set_password_bullet(obj, bullet);
+    GhostLV_Unlock();
+}
+
 //The original function is: lv_textarea_set_one_line.
 void safe_lv_textarea_set_one_line(lv_obj_t * obj, bool en)
 {
@@ -158,6 +166,15 @@ bool safe_lv_textarea_get_password_mode(const lv_obj_t * obj)
 {
     GhostLV_Lock();
     bool ret = lv_textarea_get_password_mode(obj);
+    GhostLV_Unlock();
+    return ret;
+}
+
+//The original function is: lv_textarea_get_password_bullet.
+const char * safe_lv_textarea_get_password_bullet(lv_obj_t * obj)
+{
+    GhostLV_Lock();
+    const char * ret = lv_textarea_get_password_bullet(obj);
     GhostLV_Unlock();
     return ret;
 }

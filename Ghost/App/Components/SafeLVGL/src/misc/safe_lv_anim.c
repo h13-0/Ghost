@@ -55,6 +55,15 @@ lv_anim_t * safe_lv_anim_get(void * var, lv_anim_exec_xcb_t exec_cb)
     return ret;
 }
 
+//The original function is: lv_anim_get_timer.
+struct _lv_timer_t * safe_lv_anim_get_timer(void)
+{
+    GhostLV_Lock();
+    struct _lv_timer_t * ret = lv_anim_get_timer();
+    GhostLV_Unlock();
+    return ret;
+}
+
 //The original function is: lv_anim_count_running.
 uint16_t safe_lv_anim_count_running(void)
 {

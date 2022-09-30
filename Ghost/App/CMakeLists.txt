@@ -12,19 +12,21 @@ include_directories("${PROJECT_SOURCE_DIR}")
 ### SafeLVGL
 add_subdirectory("${PROJECT_SOURCE_DIR}/Components/SafeLVGL")
 include_directories("${GHOST_CMP_SAFELVGL_INCLUDE_DIRS}")
+### Application Framework.
+add_subdirectory("${PROJECT_SOURCE_DIR}/Components/AppFramework")
+include_directories("${GHOST_APP_FRM_INCLUDE_DIRS}")
 
 ## Applications.
-### Application Manager.
-add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/ApplicationManager")
-include_directories("${GHOST_APP_APP_MGR_INCLUDE_DIRS}")
+
 
 ### Theme manager.
-add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/ThemeManager")
-include_directories("${GHOST_APP_THEME_MGR_INCLUDE_DIRS}")
+#add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/ThemeManager")
+#include_directories("${GHOST_APP_THEME_MGR_INCLUDE_DIRS}")
+
 
 ### Launcher.
-add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
-include_directories("${GHOST_APP_LAUNCHER_INCLUDE_DIRS}")
+#add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
+#include_directories("${GHOST_APP_LAUNCHER_INCLUDE_DIRS}")
 
 # Set header paths.
 set(
@@ -50,10 +52,10 @@ target_link_libraries(
 
 	# Components.
 	GhostCmpSafeLVGL
+	GhostAppFramework
 
 	# NativeApplications.
-	GhostAppAppMgr
-	GhostAppThemeMgr
-	GhostAppLauncher
+	#GhostAppThemeMgr
+	#GhostAppLauncher
 )
 

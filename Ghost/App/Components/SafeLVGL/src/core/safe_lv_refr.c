@@ -11,11 +11,11 @@ void safe_lv_refr_now(lv_disp_t * disp)
     GhostLV_Unlock();
 }
 
-//The original function is: lv_refr_obj.
-void safe_lv_refr_obj(lv_draw_ctx_t * draw_ctx, lv_obj_t * obj)
+//The original function is: lv_obj_redraw.
+void safe_lv_obj_redraw(lv_draw_ctx_t * draw_ctx, lv_obj_t * obj)
 {
     GhostLV_Lock();
-    lv_refr_obj(draw_ctx, obj);
+    lv_obj_redraw(draw_ctx, obj);
     GhostLV_Unlock();
 }
 

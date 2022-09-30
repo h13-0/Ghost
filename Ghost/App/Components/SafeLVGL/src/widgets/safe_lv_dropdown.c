@@ -105,6 +105,15 @@ uint16_t safe_lv_dropdown_get_option_cnt(const lv_obj_t * obj)
     return ret;
 }
 
+//The original function is: lv_dropdown_get_option_index.
+int32_t safe_lv_dropdown_get_option_index(lv_obj_t * obj, const char * option)
+{
+    GhostLV_Lock();
+    int32_t ret = lv_dropdown_get_option_index(obj, option);
+    GhostLV_Unlock();
+    return ret;
+}
+
 //The original function is: lv_dropdown_get_symbol.
 const char * safe_lv_dropdown_get_symbol(lv_obj_t * obj)
 {

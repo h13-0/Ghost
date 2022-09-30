@@ -20,6 +20,9 @@ void safe_lv_anim_del_all(void);
 //The original function is: lv_anim_get.
 lv_anim_t * safe_lv_anim_get(void * var, lv_anim_exec_xcb_t exec_cb);
 
+//The original function is: lv_anim_get_timer.
+struct _lv_timer_t * safe_lv_anim_get_timer(void);
+
 //The original function is: lv_anim_count_running.
 uint16_t safe_lv_anim_count_running(void);
 

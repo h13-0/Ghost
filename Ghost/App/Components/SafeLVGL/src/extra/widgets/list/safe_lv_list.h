@@ -9,7 +9,7 @@ lv_obj_t * safe_lv_list_create(lv_obj_t * parent);
 lv_obj_t * safe_lv_list_add_text(lv_obj_t * list, const char * txt);
 
 //The original function is: lv_list_add_btn.
-lv_obj_t * safe_lv_list_add_btn(lv_obj_t * list, const char * icon, const char * txt);
+lv_obj_t * safe_lv_list_add_btn(lv_obj_t * list, const void * icon, const char * txt);
 
 //The original function is: lv_list_get_btn_text.
 const char * safe_lv_list_get_btn_text(lv_obj_t * list, lv_obj_t * btn);

@@ -17,6 +17,7 @@ set(
 
 include_directories(
 	"${GHOST_APP_THEME_MGR_INCLUDE_DIRS}"
+	"${PROJECT_SOURCE_DIR}/Components"
 )
 
 # Generate libraries.
@@ -24,5 +25,6 @@ add_library(
 	${PROJECT_NAME}
 	STATIC
 	"${PROJECT_SOURCE_DIR}/GhostThemeManager.c"
+	"${PROJECT_SOURCE_DIR}/Components/GhostThemeHandle.c"
 	"${THEME_MGR_SOURCES}"
 )

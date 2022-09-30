@@ -1,8 +1,4 @@
 # Ghost Native主题开发文档
-
-## Ghost主题管理框架
-请开发者在主题开发前阅读并理解[主题管理器框架](https://github.com/h13-0/Ghost/tree/master/Ghost/App/NativeApplications/ThemeManager/ReadmeCN.md#Ghost主题管理器框架)后再进行主题开发。  
-
 ## 开发守则
 ### 允许修改的范围
 `GhostThemeManager.c`
