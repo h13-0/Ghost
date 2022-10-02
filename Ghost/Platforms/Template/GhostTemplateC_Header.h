@@ -18,6 +18,8 @@
 
 // Standard headers.
 
+// ThirdParty headers.
+
 // Ghost headers.
 #include "GhostErrorDefine.h"
 
@@ -25,7 +27,9 @@
 
 
 /***********************************Typedefs***********************************/
+#ifdef __cplusplus
 EXTREN_C_START
+#endif // __cplusplus
 
 
 /**********************************Prototypes**********************************/
@@ -39,4 +43,6 @@ EXTREN_C_START
 /// <returns>Function execution result.</returns>
 // int func(void);
 
+#ifdef __cplusplus
 EXTREN_C_END
+#endif // __cplusplus

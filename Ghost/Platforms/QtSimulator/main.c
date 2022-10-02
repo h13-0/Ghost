@@ -116,7 +116,7 @@ static void* ghostRun(void* args)
 
 	// Init Drivers.
 	/// GhostThread.
-	if (IfGhostError(GhostThreadInit()))
+	if (IfGhostError(GhostThreadModuleInit()))
 	{
 		logToQtSimulator(Fatal, 0, __FILE__, __LINE__, "Ghost thread init failed.");
 		return NULL;

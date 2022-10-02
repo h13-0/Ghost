@@ -30,6 +30,7 @@
 #include "safe_lvgl.h"
 
 /***********************************Defines************************************/
+// Define errors.
 #define DeclareGhostAppFrmErrCode() \
 	DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppFrmError, __COUNTER__)
 #define GhostAppFrmErrUninited                      DeclareGhostAppFrmErrCode()
@@ -44,7 +45,9 @@
 
 
 /***********************************Typedefs***********************************/
+#ifdef __cplusplus
 EXTREN_C_START
+#endif // __cplusplus
 
 /// <summary>
 /// Typedef of Ghost application type.
@@ -227,7 +230,9 @@ void* GhostAppFrmGetAppHandle(const char* PackageName);
 ///		Yes.
 /// </summary>
 /// <param name="PackageName">Package name.</param>
-/// <returns>Create failed when the return value is null.</returns>
+/// <returns>
+/// Returns NULL when the app does not exist or out of memory.
+/// </returns>
 GhostAppInfo_t GhostAppFrmGetAppInfo(const char* PackageName);
 
 
@@ -293,9 +298,9 @@ GhostError_t GhostAppFrmGenerateApplicationList(GhostAppList_t* const Applicatio
 GhostError_t GhostAppFrmDestoryApplicationList(GhostAppList_t* ApplicationListPtr);
 */
 
-
-
+#ifdef __cplusplus
 EXTREN_C_END
+#endif // __cplusplus
 
 #ifdef __cplusplus
 extern "C" {

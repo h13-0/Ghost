@@ -1,17 +1,48 @@
+/*******************************************************************************
+ * @File   : $safeitemname$
+ * @Path   : $rootnamespace$
+ * @Module :
+ *
+ * @Author : $username$
+ * @Time   : $time$
+ * @license: AGPL-3.0(https://github.com/h13-0/Ghost/blob/master/LICENSE)
+ * @Notes  :
+ *		The pthread implementation of Ghost Thread.
+ *
+*******************************************************************************/
+
+/***********************************Includes***********************************/
+// Configs.
+#include "GhostPlatformConfigs.h"
+// Self headers.
 #include "GhostThread.h"
 
+// Standard headers.
 #include <stdlib.h>
 #include <stddef.h>
 
+// ThirdParty headers.
 #include "pthread.h"
 
+// Ghost headers.
+
+
+/***********************************Defines************************************/
+
+
+
+/***********************************Typedefs***********************************/
+
+
+/**********************************Prototypes**********************************/
 
 /// <summary>
 /// Initialize GhostThread module.
 /// </summary>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostThreadInit()
+GhostError_t GhostThreadModuleInit()
 {
+	// Noting to do in pthread.
 	return GhostOK;
 }
 
@@ -26,14 +57,15 @@ GhostError_t GhostThreadInit()
 /// <param name="Args">Args.</param>
 /// <param name="Priority">Priority, invalid in pthread.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostThreadCreate(GhostThread_t* Thread, void* (*Function)(void*), const char* TaskName, size_t StackSize, void* Args, int Priority)
+GhostError_t GhostThreadCreate(GhostThread_t* Thread, void* (*Function)(void*),
+	const char* TaskName, size_t StackSize, void* Args, int Priority) 
 {
 	if (!Function)
-		return GhostErrorFunctionHandleIllegal;
+		return GhostThreadErrFunctionHandleIllegal;
 
 	// Create thread.
 	if (pthread_create(Thread, NULL, Function, Args))
-		return GhostErrorThreadCreateFailed;
+		return GhostThreadErrCreateFailed;
 
 	return GhostOK;
 }
@@ -45,6 +77,7 @@ GhostError_t GhostThreadCreate(GhostThread_t* Thread, void* (*Function)(void*), 
 /// <returns>Function execution result.</returns>
 GhostError_t GhostThreadDelete(GhostThread_t* Thread)
 {
+	// TODO
 	//pthread_cance
 	return GhostOK;
 }
@@ -69,8 +102,10 @@ int GhostThreadGetNumberOfThreads(void)
 GhostError_t GhostMutexInit(GhostMutex_t* Mutex)
 {
 	if (pthread_mutex_init(Mutex, NULL))
-		return GhostErrorMutexCreateFaild;
-
+	{
+		return GhostMutexErrCreateFailed;
+	}
+		
 	return GhostOK;
 }
 
@@ -81,14 +116,16 @@ GhostError_t GhostMutexInit(GhostMutex_t* Mutex)
 /// <returns>Function execution result.</returns>
 GhostError_t GhostMutexDestroy(GhostMutex_t* Mutex)
 {
-#ifdef DEBUG
+#if(MacroGhostDebug)
 	// Check handle.
 	if (Mutex == NULL)
-		return GhostErrorMutexUninitialized;
+	{
+		return GhostMutexErrUninitialized;
+	}
 #endif
 
 	if (pthread_mutex_destroy(Mutex))
-		return GhostErrorMutexDeleteFailed;
+		return GhostMutexErrDestroyFailed;
 
 	return GhostOK;
 }
@@ -101,16 +138,22 @@ GhostError_t GhostMutexDestroy(GhostMutex_t* Mutex)
 /// <returns>Function execution result.</returns>
 GhostError_t GhostMutexLock(GhostMutex_t* Mutex)
 {
-#ifdef _DEBUG
+#if(MacroGhostDebug)
 	// Check handle.
 	if (Mutex == NULL)
-		return GhostErrorMutexUninitialized;
+	{
+		return GhostMutexErrUninitialized;
+	}
 #endif
 
 	// Lock mutex.
 	if (pthread_mutex_lock(Mutex))
-		return GhostErrorMutexLockFailed;
-	return GhostOK;
+	{
+		return GhostMutexErrLockFailed;
+	}
+	else {
+		return GhostOK;
+	}
 }
 
 /// <summary>
@@ -120,14 +163,51 @@ GhostError_t GhostMutexLock(GhostMutex_t* Mutex)
 /// <returns>Function execution result.</returns>
 GhostError_t GhostMutexUnlock(GhostMutex_t* Mutex)
 {
-#ifdef _DEBUG
+#if(MacroGhostDebug)
 	// Check handle.
 	if (Mutex == NULL)
-		return GhostErrorMutexUninitialized;
+	{
+		return GhostMutexErrUninitialized;
+	}
 #endif
 
 	// Unlock mutex.
 	if (pthread_mutex_unlock(Mutex))
-		return GhostErrorMutexLockFailed;
-	return GhostOK;
+	{
+		return GhostMutexErrUnlockFailed;
+	}
+	else {
+		return GhostOK;
+	}
+}
+
+
+/// <summary>
+/// Try lock mutex.
+/// `GhostMutexTryLock` function locks the spin lock referenced by lock if it 
+///		is not held by any thread. Otherwise, the function fails.
+/// </summary>
+/// <param name="Mutex">Mutex handle.</param>
+/// <returns>
+/// `GhostOK` is returned when mutex is successfully locked.
+/// Otherwise, return `GhostMutexErrLockFailed` or `GhostMutexErrUninitialized`.
+/// </returns>
+GhostError_t GhostMutexTryLock(GhostMutex_t* Mutex)
+{
+#if(MacroGhostDebug)
+	// Check handle.
+	if (Mutex == NULL)
+	{
+		return GhostMutexErrUninitialized;
+	}
+#endif
+
+	// Try lock mutex.
+	if (pthread_mutex_trylock(Mutex))
+	{
+		return GhostMutexErrLockFailed;
+	}
+	else {
+		return GhostOK;
+	}
 }

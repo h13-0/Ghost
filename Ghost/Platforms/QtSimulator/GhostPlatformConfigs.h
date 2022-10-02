@@ -234,10 +234,5 @@
 
 
 // Let Visual studio not indent extren "C"
-#ifdef __cplusplus
 #define EXTREN_C_START extern "C" {
 #define EXTREN_C_END   }
-#else
-#define EXTREN_C_START
-#define EXTREN_C_END
-#endif

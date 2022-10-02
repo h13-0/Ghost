@@ -20,6 +20,7 @@
 // Standard headers.
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 // ThirdParty headers.
 #include "list.h"
@@ -97,8 +98,9 @@ typedef struct {
 	int NativeAppsNum;
 	int LuaAppsNum;
 
-	// Linked list.
+	// App handles and address offset.
 	list_t* AppHandles; // App handles in GhostAppHandle_t.
+	size_t  AppTokenOffset;
 } GhostAppFrm_t;
 
 
@@ -171,6 +173,8 @@ GhostError_t GhostAppFrmInit(void)
 
 		// TODO: Get application list.
 
+		// Generate random token offset.
+		framework.AppTokenOffset = rand();
 
 		GhostMutexUnlock(&framework.Mutex);
 		return GhostOK;
@@ -491,7 +495,9 @@ void* GhostAppFrmGetAppHandle(const char* PackageName)
 ///		Yes.
 /// </summary>
 /// <param name="PackageName">Package name.</param>
-/// <returns>Create failed when the return value is null.</returns>
+/// <returns>
+/// Returns NULL when the app does not exist or out of memory.
+/// </returns>
 GhostAppInfo_t GhostAppFrmGetAppInfo(const char* PackageName)
 {
 	GhostAppHandle_t* handle = GhostAppFrmGetAppHandle(PackageName);
@@ -595,6 +601,10 @@ GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, v
 				break;
 			}
 			else {
+				// Create args.
+				// TODO
+				// + manager.offset
+
 				if (IfGhostError(
 					GhostThreadCreate(
 						//handle->AppInfo.

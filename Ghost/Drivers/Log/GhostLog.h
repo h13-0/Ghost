@@ -5,9 +5,9 @@
 #include "GhostErrorDefine.h"
 #include "GhostSoftwareErrorDefine.h"
 
-#define GhostErrorLogInitFailed        DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleLogError, 1)
-#define GhostErrorLogUninitialized     DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleLogError, 2)
-#define GhostErrorLogOutOfMemory       DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleLogError, 3)
+#define GhostErrorLogInitFailed        DeclareGhostError(GhostDriverLayerError, DriverModuleLogError, 1)
+#define GhostErrorLogUninitialized     DeclareGhostError(GhostDriverLayerError, DriverModuleLogError, 2)
+#define GhostErrorLogOutOfMemory       DeclareGhostError(GhostDriverLayerError, DriverModuleLogError, 3)
 
 #ifdef __cplusplus
 extern "C" {

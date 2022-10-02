@@ -1,3 +1,4 @@
+///// TODO: Convert GhostAppRun to System App
 #include "App.h"
 
 // Standard libraries.
@@ -31,6 +32,7 @@
 // Test libraries.
 #include "GhostFileSystemPatch.h"
 #include "list.h"
+#include "GhostAppResourcePool.h"
 
 // Ghost app status.
 static GhostMutex_t statusMutex;
@@ -47,7 +49,7 @@ GhostError_t GhostAppInit(void)
 	GhostLogTerminateIfErr(Fatal, GhostAppFrmInit());
 
 	// Test App framework.
-
+	
 
 
 	// Register native applications.

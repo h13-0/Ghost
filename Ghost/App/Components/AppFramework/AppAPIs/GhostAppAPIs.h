@@ -34,16 +34,34 @@
 
 
 /***********************************Typedefs***********************************/
+#ifdef __cplusplus
 EXTREN_C_START
+#endif // __cplusplus
+
+typedef void* GhostAppToken_t;
+
+/// <summary>
+/// App entry parameters, including token under framework distribution.
+/// </summary>
+typedef struct
+{
+	GhostAppToken_t AppToken;
+	int Argc;
+	char* Argv[];
+} GhostAppArgs_t;
 
 
 /**********************************Prototypes**********************************/
 
 typedef lv_obj_t GhostVirtualScreen_t;
 
-GhostError_t GhostAppExec(void);
-
-
+/// <summary>
+/// 
+/// According to the specification, this api should be called in the main App thread.
+/// </summary>
+/// <param name="AppToken"></param>
+/// <returns></returns>
+GhostError_t GhostAppExec(GhostAppToken_t AppToken);
 
 
 /// <summary>
@@ -52,7 +70,7 @@ GhostError_t GhostAppExec(void);
 /// <param name="AppInfoPtr">Pointor of application info.</param>
 /// <param name="ScreenPtr">Pointor of virtual screen.(pointor to lv_obj_t*)</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t AppInfoPtr, lv_obj_t** const ScreenPtr);
+GhostError_t GhostAppGetVirtualScreen(GhostAppToken_t AppToken, lv_obj_t** const ScreenPtr);
 
 
 /// <summary>
@@ -61,10 +79,12 @@ GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t AppInfoPtr, lv_obj_t*
 /// <param name="AppInfoPtr"></param>
 /// <param name="Code"></param>
 /// <returns></returns>
-GhostError_t GhostAppIsForeGround(const GhostAppInfo_t AppInfoPtr);
+GhostError_t GhostAppIsForeGround(GhostAppToken_t AppToken);
 
 //GhostError_t GhostAppGet
 
 
 
+#ifdef __cplusplus
 EXTREN_C_END
+#endif // __cplusplus
