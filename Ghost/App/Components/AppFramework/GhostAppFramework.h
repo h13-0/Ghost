@@ -31,17 +31,17 @@
 
 /***********************************Defines************************************/
 // Define errors.
-#define DeclareGhostAppFrmErrCode() \
-	DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppFrmError, __COUNTER__)
-#define GhostAppFrmErrUninited                      DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrRepeatedInited                DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrPointerIsNULL                 DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrAppInfoIllegal                DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrOutOfMemory					DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrAppNotFound                   DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrDuplicatePackageName			DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrCreateThreadError				DeclareGhostAppFrmErrCode()
-#define GhostAppFrmErrConfigFileTooLarge			DeclareGhostAppFrmErrCode()
+#define DeclareGhostAppFrmErrCode(ErrID) \
+	DeclareGhostError(GhostSoftwareLayerError, SoftwareModuleAppFrmError, ErrID)
+#define GhostAppFrmErrUninited                      DeclareGhostAppFrmErrCode(1)
+#define GhostAppFrmErrRepeatedInited                DeclareGhostAppFrmErrCode(2)
+#define GhostAppFrmErrPointerIsNULL                 DeclareGhostAppFrmErrCode(3)
+#define GhostAppFrmErrAppInfoIllegal                DeclareGhostAppFrmErrCode(4)
+#define GhostAppFrmErrOutOfMemory					DeclareGhostAppFrmErrCode(5)
+#define GhostAppFrmErrAppNotFound                   DeclareGhostAppFrmErrCode(6)
+#define GhostAppFrmErrDuplicatePackageName			DeclareGhostAppFrmErrCode(7)
+#define GhostAppFrmErrCreateThreadError				DeclareGhostAppFrmErrCode(8)
+#define GhostAppFrmErrConfigFileTooLarge			DeclareGhostAppFrmErrCode(9)
 
 
 /***********************************Typedefs***********************************/
@@ -70,17 +70,7 @@ typedef enum
 ///		`GhostAppFrmAppInfoClone`
 /// 
 /// </summary>
-typedef struct __ghostAppInfo
-{
-	GhostAppType_t AppType;
-	char* PackageName;
-	char* AppName;
-	char* IconPath;                                                     // Optional.
-	int Version;
-	GhostError_t(*EntryHandle)(int Argc, void** Args);
-	GhostError_t(*DestoryHandle)(int Countdown, char** TranceBackMsg);  // Optional.
-};
-typedef struct __ghostAppInfo* GhostAppInfo_t;
+typedef void* GhostAppInfo_t;
 
 
 /// <summary>
@@ -90,9 +80,11 @@ typedef struct __ghostAppInfo* GhostAppInfo_t;
 typedef enum
 {
 	GhostAppStatusNotRunning,
+	GhostAppStatusLoading,
 	GhostAppStatusForeground,
 	GhostAppStatusBackground,
-	GhostAppStatusNotInstalled,
+	GhostAppStatusNoResponse,
+	GhostAppStatusNotFound,
 	GhostAppStatusNum,
 } GhostAppStatus_t;
 
@@ -103,9 +95,10 @@ typedef enum
 /// </summary>
 typedef enum
 {
-	GhostAppOwnerNormal = 0,
-	GhostAppOwnerSystem = 1,
-	GhostAppOwnerRoot = 2,
+	GhostAppOwnerNormal,
+	GhostAppOwnerSystem,
+	GhostAppOwnerRoot,
+	GhostAppOwnerNum,
 } GhostAppOwner_t;
 
 
@@ -176,7 +169,7 @@ GhostAppInfo_t GhostAppInfoNew(GhostAppType_t AppType, char* PackageName,
 /// Free memory of `GhostAppInfo_t`.
 /// </summary>
 /// <param name="AppInfo">App info in pointor of `GhostAppInfo_t`.</param>
-void GhostAppFrmAppInfoFree(const GhostAppInfo_t AppInfo);
+void GhostAppFrmAppInfoFree(GhostAppInfo_t AppInfo);
 
 
 /// <summary>
@@ -187,7 +180,7 @@ void GhostAppFrmAppInfoFree(const GhostAppInfo_t AppInfo);
 /// </summary>
 /// <param name="AppInfo">App info in pointor of `GhostAppInfo_t`.</param>
 /// <returns> Create failed when the return value is null. </returns>
-GhostAppInfo_t GhostAppFrmAppInfoClone(const GhostAppInfo_t AppInfo);
+GhostAppInfo_t GhostAppFrmAppInfoClone(GhostAppInfo_t AppInfo);
 
 
 /// <summary>
@@ -196,7 +189,7 @@ GhostAppInfo_t GhostAppFrmAppInfoClone(const GhostAppInfo_t AppInfo);
 ///		Yes.
 /// </summary>
 /// <returns>GhostOK if vaild.</returns>
-GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo);
+GhostError_t GhostAppFrmVerifyAppInfo(GhostAppInfo_t AppInfo);
 
 
 /// <summary>
@@ -210,7 +203,7 @@ GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo);
 /// </workflow>
 /// <param name="AppInfo">Application info.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmRegisterApp(const GhostAppInfo_t AppInfo);
+GhostError_t GhostAppFrmRegisterApp(GhostAppInfo_t AppInfo);
 
 
 /// <summary>
@@ -243,7 +236,7 @@ GhostAppInfo_t GhostAppFrmGetAppInfo(const char* PackageName);
 /// <param name="Argc">Number of args.</param>
 /// <param name="Args">Pointers of args.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, void** Args);
+GhostError_t GhostAppFrmRunForeground(const char* PackageName, int Argc, char** Argv);
 
 
 /// <summary>
@@ -253,7 +246,7 @@ GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, v
 /// <param name="Argc">Number of args.</param>
 /// <param name="Args">Pointers of args.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, void** Args);
+GhostError_t GhostAppFrmRunBackground(const char* PackageName, int Argc, void** Args);
 
 
 /// <summary>
@@ -261,7 +254,7 @@ GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, v
 /// </summary>
 /// <param name="ApplicationInfo"></param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmStopApp(const GhostAppInfo_t ApplicationInfo);
+GhostError_t GhostAppFrmStopApp(GhostAppInfo_t ApplicationInfo);
 
 
 /// <summary>
@@ -298,73 +291,8 @@ GhostError_t GhostAppFrmGenerateApplicationList(GhostAppList_t* const Applicatio
 GhostError_t GhostAppFrmDestoryApplicationList(GhostAppList_t* ApplicationListPtr);
 */
 
+
+
 #ifdef __cplusplus
 EXTREN_C_END
 #endif // __cplusplus
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-
-
-	
-
-
-	/// <summary>
-	/// The following is the API of PermissionManager.
-	/// </summary>
-	
-
-#define DeclareNativeAppInfo()										static GhostAppInfo_t __applicationInfo__ = { 0 }
-#define GhostAppNativeInfoInit(PackageName)                         do{ GhostLogTerminateIfErr(Fatal, GhostAppFrmGetInfoByPackageName(PackageName, &__applicationInfo__)); } while(0); GhostOK
-
-
-	/// <summary>
-	/// Open the file by the pointer of application info.
-	///		**After the file is opened, you can use `GhostFS` to operate the file.**
-	/// </summary>
-	/// <param name="AppInfoPtr">Pointor of application info.</param>
-	/// <param name="FilePtr">Pointor of file.</param>
-	/// <param name="AbsPath">Absolute path of the file to open.</param>
-	/// <param name="Mode">Mode.</param>
-	/// <returns>Function execution result.</returns>
-	GhostError_t GhostAppOpenFile(const GhostAppInfo_t AppInfoPtr, GhostFile_t* FilePtr, const char* AbsPath, char* Mode);
-#define GhostNativeAppOpenFile(FilePtr, AbsPath, Mode)				GhostAppOpenFile(&__applicationInfo__, FilePtr, AbsPath, Mode)
-
-
-	/// <summary>
-	/// Get the default configs of the app.
-	/// @note: This function should be deprecated.
-	/// </summary>
-	/// <param name="AppInfoPtr">Pointor of application info.</param>
-	/// <param name="Configs">Configuration information in cJSON.</param>
-	/// <returns>Function execution result.</returns>
-	GhostError_t GhostAppGetAppConfigJSON(const GhostAppInfo_t AppInfoPtr, cJSON** Configs);
-#define GhostNativeAppGetAppConfigJSON(Configs)						GhostAppGetAppConfigJSON(&__applicationInfo__, Configs)
-
-
-	/// <summary>
-	/// Get virtual screen by the pointer of application info.
-	/// </summary>
-	/// <param name="AppInfoPtr">Pointor of application info.</param>
-	/// <param name="ScreenPtr">Pointor of virtual screen.(pointor to lv_obj_t*)</param>
-	/// <returns>Function execution result.</returns>
-	GhostError_t GhostAppGetVirtualScreen(const GhostAppInfo_t AppInfoPtr, lv_obj_t** const ScreenPtr);
-#define GhostNativeAppGetVirtualScreen(PagePtr)						GhostAppGetVirtualScreen(&__applicationInfo__, PagePtr)
-
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="AppInfoPtr"></param>
-	/// <param name="Code"></param>
-	/// <returns></returns>
-	GhostError_t GhostAppIsForeGround(const GhostAppInfo_t AppInfoPtr);
-
-	//GhostError_t GhostAppGet
-
-#ifdef __cplusplus
-}
-#endif

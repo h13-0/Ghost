@@ -1,5 +1,5 @@
 ///// TODO: Convert GhostAppRun to System App
-#include "App.h"
+#include "Ghost.h"
 
 // Standard libraries.
 #include <stddef.h>
@@ -22,6 +22,7 @@
 #include "GhostSafeLVGL.h"
 
 /// Applications.
+#include "GhostCalculator.h"
 //#include "GhostThemeManager.h"
 //#include "GhostLauncher.h"
 
@@ -74,6 +75,14 @@ GhostError_t GhostAppInit(void)
 	}
 	*/
 
+	{
+		GhostAppInfo_t appInfo = MacroGhostCalculatorInfo;
+		GhostLogTerminateIfErr(Fatal, GhostAppFrmRegisterApp(appInfo));
+		// Run Ghost System(But do nothing).
+		GhostLogTerminateIfErr(Fatal, GhostAppFrmRunForeground(MacroGhostCalculatorPackageName, 1, "Ghost system call."));
+		GhostAppFrmAppInfoFree(appInfo);
+	}
+
 	GhostLogI("Ghost init successfully.");
 
 	GhostLogTerminateIfErr(Fatal, GhostMutexLock(&statusMutex));
@@ -87,11 +96,6 @@ GhostError_t GhostAppDeInit(void)
 {
 	// TODO.
 	return GhostOK;
-}
-
-void btn_event_cb(lv_event_t* e)
-{
-	printf("Clicked\n");
 }
 
 

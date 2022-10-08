@@ -34,6 +34,7 @@ add_library(
 	"${PROJECT_SOURCE_DIR}/GhostAppFramework.c"
 	"${PROJECT_SOURCE_DIR}/GhostAppResourcePool.c"
 
+	"${PROJECT_SOURCE_DIR}/AppAPIs/GhostAppAPIs.c"
 )
 
 # Include header paths.

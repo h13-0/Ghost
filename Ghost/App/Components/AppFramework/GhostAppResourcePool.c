@@ -75,9 +75,19 @@ static GhostError_t ghostAppResPoolDensify(GhostAppResPool_t Pool, bool Locked);
 ///		Yes.
 /// </summary>
 /// <param name="Pool">Resource pool pointer.</param>
-/// <param name="Capacity">Target capacity.</param>
+/// <param name="TargetCapacity">Target capacity.</param>
 /// <returns>Capacity of ResPool after resized.</returns>
-static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity, bool Locked);
+static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int TargetCapacity, bool Locked);
+
+
+/// <summary>
+/// Get the number of resources in the current resource pool.
+/// Thread safety:
+///		Yes.
+/// </summary>
+/// <param name="ResPool">Resource pool pointer.</param>
+/// <returns>Number of items.</returns>
+static inline int ghostAppResPoolGetItemNum(GhostAppResPool_t ResPool, bool Locked);
 
 
 /// <summary>
@@ -227,11 +237,11 @@ static GhostError_t ghostAppResPoolDensify(GhostAppResPool_t ResPool, bool Locke
 		GhostAppResPair_t* pool = resPool->Pool;
 
 		/// index:  0123456789..........
-		///        ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
-		///        ©¦00011111110110101100©¦
-		///        ©¸©¤©¤©¤¡ø©¤©¤©¤©¤©¤©¤¡ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
-		/// front:©¤©¤©¤©¤©¤©¼      ©¦
-		/// back :©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+		///        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+		///        â”‚00011111110110101100â”‚
+		///        â””â”€â”€â”€â–²â”€â”€â”€â”€â”€â”€â–²â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+		/// front:â”€â”€â”€â”€â”€â”˜      â”‚
+		/// back :â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 		/// length = back - front.
 		/// startaddress = pool + front
 		/// destaddress = pool + totalLength
@@ -264,19 +274,19 @@ static GhostError_t ghostAppResPoolDensify(GhostAppResPool_t ResPool, bool Locke
 
 			// Empty useless memory.
 			/// index:  0123456789..........
-			///        ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
-			///        ©¦00011111110110101100©¦
-			///        ©¸©¤©¤©¤¡ø©¤©¤©¤©¤©¤©¤¡ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
-			/// front:©¤©¤©¤©¤©¤©¼      ©¦
-			/// back :©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+			///        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+			///        â”‚00011111110110101100â”‚
+			///        â””â”€â”€â”€â–²â”€â”€â”€â”€â”€â”€â–²â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+			/// front:â”€â”€â”€â”€â”€â”˜      â”‚
+			/// back :â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 			/// 
 			/// buffer after memmove:
 			/// index:  0123456789..........
-			///        ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
-			///        ©¦1111111***0110101100©¦
-			///        ©¸©¤©¤©¤©¤©¤©¤©¤¡ø©¤¡ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
-			/// start:©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼ ©¦
-			/// end  :©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+			///        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+			///        â”‚1111111***0110101100â”‚
+			///        â””â”€â”€â”€â”€â”€â”€â”€â–²â”€â–²â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+			/// start:â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
+			/// end  :â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 			/// start = max(totalLength, front)
 			/// length = min(back - totalLength, back - front)
 			/// size = length * sizeof(GhostAppResPair_t)
@@ -337,6 +347,19 @@ int GhostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity)
 
 
 /// <summary>
+/// Get the number of resources in the current resource pool.
+/// Thread safety:
+///		Yes.
+/// </summary>
+/// <param name="ResPool">Resource pool pointer.</param>
+/// <returns>Number of items.</returns>
+int GhostAppResPoolGetItemNum(GhostAppResPool_t ResPool)
+{
+	return ghostAppResPoolGetItemNum(ResPool, false);
+}
+
+
+/// <summary>
 /// Register a resource item to ResPool.
 /// This function keeps the order of the original items.
 /// Thread safety:
@@ -383,10 +406,10 @@ GhostError_t GhostAppResPoolAddItem(GhostAppResPool_t ResPool,
 		int capacity = GhostMemMgrGetPointorSize(resPool->Pool) / sizeof(GhostAppResPair_t);
 		
 		// Check NextVacancyID.
-		if (resPool->NextVacancyID == capacity - 1)
+		if (resPool->NextVacancyID >= capacity - 1)
 		{
 			// If full.
-			if (resPool->AppResNum == capacity - 1)
+			if (resPool->AppResNum >= capacity - 1)
 			{
 				// Double capacity.
 				if (capacity = ghostAppResPoolResize(ResPool, capacity * 2, true) 
@@ -499,9 +522,9 @@ GhostError_t GhostAppResPoolFreeItem(GhostAppResPool_t ResPool, void* Resource)
 ///		Yes.
 /// </summary>
 /// <param name="Pool">Resource pool pointer.</param>
-/// <param name="Capacity">Target capacity.</param>
+/// <param name="TargetCapacity">Target capacity.</param>
 /// <returns>Capacity of ResPool after resized.</returns>
-static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity, bool Locked)
+static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int TargetCapacity, bool Locked)
 {
 #if(MacroGhostDebug)
 	// Check parameter.
@@ -522,9 +545,10 @@ static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity, bool L
 
 	do {
 		// If without densify...
-		if (Capacity == resPool->AppResNum)
+		int capacity = GhostMemMgrGetPointorSize(resPool->Pool) / sizeof(GhostAppResPair_t);
+		if (TargetCapacity == capacity)
 		{
-			ret = Capacity;
+			ret = capacity;
 			break;
 		}
 
@@ -536,10 +560,10 @@ static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity, bool L
 			break;
 		}
 		else {
-			if (Capacity > resPool->AppResNum)
+			if (TargetCapacity >= resPool->AppResNum)
 			{
 				GhostAppResPair_t* newPool = GhostMenMgrRealloc(resPool->Pool,
-					Capacity * sizeof(GhostAppResPair_t));
+					TargetCapacity * sizeof(GhostAppResPair_t));
 				if (newPool == NULL)
 				{
 					GhostLogE("GhostAppResPoolResize failed, out of memory.");
@@ -549,12 +573,12 @@ static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity, bool L
 				else {
 					resPool->Pool = newPool;
 					memset((resPool->Pool + resPool->NextVacancyID), 0x00, 
-						sizeof(GhostAppResPair_t) * (Capacity - resPool->NextVacancyID));
-					ret = Capacity;
+						sizeof(GhostAppResPair_t) * (TargetCapacity - resPool->NextVacancyID));
+					ret = TargetCapacity;
 					break;
 				}
 			}
-			if (Capacity < resPool->AppResNum)
+			if (TargetCapacity < resPool->AppResNum)
 			{
 				GhostAppResPair_t* newPool = GhostMenMgrRealloc(resPool->Pool,
 					resPool->AppResNum * sizeof(GhostAppResPair_t));
@@ -571,3 +595,91 @@ static int ghostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity, bool L
 	}
 	return ret;
 }
+
+
+/// <summary>
+/// Get the number of resources in the current resource pool.
+/// Thread safety:
+///		Yes.
+/// </summary>
+/// <param name="ResPool">Resource pool pointer.</param>
+/// <returns>Number of items.</returns>
+static inline int ghostAppResPoolGetItemNum(GhostAppResPool_t ResPool, bool Locked)
+{
+#if(MacroGhostDebug)
+	// Check parameter.
+	if (ResPool == NULL)
+	{
+		GhostLogE("GhostAppResPoolGetItemNum failed, ResPool = NULL!");
+		return 0;
+	}
+#endif
+
+	int ret = 0;
+	Pool_t* resPool = (Pool_t*)ResPool;
+	// Lock mutex.
+	if (!Locked)
+	{
+		GhostMutexLock(&resPool->Mutex);
+	}
+
+	ret = GhostMemMgrGetPointorSize(resPool->Pool) / sizeof(GhostAppResPair_t);
+
+	// Unlock mutex.
+	if (!Locked)
+	{
+		GhostMutexUnlock(&resPool->Mutex);
+	}
+	return ret;
+}
+
+
+#if(MacroGhostDebug)
+#include <math.h>
+/// <summary>
+/// Unit test.
+/// </summary>
+/// <param name="void"></param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostAppResPoolUnitTest(void)
+{
+	while (1)
+	{
+		// Create ResPool.
+		GhostAppResPool_t pool = GhostAppResPoolNew(8);
+		void* ptr[100] = { NULL };
+
+		// Add item to ResPool.
+		for (int i = 0; i < 100; i++)
+		{
+			ptr[i] = GhostMemMgrMalloc(10);
+			GhostAppResPoolAddItem(pool, ptr[i], GhostMemMgrFree);
+		}
+
+		// Delete item randomly.
+		for (int i = 0; i < 50; i++)
+		{
+			int ii = rand() % 100;
+			if (ptr[ii] != NULL)
+			{
+				GhostAppResPoolFreeItem(pool, ptr[ii]);
+				ptr[ii] = NULL;
+			}
+		}
+
+		// Resize.
+		GhostAppResPoolResize(pool, GhostAppResPoolGetItemNum(pool));
+
+		// Add new item.
+		for (int i = 0; i < 100; i++)
+		{
+			GhostAppResPoolAddItem(pool, GhostMemMgrMalloc(10), GhostMemMgrFree);
+		}
+
+		// Free ResPool.
+		GhostAppResPoolFree(pool);
+	}
+
+	return GhostOK;
+}
+#endif

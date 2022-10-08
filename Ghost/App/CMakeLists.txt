@@ -28,6 +28,10 @@ include_directories("${GHOST_APP_FRM_INCLUDE_DIRS}")
 #add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Launcher")
 #include_directories("${GHOST_APP_LAUNCHER_INCLUDE_DIRS}")
 
+### Calculator.
+add_subdirectory("${PROJECT_SOURCE_DIR}/NativeApplications/Calculator")
+include_directories("${GHOST_CALCULATOR_INCLUDE_DIRS}")
+
 # Set header paths.
 set(
 	GHOST_APP_INCLUDE_DIRS
@@ -43,7 +47,7 @@ include_directories(
 add_library(
 	${PROJECT_NAME}
 	STATIC
-	"${CMAKE_CURRENT_LIST_DIR}/App.c"
+	"${CMAKE_CURRENT_LIST_DIR}/Ghost.c"
 )
 
 # Link libraries.
@@ -57,5 +61,6 @@ target_link_libraries(
 	# NativeApplications.
 	#GhostAppThemeMgr
 	#GhostAppLauncher
+	GHOST_CALCULATOR
 )
 

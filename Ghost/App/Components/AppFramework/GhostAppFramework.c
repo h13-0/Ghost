@@ -16,6 +16,7 @@
 #include "GhostPlatformConfigs.h"
 // Self headers.
 #include "GhostAppFramework.h"
+#include "GhostAppAPIs.h"
 
 // Standard headers.
 #include <string.h>
@@ -33,7 +34,7 @@
 #include "GhostFileSystem.h"
 #include "GhostScreen.h"
 #include "GhostAppResourcePool.h"
-#include "GhostAppAPIs.h"
+
 
 /***********************************Defines************************************/
 
@@ -57,18 +58,33 @@ typedef struct GhostAppResources
 
 
 /// <summary>
+/// Typedef of AppInfo.
+/// </summary>
+typedef struct
+{
+	GhostAppType_t AppType;
+	char* PackageName;
+	char* AppName;
+	char* IconPath;                                                     // Optional.
+	int Version;
+	GhostError_t(*EntryHandle)(int Argc, void** Args);
+	GhostError_t(*DestoryHandle)(int Countdown, char** TranceBackMsg);  // Optional.
+} AppInfo_t;
+
+
+/// <summary>
 /// The linked list typedef of GhostApplicationList.
 /// </summary>
 typedef struct GhostAppHandle
 {
 	// Application message.
-	GhostAppInfo_t       AppInfo;
+	AppInfo_t*           AppInfo;
 
 	// Status.
-	GhostAppStatus_t     AppStatus : 2;
+	GhostAppStatus_t     AppStatus : (GhostAppStatusNum + 1) / 2;
 
 	// Owner.
-	GhostAppOwner_t      AppOwner  : 2;
+	GhostAppOwner_t      AppOwner  : (GhostAppOwnerNum + 1) / 2;
 
 	// Authorization.
 	GhostAppAuth_t       AppAuth;
@@ -92,16 +108,26 @@ typedef struct {
 	// Mutex.
 	GhostMutex_t Mutex;
 
-	// 
-	lv_style_t ScreenStyle;
-
 	int NativeAppsNum;
 	int LuaAppsNum;
 
+	// Foreground app.
+	GhostAppHandle_t* ForegroundApp;
+
+	// Virtual screen varibles.
+	lv_style_t ScreenStyle;
+	int ScreenWidth;
+	int ScreenHeight;
+	int ScreenRadius;
+
 	// App handles and address offset.
-	list_t* AppHandles; // App handles in GhostAppHandle_t.
+#if(MacroGhostAppFrmUseTokenOffset)
 	size_t  AppTokenOffset;
+#endif
+	list_t* AppHandles; // App handles in GhostAppHandle_t.
 } GhostAppFrm_t;
+
+
 
 
 /**********************************Prototypes**********************************/
@@ -118,7 +144,7 @@ static GhostAppFrm_t framework = { 0 };
 /// Pointor of GhostAppHandle_t.
 ///		Create failed when the return value is null.
 /// </returns>
-static GhostAppHandle_t* ghostAppFrmAppHandleNew(const GhostAppInfo_t AppInfo);
+static GhostAppHandle_t* ghostAppFrmAppHandleNew(GhostAppInfo_t AppInfo);
 
 
 /// <summary>
@@ -135,7 +161,23 @@ static int ghostAppFrmAppHandleMatch(const GhostAppHandle_t* HandleA, const Ghos
 /// Free memory of `GhostAppHandle_t`.
 /// </summary>
 /// <param name="Handle">App handle.</param>
-static void ghostAppFrmAppHandleFree(const GhostAppInfo_t ApplicationInfo);
+static void ghostAppFrmAppHandleFree(GhostAppInfo_t ApplicationInfo);
+
+
+/// <summary>
+/// Get App handle by app token.
+/// </summary>
+/// <param name="AppToken">AppToken in GhostAppArgs_t.</param>
+/// <returns>App handle.</returns>
+static inline GhostAppHandle_t* ghostAppFrmGetAppHandleByToken(GhostAppToken_t AppToken, bool Locked);
+
+
+/// <summary>
+/// Get App token by app handle.
+/// </summary>
+/// <param name="AppHandle">App handle.</param>
+/// <returns>App handle.</returns>
+static inline GhostAppToken_t ghostAppFrmGetAppTokenByHandle(GhostAppHandle_t* AppHandle, bool Locked);
 
 
 /// <summary>
@@ -154,30 +196,38 @@ GhostError_t GhostAppFrmInit(void)
 		framework.AppHandles = list_new();
 
 		// Init mutex.
-		GhostMutexInit(&framework.Mutex);
-		GhostMutexLock(&framework.Mutex);
+		GhostTerminateIfErr(GhostMutexInit(&framework.Mutex));
+		GhostTerminateIfErr(GhostMutexLock(&framework.Mutex));
 
-		// Now we are safe.
-		// Overwrite linked-list function.
-		framework.AppHandles->match = ghostAppFrmAppHandleMatch;
-		framework.AppHandles->free = ghostAppFrmAppHandleFree;
-		
+		GhostError_t ret = GhostOK;
 
-		// Create default page style.
-		lv_style_init(&framework.ScreenStyle);
-		lv_style_set_border_width(&framework.ScreenStyle, 0);
-		lv_style_set_pad_all(&framework.ScreenStyle, 0);
-		int radius = 0;
-		GhostScreenGetRadius(&radius);
-		lv_style_set_radius(&framework.ScreenStyle, MacroQtDefaultFilletRadius);
+		do {
+			// Now we are safe.
+			// Overwrite linked-list function.
+			framework.AppHandles->match = ghostAppFrmAppHandleMatch;
+			framework.AppHandles->free = ghostAppFrmAppHandleFree;
 
-		// TODO: Get application list.
 
-		// Generate random token offset.
-		framework.AppTokenOffset = rand();
+			// Create default page style.
+			lv_style_init(&framework.ScreenStyle);
+			lv_style_set_border_width(&framework.ScreenStyle, 0);
+			lv_style_set_pad_all(&framework.ScreenStyle, 0);
 
+			// Get Screen info.
+			framework.ScreenWidth = GhostScreenGetWidth();
+			framework.ScreenHeight = GhostScreenGetHeight();
+			framework.ScreenRadius = GhostScreenGetRadius();
+			lv_style_set_radius(&framework.ScreenStyle, MacroQtDefaultFilletRadius);
+
+			// TODO: Get application list.
+
+			// Generate random token offset.
+			framework.AppTokenOffset = rand();
+		} while (0);
+
+		// Unlock.
 		GhostMutexUnlock(&framework.Mutex);
-		return GhostOK;
+		return ret;
 	}
 	else {
 		// Inited.
@@ -199,7 +249,7 @@ GhostAppStatus_t GhostAppFrmGetAppStatus(const char* PackageName)
 {
 	// TODO.
 	// GhostMutexLock
-	return GhostAppStatusNotInstalled;
+	return GhostAppStatusNotFound;
 }
 
 
@@ -216,12 +266,12 @@ GhostAppStatus_t GhostAppFrmGetAppStatus(const char* PackageName)
 /// If NULL, app will be killed immediately.
 /// </param>
 /// <returns> Create failed when the return value is null. </returns>
-GhostAppInfo_t GhostAppFrmAppInfoNew(GhostAppType_t AppType, char* PackageName,
+GhostAppInfo_t GhostAppInfoNew(GhostAppType_t AppType, char* PackageName,
 	char* AppName, char* IconPath, int Version,
 	GhostError_t(*EntryHandle)(int Argc, void** Args),
 	GhostError_t(*DestoryHandle)(int Countdown, char** TranceBackMsg))
 {
-	struct __ghostAppInfo info = {
+	AppInfo_t info = {
 		.AppType = AppType,
 		.PackageName = PackageName,
 		.AppName = AppName,
@@ -248,24 +298,25 @@ GhostAppInfo_t GhostAppFrmAppInfoNew(GhostAppType_t AppType, char* PackageName,
 /// <param name="AppInfo">App info in pointor of `GhostAppInfo_t`.</param>
 void GhostAppFrmAppInfoFree(const GhostAppInfo_t AppInfo)
 {
-	if (AppInfo != NULL)
+	AppInfo_t* appInfo = AppInfo;
+	if (appInfo != NULL)
 	{
-		if (AppInfo->PackageName != NULL)
+		if (appInfo->PackageName != NULL)
 		{
-			GhostMemMgrFree(AppInfo->PackageName);
+			GhostMemMgrFree(appInfo->PackageName);
 		}
 
-		if (AppInfo->AppName != NULL)
+		if (appInfo->AppName != NULL)
 		{
-			GhostMemMgrFree(AppInfo->AppName);
+			GhostMemMgrFree(appInfo->AppName);
 		}
 
-		if (AppInfo->IconPath != NULL)
+		if (appInfo->IconPath != NULL)
 		{
-			GhostMemMgrFree(AppInfo->IconPath);
+			GhostMemMgrFree(appInfo->IconPath);
 		}
 
-		GhostMemMgrFree(AppInfo);
+		GhostMemMgrFree(appInfo);
 	}
 }
 
@@ -278,10 +329,11 @@ void GhostAppFrmAppInfoFree(const GhostAppInfo_t AppInfo)
 /// </summary>
 /// <param name="AppInfo">App info in pointor of `GhostAppInfo_t`.</param>
 /// <returns> Create failed when the return value is null. </returns>
-GhostAppInfo_t GhostAppFrmAppInfoClone(const GhostAppInfo_t AppInfo)
+GhostAppInfo_t GhostAppFrmAppInfoClone(GhostAppInfo_t AppInfo)
 {
+	AppInfo_t* appInfo = AppInfo;
 	// Allocate memory.
-	GhostAppInfo_t info = GhostMemMgrCalloc(1, sizeof(GhostAppInfo_t));
+	AppInfo_t* info = GhostMemMgrCalloc(1, sizeof(AppInfo_t));
 	
 	// Check allocate result.
 	if (info == NULL)
@@ -290,15 +342,18 @@ GhostAppInfo_t GhostAppFrmAppInfoClone(const GhostAppInfo_t AppInfo)
 		return NULL;
 	}
 
-	*info = *AppInfo;
+	*info = *appInfo;
 	// Clone PackageName.
 	//> Allocate memory.
-	info->PackageName = GhostMemMgrMalloc(strlen(AppInfo->PackageName) + 1);
-	info->AppName = GhostMemMgrMalloc(strlen(AppInfo->AppName) + 1);
-	info->IconPath = GhostMemMgrMalloc(strlen(AppInfo->IconPath) + 1);
+	info->PackageName = GhostMemMgrMalloc(strlen(appInfo->PackageName) + 1);
+	info->AppName = GhostMemMgrMalloc(strlen(appInfo->AppName) + 1);
+	if (info->IconPath != NULL)
+	{
+		info->IconPath = GhostMemMgrMalloc(strlen(appInfo->IconPath) + 1);
+	}
 	
 	//> Check allocate result.
-	if (info->PackageName == NULL || info->AppName == NULL || info->IconPath == NULL)
+	if (info->PackageName == NULL || info->AppName == NULL || (appInfo->IconPath != NULL && info->IconPath == NULL))
 	{
 		GhostLogE("Clone app info failed, out of memory!");
 		// Free.
@@ -307,9 +362,13 @@ GhostAppInfo_t GhostAppFrmAppInfoClone(const GhostAppInfo_t AppInfo)
 	}
 
 	//> Copy string.
-	memcpy(info->PackageName, AppInfo->PackageName, strlen(AppInfo->PackageName) + 1);
-	memcpy(info->AppName, AppInfo->AppName, strlen(AppInfo->AppName) + 1);
-	memcpy(info->IconPath, AppInfo->IconPath, strlen(AppInfo->IconPath) + 1);
+	memcpy(info->PackageName, appInfo->PackageName, strlen(appInfo->PackageName) + 1);
+	memcpy(info->AppName, appInfo->AppName, strlen(appInfo->AppName) + 1);
+	if (info->IconPath != NULL)
+	{
+		memcpy(info->IconPath, appInfo->IconPath, strlen(appInfo->IconPath) + 1);
+	}
+	
 	return info;
 }
 
@@ -320,24 +379,25 @@ GhostAppInfo_t GhostAppFrmAppInfoClone(const GhostAppInfo_t AppInfo)
 ///		Yes.
 /// </summary>
 /// <returns>GhostOK if vaild.</returns>
-GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo)
+GhostError_t GhostAppFrmVerifyAppInfo(GhostAppInfo_t AppInfo)
 {
+	AppInfo_t* appInfo = AppInfo;
 	// TODO: Check icons.
 
 	// Check parameters.
 	//> Check AppType.
-	if (AppInfo->AppType < GhostAppTypeNative || AppInfo->AppType > GhostAppTypeNum)
+	if (appInfo->AppType < GhostAppTypeNative || appInfo->AppType > GhostAppTypeNum)
 	{
 		return GhostAppFrmErrAppInfoIllegal;
 	}
 
 	//> Check packagename.
-	if (AppInfo->PackageName == NULL)
+	if (appInfo->PackageName == NULL)
 	{
 		return GhostAppFrmErrAppInfoIllegal;
 	}
 	else {
-		int length = strlen(AppInfo->PackageName);
+		int length = strlen(appInfo->PackageName);
 		if (length == 0 || length > MacroMaximumAppPackageNameLength)
 		{
 			return GhostAppFrmErrAppInfoIllegal;
@@ -347,12 +407,12 @@ GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo)
 	}
 
 	//> Check app name.
-	if (AppInfo->AppName == NULL)
+	if (appInfo->AppName == NULL)
 	{
 		return GhostAppFrmErrAppInfoIllegal;
 	}
 	else {
-		int length = strlen(AppInfo->AppName);
+		int length = strlen(appInfo->AppName);
 		if (length == 0 || length > MacroMaximumAppNameLength)
 		{
 			return GhostAppFrmErrAppInfoIllegal;
@@ -362,7 +422,7 @@ GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo)
 	}
 
 	//> Check icon path.
-	if (AppInfo->AppName != NULL)
+	if (appInfo->AppName != NULL)
 	{
 		// Check file and picture.
 		// TODO.
@@ -370,16 +430,17 @@ GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo)
 
 
 	//> Check version.
-	if (AppInfo->Version <= 0)
+	if (appInfo->Version < 0)
 	{
 		return GhostAppFrmErrAppInfoIllegal;
 	}
 
 	//> Check entry handle.
-	if (AppInfo->EntryHandle == NULL)
+	if (appInfo->EntryHandle == NULL)
 	{
 		return GhostAppFrmErrAppInfoIllegal;
 	}
+	return GhostOK;
 }
 
 
@@ -394,12 +455,13 @@ GhostError_t GhostAppFrmVerifyAppInfo(const GhostAppInfo_t AppInfo)
 /// </workflow>
 /// <param name="AppInfo">Application info.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmRegisterApp(const GhostAppInfo_t AppInfo)
+GhostError_t GhostAppFrmRegisterApp(GhostAppInfo_t AppInfo)
 {
+	AppInfo_t* appInfo = AppInfo;
 	GhostError_t ret = GhostOK;
 
 	// Lock mutex.
-	GhostMutexLock(framework.Mutex);
+	GhostMutexLock(&framework.Mutex);
 	do {
 		// Verify whether AppInfo is legal.
 		if (IfGhostError(ret = GhostAppFrmVerifyAppInfo(AppInfo)))
@@ -430,7 +492,7 @@ GhostError_t GhostAppFrmRegisterApp(const GhostAppInfo_t AppInfo)
 		}
 
 		// App count.
-		switch (AppInfo->AppType)
+		switch (appInfo->AppType)
 		{
 		case GhostAppTypeNative:
 			framework.NativeAppsNum++;
@@ -446,7 +508,7 @@ GhostError_t GhostAppFrmRegisterApp(const GhostAppInfo_t AppInfo)
 	} while (0);
 	
 	// Unlock mutex.
-	GhostMutexUnlock(framework.Mutex);
+	GhostMutexUnlock(&framework.Mutex);
 	return ret;
 }
 
@@ -470,21 +532,21 @@ void* GhostAppFrmGetAppHandle(const char* PackageName)
 	}
 
 	// Lock mutex.
-	GhostMutexLock(framework.Mutex);
+	GhostMutexLock(&framework.Mutex);
 	do {
 		list_node_t* node;
 		list_iterator_t* it = list_iterator_new(framework.AppHandles, LIST_HEAD);
 		while ((node = list_iterator_next(it))) {
-			if (!strncmp(PackageName, ((GhostAppHandle_t*)node)->AppInfo->PackageName, MacroMaximumAppPackageNameLength))
+			if (!strncmp(PackageName, ((GhostAppHandle_t*)node->val)->AppInfo->PackageName, MacroMaximumAppPackageNameLength))
 			{
-				handle = (GhostAppHandle_t*)node;
+				handle = (GhostAppHandle_t*)node->val;
 				break;
 			}
 		}
 	} while (0);
 
 	// Unlock mutex.
-	GhostMutexUnlock(framework.Mutex);
+	GhostMutexUnlock(&framework.Mutex);
 	return handle;
 }
 
@@ -518,7 +580,7 @@ GhostAppInfo_t GhostAppFrmGetAppInfo(const char* PackageName)
 /// <param name="Argc">Number of args.</param>
 /// <param name="Args">Pointers of args.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, void** Args)
+GhostError_t GhostAppFrmRunForeground(const char* PackageName, int Argc, char** Argv)
 {
 	GhostError_t ret = GhostOK;
 
@@ -527,7 +589,7 @@ GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, v
 	if (handle != NULL)
 	{
 		// Lock mutex.
-		GhostMutexLock(framework.Mutex);
+		GhostMutexLock(&framework.Mutex);
 
 		do {
 			if (handle->AppStatus == GhostAppStatusForeground)
@@ -540,6 +602,32 @@ GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, v
 				break;
 			}
 			else {
+				handle->ResPool = GhostAppResPoolNew(MacroGhostAppDefaultResPoolCapacity);
+				GhostAppArgs_t* args = GhostMemMgrCalloc(1, sizeof(GhostAppArgs_t));
+				if (args == NULL)
+				{
+					ret = GhostAppFrmErrOutOfMemory;
+					break;
+				}
+				
+				// Clone argv.
+				args->Argv = GhostMemMgrCalloc(1, ((strlen(Argv)) + 1) * sizeof(char));
+				if (args->Argv == NULL)
+				{
+					ret = GhostAppFrmErrOutOfMemory;
+					GhostMemMgrFree(args);
+					break;
+				}
+				
+				args->AppToken = ghostAppFrmGetAppTokenByHandle(handle, true);
+
+				// Clone argv.
+				memcpy(args->Argv, Argv, ((strlen(Argv)) + 1) * sizeof(char));
+
+				// Add to AppResPool.
+				GhostAppResPoolAddItem(handle->ResPool, args, GhostMemMgrFree);
+				GhostAppResPoolAddItem(handle->ResPool, args->Argv, GhostMemMgrFree);
+
 				if (IfGhostError(
 						GhostThreadCreate(
 							//handle->AppInfo.
@@ -547,21 +635,24 @@ GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, v
 							handle->AppInfo->EntryHandle,
 							handle->AppInfo->PackageName,
 							0,
-							handle,
+							args,
 							1
 						))
 					)
 				{
 					// If error:
 					ret = GhostAppFrmErrCreateThreadError;
+					// TODO: free memory.
 					break;
 				}
+				
+				framework.ForegroundApp = handle;
 			}
 			handle->AppStatus = GhostAppStatusForeground;
 		} while (0);
 
 		// Unlock mutex.
-		GhostMutexUnlock(framework.Mutex);
+		GhostMutexUnlock(&framework.Mutex);
 	}
 	else {
 		GhostLogE("Ghost App run failed, App: %s not found.", PackageName);
@@ -579,7 +670,7 @@ GhostError_t GhostAppFrmRunForeground(const char* const PackageName, int Argc, v
 /// <param name="Argc">Number of args.</param>
 /// <param name="Args">Pointers of args.</param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, void** Args)
+GhostError_t GhostAppFrmRunBackground(const char* PackageName, int Argc, void** Args)
 {
 	GhostError_t ret = GhostOK;
 
@@ -588,7 +679,7 @@ GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, v
 	if (handle != NULL)
 	{
 		// Lock mutex.
-		GhostMutexLock(framework.Mutex);
+		GhostMutexLock(&framework.Mutex);
 
 		do {
 			if (handle->AppStatus == GhostAppStatusBackground)
@@ -626,7 +717,7 @@ GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, v
 		} while (0);
 
 		// Unlock mutex.
-		GhostMutexUnlock(framework.Mutex);
+		GhostMutexUnlock(&framework.Mutex);
 	}
 	else {
 		GhostLogE("Ghost App run failed, App: %s not found.", PackageName);
@@ -642,7 +733,7 @@ GhostError_t GhostAppFrmRunBackground(const char* const PackageName, int Argc, v
 /// </summary>
 /// <param name="ApplicationInfo"></param>
 /// <returns>Function execution result.</returns>
-GhostError_t GhostAppMgrStopApp(const GhostAppInfo_t ApplicationInfo)
+GhostError_t GhostAppMgrStopApp(GhostAppInfo_t ApplicationInfo)
 {
 	GhostError_t ret = GhostOK;
 	// Wait for UI to idle.
@@ -681,7 +772,7 @@ GhostError_t GhostAppMgrUninstall(const char* PackageName)
 /// Pointor of GhostAppHandle_t.
 ///		Create failed when the return value is null.
 /// </returns>
-static GhostAppHandle_t* ghostAppFrmAppHandleNew(const GhostAppInfo_t AppInfo)
+static GhostAppHandle_t* ghostAppFrmAppHandleNew(GhostAppInfo_t AppInfo)
 {
 	if (IfGhostError(GhostAppFrmVerifyAppInfo(AppInfo)))
 	{
@@ -754,26 +845,161 @@ static void ghostAppFrmAppHandleFree(const GhostAppHandle_t* Handle)
 }
 
 
-/*
 /// <summary>
-/// Generate application list.
-///		**The `ApplicationListPtr` should be released after use!**
+/// Get App handle by app token.
 /// </summary>
-/// <param name="ApplicationListPtr">Pointer of application linked list.</param>
-/// <returns>Function execution result.</returns>
-GhostError_t GhostAppMgrGenerateApplicationList(GhostAppList_t* const ApplicationListPtr)
+/// <param name="AppToken">AppToken in GhostAppArgs_t.</param>
+/// <returns>App handle.</returns>
+GhostAppHandle_t* ghostAppFrmGetAppHandleByToken(GhostAppToken_t AppToken, bool Locked)
 {
-	return GhostOK;
+#if(MacroGhostAppFrmUseTokenOffset)
+	GhostAppHandle_t* handle = NULL;
+
+	if (!Locked)
+	{
+		GhostMutexLock(&framework.Mutex);
+	}
+
+	handle = (GhostAppHandle_t*)((size_t)AppToken - (size_t)framework.AppTokenOffset);
+
+	if (!Locked)
+	{
+		GhostMutexUnlock(&framework.Mutex);
+	}
+
+	return handle;
+#else
+	return AppToken;
+#endif // MacroGhostAppFrmUseTokenOffset
 }
 
 
 /// <summary>
-/// Release application list.
+/// Get App token by app handle.
 /// </summary>
-/// <param name="ApplicationListPtr">Pointer of application linked list.</param>
-/// <returns></returns>
-GhostError_t GhostAppMgrDestoryApplicationList(GhostAppList_t* ApplicationListPtr)
+/// <param name="AppHandle">App handle.</param>
+/// <returns>App handle.</returns>
+static inline GhostAppToken_t ghostAppFrmGetAppTokenByHandle(GhostAppHandle_t* AppHandle, bool Locked)
 {
-	return GhostOK;
+#if(MacroGhostAppFrmUseTokenOffset)
+	GhostAppToken_t token = NULL;
+
+	if (!Locked)
+	{
+		GhostMutexLock(&framework.Mutex);
+	}
+
+	token = (GhostAppToken_t*)((size_t)AppHandle + (size_t)framework.AppTokenOffset);
+
+	if (!Locked)
+	{
+		GhostMutexUnlock(&framework.Mutex);
+	}
+
+	return token;
+#else
+	return AppHandle;
+#endif // MacroGhostAppFrmUseTokenOffset
 }
-*/
+
+
+/// <summary>
+/// App exec handle.
+/// According to the specification, this api should be called in the main App thread.
+/// The app cannot display the UI and the app status is `GhostAppStatusLoading` 
+///		until this function is called.
+/// </summary>
+/// <param name="AppToken">AppToken in GhostAppArgs_t.</param>
+/// <returns>
+/// Reason for program exit.
+/// </returns>
+GhostError_t GhostAppExec(GhostAppToken_t AppToken)
+{
+	// Enable screen.
+	// TODO.
+	GhostAppHandle_t* app = NULL;
+	GhostAppHandle_t* foregroundApp = NULL;
+
+	// Lock 
+	GhostMutexLock(&framework.Mutex);
+
+	// Get AppHandle by AppToken.
+	app = ghostAppFrmGetAppHandleByToken(AppToken, true);
+	foregroundApp = framework.ForegroundApp;
+
+	// Set virtual screen visible.
+	if (foregroundApp == app && app->Screen != NULL)
+	{
+		if (app->Screen != NULL)
+		{
+			// TODO: Lock lvgl.
+			lv_obj_clear_flag(app->Screen, LV_OBJ_FLAG_HIDDEN);
+		}
+		else
+		{
+			// TODO: Mask as Non-UI App.
+
+		}
+	}
+
+	// Unlock.
+	GhostMutexUnlock(&framework.Mutex);
+
+
+	while (1)
+	{
+		GhostSleepMillisecond(1000);
+	}
+}
+
+
+/// <summary>
+/// Get virtual screen by AppToken.
+/// </summary>
+/// <param name="AppToken">AppToken in GhostAppArgs_t.</param>
+/// <param name="BackgroundColor">Background color.</param>
+/// <returns>
+/// Pointer of virtual screen(It's actually a lv_obj_t*).
+/// </returns>
+lv_obj_t* GhostAppGetVirtualScreen(GhostAppToken_t AppToken, lv_color_t BackgroundColor)
+{
+	lv_obj_t* screen = NULL;
+
+	// Lock 
+	GhostMutexLock(&framework.Mutex);
+
+	do {
+		GhostAppHandle_t* app = ghostAppFrmGetAppHandleByToken(AppToken, true);
+		if (app->Screen != NULL)
+		{
+			screen = app->Screen;
+			break;
+		}
+		else {
+			GhostLV_Lock();
+			app->Screen = lv_obj_create(lv_scr_act());
+			if (app->Screen == NULL)
+			{
+				GhostLV_Unlock();
+				GhostLogE("Create virtual screen failed, out of memory!");
+				break;
+			}
+			else
+			{
+				screen = app->Screen;
+				lv_obj_add_flag(screen, LV_OBJ_FLAG_HIDDEN);
+				lv_obj_add_style(screen, &framework.ScreenStyle, 0);
+				lv_obj_set_scrollbar_mode(screen, LV_SCROLLBAR_MODE_OFF);
+				lv_obj_set_pos(screen, 0, 0);
+				lv_obj_set_size(screen, framework.ScreenWidth, framework.ScreenHeight);
+				lv_obj_set_style_bg_color(screen, BackgroundColor, 0);
+				GhostLV_Unlock();
+			}
+		}
+	} while (0);
+
+	// Unlock.
+	GhostMutexUnlock(&framework.Mutex);
+
+	return screen;
+}

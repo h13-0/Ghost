@@ -26,7 +26,9 @@
 
 
 /***********************************Typedefs***********************************/
+#ifdef __cplusplus
 EXTREN_C_START
+#endif // __cplusplus
 
 
 /**********************************Prototypes**********************************/
@@ -38,4 +40,6 @@ EXTREN_C_START
 /// <returns>Function execution result.</returns>
 GhostError_t GhostCalculatorRun(const GhostAppArgs_t* Param);
 
+#ifdef __cplusplus
 EXTREN_C_END
+#endif // __cplusplus

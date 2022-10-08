@@ -27,8 +27,8 @@ extern "C" {
 	/// Get screen fillet radius.
 	/// </summary>
 	/// <param name="Radius">Radius.</param>
-	/// <returns>Always GhostOK.</returns>
-	GhostError_t GhostScreenGetRadius(int* Radius);
+	/// <returns>Radius.</returns>
+	int GhostScreenGetRadius(void);
 
 	
 #ifdef __cplusplus

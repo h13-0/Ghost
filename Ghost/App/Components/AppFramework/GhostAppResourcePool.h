@@ -81,10 +81,20 @@ GhostError_t GhostAppResPoolFree(GhostAppResPool_t ResPool);
 /// Thread safety:
 ///		Yes.
 /// </summary>
-/// <param name="Pool">Resource pool pointer.</param>
+/// <param name="ResPool">Resource pool pointer.</param>
 /// <param name="Capacity">Target capacity.</param>
 /// <returns>Capacity of ResPool after resized.</returns>
 int GhostAppResPoolResize(GhostAppResPool_t ResPool, int Capacity);
+
+
+/// <summary>
+/// Get the number of resources in the current resource pool.
+/// Thread safety:
+///		Yes.
+/// </summary>
+/// <param name="ResPool">Resource pool pointer.</param>
+/// <returns>Number of items.</returns>
+int GhostAppResPoolGetItemNum(GhostAppResPool_t ResPool);
 
 
 /// <summary>
@@ -111,6 +121,16 @@ GhostError_t GhostAppResPoolAddItem(GhostAppResPool_t ResPool,
 /// <param name="Resource">Resource pointor.</param>
 /// <returns>Function execution result.</returns>
 GhostError_t GhostAppResPoolFreeItem(GhostAppResPool_t ResPool, void* Resource);
+
+
+#if(MacroGhostDebug)
+/// <summary>
+/// Unit test.
+/// </summary>
+/// <param name="void"></param>
+/// <returns>Function execution result.</returns>
+GhostError_t GhostAppResPoolUnitTest(void);
+#endif
 
 
 #ifdef __cplusplus

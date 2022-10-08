@@ -15,14 +15,13 @@
 // Configs.
 #include "GhostPlatformConfigs.h"
 // Self headers.
-#include "GhostAppAPIs.h"
 
 // Standard headers.
 
 // ThirdParty headers.
 
 // Ghost headers.
-#include "GhostClock.h"
+
 
 /***********************************Defines************************************/
 
@@ -32,6 +31,4 @@
 
 
 /**********************************Prototypes**********************************/
-
-
 

@@ -22,7 +22,8 @@
 // ThirdParty headers.
 
 // Ghost headers.
-
+// TODO: Use app api instead of system api.
+#include "GhostClock.h"
 
 /***********************************Defines************************************/
 
@@ -31,11 +32,20 @@
 /***********************************Typedefs***********************************/
 typedef struct
 {
-	GhostAppToken_t token;
+	GhostAppToken_t Token;
+	lv_obj_t* Screen;
 } GhostCalculator_t;
 
 /**********************************Prototypes**********************************/
 static GhostCalculator_t calculator;
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name=""></param>
+/// <returns></returns>
+static GhostError_t setupUI(void);
 
 
 /// <summary>
@@ -45,7 +55,18 @@ static GhostCalculator_t calculator;
 /// <returns>Function execution result.</returns>
 GhostError_t GhostCalculatorRun(const GhostAppArgs_t* Args)
 {
+	calculator.Token = Args->AppToken;
+	calculator.Screen = GhostAppGetVirtualScreen(calculator.Token, lv_color_black());
 
+	setupUI();
 
 	GhostAppExec(Args->AppToken);
+}
+
+
+
+static GhostError_t setupUI(void)
+{
+
+	return GhostOK;
 }

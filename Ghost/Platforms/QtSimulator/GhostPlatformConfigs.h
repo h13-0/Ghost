@@ -143,6 +143,7 @@
 #define MacroGhostAppPackageInformationFileName                       ("App.json")
 #define MacroGhostAppDefaultConfigFileName                            ("Configs.json")
 #define MacroGhostAppDefaultConfigFileSizeLimit                       (4096)       // 4KB.
+#define MacroGhostAppDefaultResPoolCapacity							  (16)
 
 //> Ghost theme manager.
 //>>> Built-in themes.
@@ -187,13 +188,16 @@
 #endif // Ghost calculator.
 
 
-//> Register native applications.
-//>> Register Ghost system.
+//> Native applications.
+//>> Ghost system.
 #if(1)
 #define MacroGhostSystemInfo									       MacroDeclareStructure(GhostAppInfo_t, GhostNativeApplication, "tech.h13.ghost", "Ghost System", 0, NULL, NULL)
 #endif
 
-//>> Register Ghost theme manager.
+//>> Ghost app framework.
+#define MacroGhostAppFrmUseTokenOffset									(1)
+
+//>> Ghost theme manager.
 #if(1)
 #define MacroGhostThemeManagerPackageName								("tech.h13.ghost.thememanager")
 #define MacroGhostThemeManagerInfo										GhostAppFrmAppInfoNew( \
@@ -216,7 +220,7 @@
 
 #endif
 
-//>> Register Ghost launcher.
+//>> Ghost launcher.
 #if(1)
 #define MacroGhostLauncherPackageName									("tech.h13.ghost.launcher")
 #define MacroGhostLauncherInfo											GhostAppFrmAppInfoNew( \
@@ -232,6 +236,22 @@
 
 #endif //>> Ghost launcher.
 
+
+//>> Ghost calculator.
+#if(MacroIsCalculatorEnabled)
+#define MacroGhostCalculatorPackageName									("tech.h13.ghost.calculator")
+#define MacroGhostCalculatorInfo										GhostAppInfoNew( \
+																			GhostAppTypeNative, \
+																			MacroGhostCalculatorPackageName, \
+																			"Calculator", \
+																			NULL, \
+																			0, \
+																			GhostCalculatorRun, \
+																			NULL \
+																		)
+
+
+#endif //>> Ghost calculator.
 
 // Let Visual studio not indent extren "C"
 #define EXTREN_C_START extern "C" {

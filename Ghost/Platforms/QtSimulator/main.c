@@ -4,7 +4,7 @@
 
 //#include "lv_png.h"
 
-#include "App.h"
+#include "Ghost.h"
 
 #include "GhostThread.h"
 #include "GhostMemoryManager.h"
