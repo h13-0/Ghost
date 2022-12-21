@@ -10,3 +10,6 @@
 [submodule "Ghost/ThirdParty/lvgl"]
 	path = Ghost/ThirdParty/lvgl
 	url = https://github.com/lvgl/lvgl.git
+[submodule "Ghost/ThirdParty/pikascript"]
+	path = Ghost/ThirdParty/pikascript
+	url = https://github.com/pikasTech/pikascript.git
