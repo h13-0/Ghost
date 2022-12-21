@@ -1,8 +1,8 @@
 [submodule "Ghost/thirdparty/cJSON"]
-	path = Ghost/thirdparty/cJSON
+	path = ./Ghost/thirdparty/cJSON
 	url = https://github.com/DaveGamble/cJSON.git
-[submodule "./Ghost/thirdparty/list"]
-	path = ./Ghost/thirdparty/list
+[submodule "Ghost/thirdparty/list"]
+	path = Ghost/thirdparty/list
 	url = https://github.com/clibs/list.git
 [submodule "./DeploymentTool/safe_lvgl_converter"]
 	path = ./DeploymentTool/safe_lvgl_converter
