@@ -2,8 +2,8 @@
  * @file: safe_lvgl.c
  * @note: This document is generated using [safe_lvgl_converter](https://github.com/h13-0/safe_lvgl_converter),
  *            based on lvgl version 8.3.4.
- * @date: 2022/12/21
- * @time: 00:37:04
+ * @date: 2022/12/22
+ * @time: 00:53:40
  */
 #include "safe_lvgl.h"
 #include "GhostThread.h"

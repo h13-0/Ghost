@@ -1,9 +1,9 @@
 /**
  * @file: safe_lvgl.h 
  * @note: This document is generated using [safe_lvgl_converter](https://github.com/h13-0/safe_lvgl_converter),
- *            based on lvgl version $lvgl_version$.
- * @date: 2022/12/21
- * @time: 00:37:04
+ *            based on lvgl version 8.3.4.
+ * @date: 2022/12/22
+ * @time: 00:53:40
  */
 
 #ifndef __SAFE_LVGL_H__ 
